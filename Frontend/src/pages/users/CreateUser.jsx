@@ -170,10 +170,10 @@ const CreateUser = () => {
               <Grid item xs={7}>
                 <LocalizationProvider dateAdapter={AdapterDateFns} locale={vi}>
                   <DatePicker
+                    format="dd/MM/yyyy"
                     label="Date Of Birth"
                     value={user.dateOfBirth}
                     onChange={(date) => handleDateChange("dateOfBirth", date)}
-                    inputFormat="dd/MM/yyyy"
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -243,7 +243,7 @@ const CreateUser = () => {
                     label="Joined Date"
                     value={user.joinedDate}
                     onChange={(date) => handleDateChange("joinedDate", date)}
-                    inputFormat="dd/MM/yyyy"
+                    format="dd/MM/yyyy"
                     renderInput={(params) => (
                       <TextField
                         {...params}
