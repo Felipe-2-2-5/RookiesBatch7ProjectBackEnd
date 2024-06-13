@@ -104,7 +104,7 @@ namespace Backend.Application.Services.UserServices
         }
 
 
-        public async Task<PaginationResponse<UserResponse>> GetFilterAsync(FilterRequest request)
+        public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request)
         {
             var res = await _userRepo.GetFilterAsync(request);
             var dtos = _mapper.Map<IEnumerable<UserResponse>>(res.Data);

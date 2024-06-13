@@ -36,10 +36,14 @@ namespace Backend.Infrastructure.Repository
 
             return user;
         }
-        public async Task<PaginationResponse<User>> GetFilterAsync(FilterRequest request)
+        public async Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request)
         {
             IQueryable<User> query = _table;
 
+            if (request.Role != null)
+            {
+                query = query.Where(p => p.Type == request.Role);
+            }
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(p =>
@@ -59,7 +63,7 @@ namespace Backend.Infrastructure.Repository
             var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             return new(items, totalCount);
         }
-        private static Expression<Func<User, object>> GetSortProperty(FilterRequest request) =>
+        private static Expression<Func<User, object>> GetSortProperty(UserFilterRequest request) =>
         request.SortColumn?.ToLower() switch
         {
             "code" => user => user.StaffCode,

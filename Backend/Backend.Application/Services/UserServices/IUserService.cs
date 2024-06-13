@@ -14,7 +14,7 @@ namespace Backend.Application.Services.UserServices
 
         Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
 
-        Task<PaginationResponse<UserResponse>> GetFilterAsync(FilterRequest request);
+        Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request);
 
         Task<UserResponse> InsertAsync(UserDTO dto);
     }

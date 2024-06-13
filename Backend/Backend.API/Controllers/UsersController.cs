@@ -35,7 +35,7 @@ namespace Backend.API.Controllers
             return Ok(result);
         }
         [HttpPost("filter")]
-        public async Task<IActionResult> GetFilterAsync(FilterRequest request)
+        public async Task<IActionResult> GetFilterAsync(UserFilterRequest request)
         {
             var res = await _userService.GetFilterAsync(request);
             return Ok(res);
