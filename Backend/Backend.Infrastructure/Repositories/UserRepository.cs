@@ -1,6 +1,7 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entity;
+using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -9,15 +10,13 @@ namespace Backend.Infrastructure.Repository
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly AssetContext _assetContext;
         public UserRepository(AssetContext context) : base(context)
         {
-            _assetContext = context;
         }
         public async Task<User?> FindUserByUserNameAsync(string email) => await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == email);
         public async Task<User> GenerateUserInformation(User user)
         {
-            int maxId = await _context.Users.MaxAsync(s => (int?)s.Id) ?? 0;
+            int maxId = await _table.CountAsync();
             string staffCode = $"SD{(maxId + 1).ToString("D4")}";
 
             // Generate Username
@@ -40,9 +39,17 @@ namespace Backend.Infrastructure.Repository
         {
             IQueryable<User> query = _table;
 
-            if (request.Role != null)
+            if (!string.IsNullOrWhiteSpace(request.Type))
             {
-                query = query.Where(p => p.Type == request.Role);
+                if(request.Type == "Admin")
+                {
+                    query = query.Where(p => p.Type == Role.Admin);
+                }
+                else
+                {
+                    query = query.Where(p => p.Type == Role.Staff);
+
+                }
             }
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
@@ -67,10 +74,10 @@ namespace Backend.Infrastructure.Repository
         request.SortColumn?.ToLower() switch
         {
             "code" => user => user.StaffCode,
-            "name" => user => user.FirstName,
+            "name" => user => user.FirstName + " " + user.LastName,
             "date" => user => user.JoinedDate,
             "type" => user => user.Type,
-            _ => user => user.FirstName
+            _ => user => user.FirstName + " " + user.LastName
         };
     }
 }

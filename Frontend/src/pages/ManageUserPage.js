@@ -1,10 +1,12 @@
 // pages/ManageUserPage.js
-import { ArrowDownward, ArrowUpward, Delete, Edit } from "@mui/icons-material";
+import { ArrowDownward, ArrowDropDown, ArrowDropUp, ArrowUpward, Delete, Edit, Search } from "@mui/icons-material";
+import { Sheet } from "@mui/joy";
 import {
   Box,
   Button,
   FormControl,
   IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Pagination,
@@ -19,10 +21,14 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Layout from "../components/Layout";
-import { Sheet } from "@mui/joy";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import { FilterRequest } from "../services/Service";
+
+//reformat code from 	2017-09-18T00:00:00 to 19/08/2017
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB'); // en-GB format gives the desired "dd/mm/yyyy" format
+};
 
 const ManageUserPage = () => {
   const navigate = useNavigate();
@@ -33,36 +39,59 @@ const ManageUserPage = () => {
     sortOrder: "",
     page: 1,
     pageSize: "20",
+    type: ""
   });
   const [users, setUser] = useState([]);
+
   const getUsers = async (filterRequest) => {
-    const res = await axios.post("https://localhost:7083/api/users/filter", {
-      searchTerm: filterRequest.searchTerm,
-      sortColumn: filterRequest.sortColumn,
-      sortOrder: filterRequest.sortOrder,
-      page: filterRequest.page,
-      pageSize: filterRequest.pageSize,
-    });
+    const res = await FilterRequest(filterRequest);
+
     setUser(res.data.data);
     setTotalCount(res.data.totalCount);
   };
+
   useEffect(() => {
     getUsers(filterRequest);
   }, [filterRequest]);
 
-  const [type, setType] = useState("All");
 
+  //Search state to set in filter request after entered
+  const [searchTerm, setSearchTerm] = useState("");
   const handleSearchChange = (e) => {
+    console.log(e.target.value);
+    setSearchTerm(e.target.value);
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      setFilterRequest((prev) => ({
+        ...prev,
+        searchTerm: searchTerm,
+      }));
+    }
+  };
+  const handleOnBlur = () => {
     setFilterRequest((prev) => ({
       ...prev,
-      searchTerm: e.target.value,
+      searchTerm: searchTerm,
     }));
+  }
+
+  // console.log("filter", filterRequest);
+
+  const handleTypeChange = (e) => {
+    console.log(e.target.value);
+    if (e.target.value === "All") {
+      setFilterRequest({
+        type: "",
+      })
+    } else {
+      setFilterRequest({
+        type: e.target.value,
+      })
+    }
+
   };
 
-  console.log("filter", filterRequest);
-  const handleTypeChange = (e) => {
-    setType(e.target.value);
-  };
   const handlePageChange = (e, value) => {
     setFilterRequest((prev) => ({
       ...prev,
@@ -70,24 +99,32 @@ const ManageUserPage = () => {
     }));
   };
 
-  const handleHeaderClick = (e) => {
+  const handleHeaderClick = (column) => {
     setFilterRequest((prev) => {
       let newSortOrder;
-      if (prev.sortColumn === e) {
-        // Toggle the sort order
-        newSortOrder =
-          prev.sortOrder === "descend"
-            ? "asc"
-            : prev.sortOrder === "asc"
-            ? ""
-            : "descend";
+      let newSortColumn;
+
+      if (prev.sortColumn === column) {
+        // Toggle between "descend", "", and reset
+        if (prev.sortOrder === "descend") {
+          newSortOrder = "";
+          newSortColumn = column;
+        } else if (prev.sortOrder === "") {
+          newSortOrder = "";
+          newSortColumn = "";
+        } else {
+          newSortOrder = "descend";
+          newSortColumn = column;
+        }
       } else {
-        // Set to descending if switching columns
-        newSortOrder = "";
+        // If switching columns, start with "descend"
+        newSortOrder = "descend";
+        newSortColumn = column;
       }
+
       return {
         ...prev,
-        sortColumn: e,
+        sortColumn: newSortColumn,
         sortOrder: newSortOrder,
       };
     });
@@ -95,19 +132,17 @@ const ManageUserPage = () => {
 
   const getSortIcon = (column) => {
     if (filterRequest.sortColumn === column) {
-      switch (filterRequest.sortOrder) {
-        case "descend":
-          return <ArrowDownward />;
-        case "asc":
-          return <ArrowUpward />;
-        default:
-          return null;
+      if (filterRequest.sortOrder === "descend") {
+        return <ArrowDropDown />;
+      }
+      if (filterRequest.sortOrder === "") {
+        return <ArrowDropUp />;
       }
     }
     return null;
   };
   return (
-    <Layout title=" -> Manage User">
+    <>
       <Paper
         elevation={3}
         style={{
@@ -125,7 +160,7 @@ const ManageUserPage = () => {
             <InputLabel>Type</InputLabel>
             <Select
               label="Type"
-              value={type}
+              value={filterRequest.type}
               name="type"
               onChange={handleTypeChange}
             >
@@ -137,9 +172,18 @@ const ManageUserPage = () => {
           <TextField
             variant="outlined"
             label="Search"
-            value={filterRequest.searchTerm}
+            value={searchTerm}
             name="search"
             onChange={handleSearchChange}
+            onBlur={handleOnBlur}
+            onKeyPress={handleKeyPress}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
             sx={{ marginLeft: "auto", marginRight: "20px" }}
           />
           <Button
@@ -166,8 +210,8 @@ const ManageUserPage = () => {
                   <TableCell>
                     <Button
                       variant="text"
-                      onClick={() => handleHeaderClick("staffCode")}
-                      endIcon={getSortIcon("staffCode")}
+                      onClick={() => handleHeaderClick("code")}
+                      endIcon={getSortIcon("code")}
                       sx={{
                         fontWeight: "bold",
                         textTransform: "none",
@@ -182,8 +226,8 @@ const ManageUserPage = () => {
                   <TableCell>
                     <Button
                       variant="text"
-                      onClick={() => handleHeaderClick("fullName")}
-                      endIcon={getSortIcon("fullName")}
+                      onClick={() => handleHeaderClick("name")}
+                      endIcon={getSortIcon("name")}
                       sx={{
                         fontWeight: "bold",
                         textTransform: "none",
@@ -198,8 +242,6 @@ const ManageUserPage = () => {
                   <TableCell>
                     <Button
                       variant="text"
-                      onClick={() => handleHeaderClick("username")}
-                      endIcon={getSortIcon("username")}
                       sx={{
                         fontWeight: "bold",
                         textTransform: "none",
@@ -214,8 +256,8 @@ const ManageUserPage = () => {
                   <TableCell>
                     <Button
                       variant="text"
-                      onClick={() => handleHeaderClick("joinedDate")}
-                      endIcon={getSortIcon("joinedDate")}
+                      onClick={() => handleHeaderClick("date")}
+                      endIcon={getSortIcon("date")}
                       sx={{
                         fontWeight: "bold",
                         textTransform: "none",
@@ -230,7 +272,8 @@ const ManageUserPage = () => {
                   <TableCell>
                     <Button
                       variant="text"
-                      onClick={() => handleHeaderClick("")}
+                      onClick={() => handleHeaderClick("type")}
+                      endIcon={getSortIcon("type")}
                       sx={{
                         fontWeight: "bold",
                         textTransform: "none",
@@ -268,7 +311,7 @@ const ManageUserPage = () => {
                       {user.firstName + " " + user.lastName}
                     </TableCell>
                     <TableCell>{user.userName}</TableCell>
-                    <TableCell>{user.joinedDate}</TableCell>
+                    <TableCell>{formatDate(user.joinedDate)}</TableCell>
                     <TableCell>{user.type}</TableCell>
                     <TableCell>
                       <IconButton color="primary">
@@ -309,7 +352,7 @@ const ManageUserPage = () => {
           />
         </Box>
       </Paper>
-    </Layout>
+    </>
   );
 };
 

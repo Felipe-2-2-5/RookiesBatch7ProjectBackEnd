@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Radio,
@@ -15,25 +15,26 @@ import {
   Grid,
   FormHelperText,
 } from "@mui/material";
-import Layout from "../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { useEffect } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { useAuthContext } from "../../context/AuthContext";
+import { format } from "date-fns";
+import { flushSync } from "react-dom";
 
 const CreateUser = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
+  const { currentUser } = useAuthContext();
+  const [users, setUsers] = useState({
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
-    gender: "female",
-    joinedDate: "",
-    type: "",
+    dateOfBirth: null,
+    gender: 2,
+    joinedDate: null,
+    type: 0,
     location: "",
   });
 
@@ -47,24 +48,72 @@ const CreateUser = () => {
     location: false,
   });
 
-  const formatDate = (date) => {
-    return date ? format(new Date(date), "dd/MM/yyyy") : "";
-  };
+  const [touched, setTouched] = useState({
+    dateOfBirth: false,
+    joinedDate: false,
+  });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
-    setFormErrors({ ...formErrors, [name]: value.trim() === "" });
+    setUsers({ ...users, [name]: value });
+    const isValid = /^[a-zA-Z]{2,20}$/.test(value);
+
+    let errorMessage = "";
+    if (value.trim() === "") {
+      errorMessage = `${
+        name.charAt(0).toUpperCase() + name.slice(1)
+      } is required`;
+    } else if (value.length < 2 || value.length > 20) {
+      errorMessage = `${
+        name.charAt(0).toUpperCase() + name.slice(1)
+      } must be between 2 and 20 letters`;
+    } else if (!isValid) {
+      errorMessage = `${
+        name.charAt(0).toUpperCase() + name.slice(1)
+      } does not contain space`;
+    }
+
+    setFormErrors({ ...formErrors, [name]: errorMessage });
+  };
+
+  const handleLastNameChange = (event) => {
+    const { name, value } = event.target;
+    const trimmedValue = value.replace(/\s+/g, " ");
+    setUsers({ ...users, [name]: trimmedValue });
+    const isValid = /^[a-zA-Z\s]{2,20}$/.test(trimmedValue);
+
+    let errorMessage = "";
+    if (trimmedValue.trim() === "") {
+      errorMessage = `${
+        name.charAt(0).toUpperCase() + name.slice(1)
+      } is required`;
+    } else if (trimmedValue.length < 2 || trimmedValue.length > 20) {
+      errorMessage = `${
+        name.charAt(0).toUpperCase() + name.slice(1)
+      } must be between 2 and 20 letters`;
+    }
+
+    setFormErrors({ ...formErrors, [name]: errorMessage });
+  };
+
+  const handleTypeChange = (event) => {
+    const { name, value } = event.target;
+    setUsers({ ...users, [name]: value });
   };
 
   const handleDateChange = (name, date) => {
-    setUser({ ...user, [name]: date });
+    setUsers({ ...users, [name]: date });
+    setTouched({ ...touched, [name]: true });
   };
 
+  const formatDate = (date) => {
+    if (!date) return "";
+    return format(date, "dd/MM/yyyy");
+  };
   useEffect(() => {
-    if (user.dateOfBirth && user.joinedDate) {
-      const dob = new Date(user.dateOfBirth);
-      const joined = new Date(user.joinedDate);
+    if (users.dateOfBirth) {
+      const dob = new Date(users.dateOfBirth);
+      const joined = new Date(users.joinedDate);
       const age = Math.floor(
         (Date.now() - dob) / (365.25 * 24 * 60 * 60 * 1000)
       );
@@ -78,18 +127,37 @@ const CreateUser = () => {
       } else {
         setFormErrors((prevErrors) => ({ ...prevErrors, joinedDate: false }));
       }
+    } else {
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        dateOfBirth: !users.dateOfBirth,
+        joinedDate: !users.joinedDate,
+      }));
     }
-  }, [user.dateOfBirth, user.joinedDate]);
+  }, [users.dateOfBirth, users.joinedDate]);
 
   const handleSubmit = async (event) => {
+    console.log("location : ", currentUser.locality);
     event.preventDefault();
+    console.log("adsasdasdsds");
     const hasErrors = Object.values(formErrors).some((error) => error);
     if (!hasErrors) {
       try {
+        if (!users.location) {
+          users.location = currentUser.locality;
+        }
+        if (users.location) {
+          users.location === "HaNoi"
+            ? (users.location = 1)
+            : (users.location = 0);
+        }
+        if (users.gender) {
+          users.gender = +users.gender;
+        }
         const response = await axios.post("https://localhost:7083/api/users", {
-          ...user,
-          dateOfBirth: formatDate(user.dateOfBirth),
-          joinedDate: formatDate(user.joinedDate),
+          ...users,
+          dateOfBirth: users.dateOfBirth ? formatDate(users.dateOfBirth) : null,
+          joinedDate: users.joinedDate ? formatDate(users.joinedDate) : null,
         });
         console.log("Response:", response.data);
         console.log("User created successfully.");
@@ -103,7 +171,7 @@ const CreateUser = () => {
   };
 
   return (
-    <Layout title="Manage User > Create New User">
+    <>
       <Container sx={{ display: "flex", justifyContent: "center", my: 4 }}>
         <Box sx={{ width: "60%", borderRadius: 1, p: 1 }}>
           <Typography
@@ -125,19 +193,19 @@ const CreateUser = () => {
                   <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
                 </Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={9}>
                 <TextField
+                  placeholder="First Name"
                   onBlur={handleChange}
                   fullWidth
                   name="firstName"
-                  value={user.firstName}
+                  value={users.firstName}
                   onChange={handleChange}
                   margin="dense"
-                  required
                   error={formErrors.firstName}
                 />
                 {formErrors.firstName && (
-                  <FormHelperText error>First name is required!</FormHelperText>
+                  <FormHelperText error>{formErrors.firstName}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={3} sx={{ display: "flex", alignItems: "center" }}>
@@ -146,19 +214,20 @@ const CreateUser = () => {
                   <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
                 </Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={9}>
                 <TextField
+                  placeholder="Last Name"
                   fullWidth
                   name="lastName"
-                  value={user.lastName}
-                  onBlur={handleChange}
-                  onChange={handleChange}
+                  value={users.lastName}
+                  onBlur={handleLastNameChange}
+                  onChange={handleLastNameChange}
                   margin="dense"
                   required
                   error={formErrors.lastName}
                 />
                 {formErrors.lastName && (
-                  <FormHelperText error>Last name is required!</FormHelperText>
+                  <FormHelperText error>{formErrors.lastName}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={3} sx={{ display: "flex", alignItems: "center" }}>
@@ -167,28 +236,29 @@ const CreateUser = () => {
                   <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
                 </Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={9}>
                 <LocalizationProvider dateAdapter={AdapterDateFns} locale={vi}>
                   <DatePicker
                     format="dd/MM/yyyy"
                     label="Date Of Birth"
-                    value={user.dateOfBirth}
+                    value={users.dateOfBirth}
                     onChange={(date) => handleDateChange("dateOfBirth", date)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         fullWidth
                         margin="dense"
-                        required
-                        error={formErrors.dateOfBirth}
+                        error={formErrors.dateOfBirth && touched.dateOfBirth}
                       />
                     )}
                   />
                 </LocalizationProvider>
 
-                {formErrors.dateOfBirth && (
+                {formErrors.dateOfBirth && touched.dateOfBirth && (
                   <FormHelperText error>
-                    User must be at least 18 years old!
+                    {users.dateOfBirth
+                      ? "User must be at least 18 years old!"
+                      : "Date of Birth is required!"}
                   </FormHelperText>
                 )}
               </Grid>
@@ -198,15 +268,15 @@ const CreateUser = () => {
                   <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
                 </Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={9}>
                 <RadioGroup
                   name="gender"
-                  value={user.gender}
-                  onChange={handleChange}
+                  value={users.gender}
+                  onChange={handleTypeChange}
                   row
                 >
                   <FormControlLabel
-                    value="female"
+                    value={1}
                     control={
                       <Radio
                         sx={{
@@ -218,7 +288,7 @@ const CreateUser = () => {
                     label="Female"
                   />
                   <FormControlLabel
-                    value="male"
+                    value={2}
                     control={
                       <Radio
                         sx={{
@@ -237,32 +307,29 @@ const CreateUser = () => {
                   <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
                 </Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={9}>
                 <LocalizationProvider dateAdapter={AdapterDateFns} locale={vi}>
                   <DatePicker
-                    label="Joined Date"
-                    value={user.joinedDate}
-                    onChange={(date) => handleDateChange("joinedDate", date)}
                     format="dd/MM/yyyy"
+                    label="Joined Date"
+                    value={users.joinedDate}
+                    onChange={(date) => handleDateChange("joinedDate", date)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         fullWidth
                         margin="dense"
                         required
-                        error={formErrors.joinedDate}
+                        error={formErrors.joinedDate && touched.joinedDate}
                       />
                     )}
                   />
                 </LocalizationProvider>
-                {formErrors.joinedDate && (
+                {formErrors.joinedDate && touched.joinedDate && (
                   <FormHelperText error>
-                    {formErrors.joinedDate &&
-                    user.joinedDate &&
-                    user.dateOfBirth &&
-                    new Date(user.joinedDate) < new Date(user.dateOfBirth)
+                    {users.joinedDate
                       ? "Joined date must be greater than Date of Birth!"
-                      : "Joined date is required!"}
+                      : "Joined Date is required!"}
                   </FormHelperText>
                 )}
               </Grid>
@@ -272,7 +339,7 @@ const CreateUser = () => {
                   <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
                 </Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={9}>
                 <FormControl
                   fullWidth
                   margin="dense"
@@ -283,12 +350,12 @@ const CreateUser = () => {
                   <Select
                     labelId="type-label"
                     name="type"
-                    value={user.type}
-                    onChange={handleChange}
+                    value={users.type}
+                    onChange={handleTypeChange}
                     label="Type"
                   >
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="user">User</MenuItem>
+                    <MenuItem value={1}>Admin</MenuItem>
+                    <MenuItem value={0}>Staff</MenuItem>
                   </Select>
                   {formErrors.type && (
                     <FormHelperText error>Type is required!</FormHelperText>
@@ -300,7 +367,7 @@ const CreateUser = () => {
                 item
                 xs={3}
                 sx={{
-                  display: user.type === "admin" ? "flex" : "none",
+                  display: users.type === 1 ? "flex" : "none",
                   alignItems: "center",
                 }}
               >
@@ -311,8 +378,8 @@ const CreateUser = () => {
               </Grid>
               <Grid
                 item
-                xs={7}
-                sx={{ display: user.type === "admin" ? "block" : "none" }}
+                xs={9}
+                sx={{ display: users.type === 1 ? "block" : "none" }}
               >
                 <FormControl
                   fullWidth
@@ -324,7 +391,7 @@ const CreateUser = () => {
                   <Select
                     labelId="location-label"
                     name="location"
-                    value={user.location}
+                    value={users.location}
                     onChange={handleChange}
                     label="Location"
                   >
@@ -337,7 +404,7 @@ const CreateUser = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={10}>
+              <Grid item xs={12}>
                 <Box
                   sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}
                 >
@@ -363,7 +430,7 @@ const CreateUser = () => {
           </form>
         </Box>
       </Container>
-    </Layout>
+    </>
   );
 };
 
