@@ -24,7 +24,7 @@ jobs:
       run: | 
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        dotnet ef database update -p ${{ env.DATABASE_DIRECTORY }} --connection '${{ secrets.DBConnection }}'
+        dotnet ef database update -StartUpProjectName "${{ env.WORKING_DIRECTORY }}" -p ${{ env.DATABASE_DIRECTORY }} --connection '${{ secrets.DBConnection }}'
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
