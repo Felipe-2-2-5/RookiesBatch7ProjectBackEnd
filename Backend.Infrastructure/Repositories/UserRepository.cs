@@ -41,7 +41,7 @@ namespace Backend.Infrastructure.Repository
 
             if (!string.IsNullOrWhiteSpace(request.Type))
             {
-                if(request.Type == "Admin")
+                if (request.Type == "Admin")
                 {
                     query = query.Where(p => p.Type == Role.Admin);
                 }
@@ -55,7 +55,7 @@ namespace Backend.Infrastructure.Repository
             {
                 query = query.Where(p =>
                     p.StaffCode.Contains(request.SearchTerm) ||
-                    p.UserName.Contains(request.SearchTerm));
+                    (p.FirstName + " " + p.LastName).Contains(request.SearchTerm));
             }
 
             if (request.SortOrder?.ToLower() == "descend")

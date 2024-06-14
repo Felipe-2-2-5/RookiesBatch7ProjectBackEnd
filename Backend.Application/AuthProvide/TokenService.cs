@@ -52,8 +52,8 @@ namespace Backend.Application.AuthProvide
             var claims = new List<Claim>
                 {
                     new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                     new(ClaimTypes.Name, user.UserName),
-                     new(ClaimTypes.Locality, user.Location.ToString()),
+                    new(ClaimTypes.Name, user.UserName),
+                    new("Location", user.Location.ToString()),
                      new("FirstLogin", user.FirstLogin.ToString()),
                     new(ClaimTypes.Role, user.Type.ToString()),
                 };
