@@ -12,7 +12,7 @@ namespace Backend.Infrastructure.Data
             new() {
                 Id = 1,
                 StaffCode = "SD0001",
-                UserName = "john_d",
+                UserName = "johnd",
                 Password = "Password@123",
                 FirstName = "John",
                 LastName = "Doe",
@@ -27,7 +27,7 @@ namespace Backend.Infrastructure.Data
             {
                 Id = 2,
                 StaffCode = "SD0002",
-                UserName = "jane_s",
+                UserName = "janes",
                 Password = "Password@456",
                 FirstName = "Jane",
                 LastName = "Smith",
@@ -41,7 +41,7 @@ namespace Backend.Infrastructure.Data
             new() {
                 Id = 3,
                 StaffCode = "SD0003",
-                UserName = "michael_b",
+                UserName = "michaelb",
                 Password = "Password@789",
                 FirstName = "Michael",
                 LastName = "Brown",
@@ -55,7 +55,7 @@ namespace Backend.Infrastructure.Data
             new() {
                 Id = 4,
                 StaffCode = "SD0004",
-                UserName = "emily_j",
+                UserName = "emilyj",
                 Password = "Password@101",
                 FirstName = "Emily",
                 LastName = "Jones",
@@ -69,7 +69,7 @@ namespace Backend.Infrastructure.Data
             new() {
                 Id = 5,
                 StaffCode = "SD0005",
-                UserName = "david_w",
+                UserName = "davidw",
                 Password = "Password@202",
                 FirstName = "David",
                 LastName = "Williams",
