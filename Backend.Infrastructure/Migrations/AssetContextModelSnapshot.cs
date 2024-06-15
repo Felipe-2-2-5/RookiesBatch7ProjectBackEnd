@@ -153,6 +153,11 @@ namespace Backend.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Prefix")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -195,8 +200,8 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<int>("Location")
                         .HasMaxLength(30)
@@ -211,13 +216,13 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("StaffCode")
                         .IsRequired()
-                        .HasMaxLength(7)
-                        .HasColumnType("nvarchar(7)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -248,10 +253,10 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "password123",
+                            Password = "$2a$11$xgCh/RwgM.Hb.i4B1jOmCelf5gA.4EIs3VdwAS7X0eeyrNbBWHf0u",
                             StaffCode = "SD0001",
                             Type = 1,
-                            UserName = "john_d"
+                            UserName = "johnd"
                         },
                         new
                         {
@@ -263,10 +268,10 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "password456",
+                            Password = "$2a$11$//qYOk.Byx9cxN1bTF36.u.as4SI/CkjRvMmsyQvisn6logEjVIBm",
                             StaffCode = "SD0002",
                             Type = 0,
-                            UserName = "jane_s"
+                            UserName = "janes"
                         },
                         new
                         {
@@ -278,10 +283,10 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "password789",
+                            Password = "$2a$11$HtN9/mZDmIWyUb5wKu3cbuRi9QbbZLZ100/miEZ948nwyU7UyWr/S",
                             StaffCode = "SD0003",
                             Type = 1,
-                            UserName = "michael_b"
+                            UserName = "michaelb"
                         },
                         new
                         {
@@ -293,10 +298,10 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "password101",
+                            Password = "$2a$11$trA.63QjNLvzbr9/SVN9SOeLhlJUU/0chddEriIAsSlm6TWPmWPjK",
                             StaffCode = "SD0004",
                             Type = 0,
-                            UserName = "emily_j"
+                            UserName = "emilyj"
                         },
                         new
                         {
@@ -308,10 +313,10 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "password202",
+                            Password = "$2a$11$gJ90ppXfyqAVqzvyWSZWiumFgJZv/hHSnfUEpUAwzifEry9FEABVe",
                             StaffCode = "SD0005",
                             Type = 0,
-                            UserName = "david_w"
+                            UserName = "davidw"
                         });
                 });
 

@@ -17,6 +17,6 @@ namespace Backend.Domain.Entities
         [StringLength(maximumLength: 600)]
         public string? Specification { get; set; }
         public DateTime InstalledDate { get; set; }
-        public AssigmentState State { get; set; }
+        public AssetState State { get; set; }
     }
 }
