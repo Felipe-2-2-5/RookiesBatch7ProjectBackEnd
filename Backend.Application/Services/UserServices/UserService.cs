@@ -44,7 +44,11 @@ namespace Backend.Application.Services.UserServices
             {
                 var user = _mapper.Map<User>(dto);
                 user = await _userRepo.GenerateUserInformation(user);
+
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
                 await _userRepo.InsertAsync(user);
+
                 user = await FindUserByUserNameAsync(user.UserName);
                 var res = _mapper.Map<UserResponse>(user);
                 return res;
@@ -57,11 +61,12 @@ namespace Backend.Application.Services.UserServices
         public async Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO)
         {
             var user = await _userRepo.GetByIdAsync(changePasswordDTO.Id) ?? throw new NotFoundException();
-            if (changePasswordDTO.OldPassword != user.Password)
+            bool checkPassword = BCrypt.Net.BCrypt.Verify(changePasswordDTO.OldPassword, user.Password);
+            if (!checkPassword)
             {
                 throw new DataInvalidException("Wrong password");
             }
-            if (changePasswordDTO.NewPassword == user.Password)
+            if (changePasswordDTO.NewPassword == changePasswordDTO.OldPassword)
             {
                 throw new DataInvalidException("Do not re-enter the old password");
             }
@@ -69,7 +74,7 @@ namespace Backend.Application.Services.UserServices
             if (!check.IsPasswordValid(changePasswordDTO.NewPassword))
                 throw new DataInvalidException("The password having at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol");
 
-            user.Password = changePasswordDTO.NewPassword;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDTO.NewPassword);
             user.ModifiedAt = DateTime.UtcNow;
             user.ModifiedBy = user.FirstName;
             user.FirstLogin = false;
@@ -91,8 +96,9 @@ namespace Backend.Application.Services.UserServices
             var getUser = await FindUserByUserNameAsync(dto.UserName!);
             if (getUser == null)
                 return new LoginResponse(false, "User not found");
+            bool checkPassword = BCrypt.Net.BCrypt.Verify(dto.Password, getUser.Password);
 
-            if (dto.Password == getUser.Password)
+            if (checkPassword)
             {
                 return new LoginResponse(true, "Login success", _tokenService.GenerateJWTWithUser(getUser));
 
