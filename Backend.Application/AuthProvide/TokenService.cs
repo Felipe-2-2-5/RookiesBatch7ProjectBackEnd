@@ -30,7 +30,7 @@ namespace Backend.Application.AuthProvide
         {
             var securityKey = GetSecurityKey(_configuration);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var expireInMinutes = Convert.ToInt32(_configuration["Jwt:ExpireIMinutes"] ?? "10000");
+            var expireInMinutes = Convert.ToInt32(_configuration["Jwt:ExpireMinutes"]);
 
             var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
