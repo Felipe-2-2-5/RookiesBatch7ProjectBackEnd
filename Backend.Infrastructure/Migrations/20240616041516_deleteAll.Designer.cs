@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    [Migration("20240614152727_init")]
-    partial class init
+    [Migration("20240616041516_deleteAll")]
+    partial class deleteAll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,7 +256,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "$2a$11$xgCh/RwgM.Hb.i4B1jOmCelf5gA.4EIs3VdwAS7X0eeyrNbBWHf0u",
+                            Password = "$2a$11$HJEpU7dshGMOrRPtsuMU/uVQQMSGF7nQPaRTxnrRWL.g5/Cn9yKCW",
                             StaffCode = "SD0001",
                             Type = 1,
                             UserName = "johnd"
@@ -271,7 +271,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "$2a$11$//qYOk.Byx9cxN1bTF36.u.as4SI/CkjRvMmsyQvisn6logEjVIBm",
+                            Password = "$2a$11$PmyC7Oy51BMOvStVtG5kcew5L6I6ONzVaG0MoNxKqSCtSuLDFG3Qy",
                             StaffCode = "SD0002",
                             Type = 0,
                             UserName = "janes"
@@ -286,7 +286,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "$2a$11$HtN9/mZDmIWyUb5wKu3cbuRi9QbbZLZ100/miEZ948nwyU7UyWr/S",
+                            Password = "$2a$11$P8CMCcsPR6/z1Okupeeg7.xB/8SrGoHH0aZC0wCg60w/RKjeR3KX2",
                             StaffCode = "SD0003",
                             Type = 1,
                             UserName = "michaelb"
@@ -301,7 +301,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "$2a$11$trA.63QjNLvzbr9/SVN9SOeLhlJUU/0chddEriIAsSlm6TWPmWPjK",
+                            Password = "$2a$11$hBpWrQizu/7BB3Hgu7FEee.lsqgn7qAR637Efg2lwssSUArm2A9PS",
                             StaffCode = "SD0004",
                             Type = 0,
                             UserName = "emilyj"
@@ -316,7 +316,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "$2a$11$gJ90ppXfyqAVqzvyWSZWiumFgJZv/hHSnfUEpUAwzifEry9FEABVe",
+                            Password = "$2a$11$w2isTELxGIiC0Ypta66B6eELt4O3q8o5bBFS79wm4L7sQcAOyeFrq",
                             StaffCode = "SD0005",
                             Type = 0,
                             UserName = "davidw"
