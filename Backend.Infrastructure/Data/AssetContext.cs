@@ -6,7 +6,6 @@ namespace Backend.Infrastructure.Data
 {
     public class AssetContext : DbContext
     {
-
         public AssetContext(DbContextOptions<AssetContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
