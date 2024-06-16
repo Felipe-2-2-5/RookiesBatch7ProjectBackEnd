@@ -6,7 +6,10 @@ namespace Backend.Infrastructure.Data
 {
     public class AssetContext : DbContext
     {
+<<<<<<< HEAD
 
+=======
+>>>>>>> af4e682cb2b16bb0018350bb456ebf5ba606575e
         public AssetContext(DbContextOptions<AssetContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
@@ -32,14 +35,21 @@ namespace Backend.Infrastructure.Data
                 .HasOne(a => a.Asset)
                 .WithMany()
                 .HasForeignKey(a => a.AssetId);
+<<<<<<< HEAD
 
+=======
+>>>>>>> af4e682cb2b16bb0018350bb456ebf5ba606575e
             modelBuilder.Entity<Asset>()
                .HasOne(b => b.Category)
                .WithMany(c => c.Assets)
                .HasForeignKey(b => b.CategoryId);
+<<<<<<< HEAD
 
             var users = new SeedUsersData().GenerateSeedData();
 
+=======
+            var users = new SeedUsersData().GenerateSeedData();
+>>>>>>> af4e682cb2b16bb0018350bb456ebf5ba606575e
             modelBuilder.Entity<User>().HasData(users);
         }
     }
