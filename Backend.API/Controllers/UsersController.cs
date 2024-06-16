@@ -1,6 +1,8 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.Services.UserServices;
+using Backend.Domain.Enum;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers
@@ -17,6 +19,7 @@ namespace Backend.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var dto = await _userService.GetByIdAsync(id);
@@ -29,18 +32,21 @@ namespace Backend.API.Controllers
             return Ok(result);
         }
         [HttpPost("change_password")]
+        [Authorize]
         public async Task<ActionResult<LoginResponse>> ChangePasswordAsync(ChangePasswordDTO dto)
         {
             var result = await _userService.ChangePasswordAsync(dto);
             return Ok(result);
         }
         [HttpPost("filter")]
+        [Authorize]
         public async Task<IActionResult> GetFilterAsync(UserFilterRequest request)
         {
             var res = await _userService.GetFilterAsync(request);
             return Ok(res);
         }
         [HttpPost]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(UserDTO dto)
         {
             var res = await _userService.InsertAsync(dto);
