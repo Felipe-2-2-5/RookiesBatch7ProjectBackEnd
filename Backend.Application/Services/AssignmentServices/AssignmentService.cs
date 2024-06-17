@@ -4,7 +4,7 @@ using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.IRepositories;
 using Backend.Domain.Exceptions;
 
-namespace Backend.Application.Services.Assignment;
+namespace Backend.Application.Services.AssignmentServices;
 
 public class AssignmentService : IAssignmentService
 {

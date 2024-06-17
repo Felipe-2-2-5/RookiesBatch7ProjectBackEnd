@@ -4,6 +4,7 @@ using Backend.Application.Services.UserServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Backend.API.Controllers
 {
@@ -12,7 +13,8 @@ namespace Backend.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-
+        private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+        private Location Location => (Location)Enum.Parse(typeof(Location), User.Claims.First(c => c.Type == "Location").Value);
         public UsersController(IUserService userService)
         {
             _userService = userService;
@@ -42,14 +44,14 @@ namespace Backend.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetFilterAsync(UserFilterRequest request)
         {
-            var res = await _userService.GetFilterAsync(request);
+            var res = await _userService.GetFilterAsync(request, Location);
             return Ok(res);
         }
         [HttpPost]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(UserDTO dto)
         {
-            var res = await _userService.InsertAsync(dto);
+            var res = await _userService.InsertAsync(dto, UserName);
             return Ok(res);
         }
     }
