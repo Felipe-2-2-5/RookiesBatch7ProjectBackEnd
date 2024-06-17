@@ -10,6 +10,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using System.Security.Claims;
+using Backend.Domain.Entities;
 
 namespace Backend.Tests.ServiceTests
 {
