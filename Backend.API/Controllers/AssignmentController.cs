@@ -1,5 +1,5 @@
 using Backend.Application.Common.Paging;
-using Backend.Application.Services.Assignment;
+using Backend.Application.Services.AssignmentServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +10,12 @@ namespace Backend.API.Controllers;
 public class AssignmentController : ControllerBase
 {
     private readonly IAssignmentService _assignmentService;
-    
+
     public AssignmentController(IAssignmentService assignmentService)
     {
         _assignmentService = assignmentService;
     }
-    
+
     [HttpGet("{id}")]
     [Authorize]
     public async Task<IActionResult> GetByIdAsync(int id)
@@ -23,7 +23,7 @@ public class AssignmentController : ControllerBase
         var dto = await _assignmentService.GetByIdAsync(id);
         return Ok(dto);
     }
-    
+
     [HttpPost("filter")]
     //[Authorize]
     public async Task<IActionResult> GetFilterAsync(AssignmentFilterRequest request)
