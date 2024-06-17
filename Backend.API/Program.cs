@@ -3,6 +3,7 @@ using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Middleware;
+using Backend.Application.Services.Assignment;
 using Backend.Application.Services.UserServices;
 using Backend.Application.Validations;
 using Backend.Infrastructure.Data;
@@ -85,6 +86,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 //User services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 
 //Add FluentValidation services
 builder.Services.AddTransient<IValidator<UserDTO>, UserDTOValidation>();
