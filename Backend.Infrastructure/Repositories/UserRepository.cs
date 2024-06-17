@@ -20,12 +20,25 @@ namespace Backend.Infrastructure.Repository
             string staffCode = $"SD{(maxId + 1).ToString("D4")}";
 
             // Generate Username
-            string baseUsername = $"{user.FirstName.ToLower()}{string.Concat(user.LastName.ToLower().Split(' ').Select(w => w[0]))}"; string username = baseUsername;
-            int usernameIndex = 1;
-            while (await _context.Users.AnyAsync(s => s.UserName == username))
-            {
-                username = $"{baseUsername}{usernameIndex++}";
-            }
+            string baseUsername = $"{user.FirstName.ToLower()}{string.Concat(user.LastName.ToLower().Split(' ').Select(w => w[0]))}";
+            string username = baseUsername;
+
+            var users = await _context.Users
+                .Where(s => s.UserName.StartsWith(baseUsername))
+                .Select(s => s.UserName)
+                .ToListAsync();
+
+            var numbers = users
+                .Select(u =>
+                {
+                    string suffix = u.Substring(baseUsername.Length);
+                    return int.TryParse(suffix, out int n) ? n : 0;
+                })
+                .ToList();
+
+            int maxNumber = numbers.Count > 0 ? numbers.Max() + 1 : 0;
+
+            username = $"{baseUsername}{(maxNumber == 0 ? "" : maxNumber.ToString())}";
 
             // Generate Password
             string password = $"{char.ToUpper(username[0])}{username.Substring(1)}@{user.DateOfBirth:ddMMyyyy}";

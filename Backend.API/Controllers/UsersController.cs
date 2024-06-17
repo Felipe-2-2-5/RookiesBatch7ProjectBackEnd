@@ -4,6 +4,7 @@ using Backend.Application.Services.UserServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Backend.API.Controllers
 {
@@ -12,7 +13,8 @@ namespace Backend.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-
+        private int UserId => int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
         public UsersController(IUserService userService)
         {
             _userService = userService;
