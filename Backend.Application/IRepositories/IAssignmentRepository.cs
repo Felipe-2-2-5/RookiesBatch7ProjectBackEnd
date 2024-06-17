@@ -1,6 +1,9 @@
+using Backend.Application.Common.Paging;
+using Backend.Domain.Entities;
+
 namespace Backend.Application.IRepositories;
 
-public interface IAssignmentRepository
+public interface IAssignmentRepository : IBaseRepository<Assignment>
 {
-    
+    Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request);
 }

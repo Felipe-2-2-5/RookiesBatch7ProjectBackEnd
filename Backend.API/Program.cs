@@ -5,6 +5,7 @@ using Backend.Application.DTOs.CategoryDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Middleware;
 using Backend.Application.Services.AssetServices;
+using Backend.Application.Services.AssignmentServices;
 using Backend.Application.Services.CategoryServices;
 using Backend.Application.Services.UserServices;
 using Backend.Application.Validations;
@@ -87,6 +88,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 //User services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 
 //Category services
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
