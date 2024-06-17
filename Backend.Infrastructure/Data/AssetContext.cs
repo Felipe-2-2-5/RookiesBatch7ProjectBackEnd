@@ -7,6 +7,7 @@ namespace Backend.Infrastructure.Data
     public class AssetContext : DbContext
     {
         public AssetContext(DbContextOptions<AssetContext> options) : base(options) { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
@@ -23,18 +24,27 @@ namespace Backend.Infrastructure.Data
                 .IsUnique();
 
             modelBuilder.Entity<Assignment>()
-                .HasOne(a => a.User)
+                .HasOne(a => a.AssignedTo)
                 .WithMany()
-                .HasForeignKey(a => a.UserId);
+                .HasForeignKey(a => a.AssignedToId)
+                .OnDelete(DeleteBehavior.NoAction); 
+
+            modelBuilder.Entity<Assignment>()
+                .HasOne(a => a.AssignedBy)
+                .WithMany()
+                .HasForeignKey(a => a.AssignedById)
+                .OnDelete(DeleteBehavior.NoAction); 
 
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.Asset)
-                .WithMany()
+                .WithMany(a => a.Assignments)
                 .HasForeignKey(a => a.AssetId);
+
             modelBuilder.Entity<Asset>()
-               .HasOne(b => b.Category)
-               .WithMany(c => c.Assets)
-               .HasForeignKey(b => b.CategoryId);
+                .HasOne(b => b.Category)
+                .WithMany(c => c.Assets)
+                .HasForeignKey(b => b.CategoryId);
+
             var users = new SeedUsersData().GenerateSeedData();
             modelBuilder.Entity<User>().HasData(users);
         }

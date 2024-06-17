@@ -1,7 +1,7 @@
-﻿using Backend.Domain.Enum;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Backend.Domain.Enum;
 
-namespace Backend.Domain.Entity
+namespace Backend.Domain.Entities
 {
     public class User : BaseEntity
     {

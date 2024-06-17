@@ -4,6 +4,7 @@ using Backend.Application.Common;
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.IRepositories;
+using Backend.Domain.Entities;
 using Backend.Domain.Entity;
 using Backend.Domain.Exceptions;
 using FluentValidation;
