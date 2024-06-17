@@ -5,9 +5,9 @@ using System.Globalization;
 
 namespace Backend.Application.Validations;
 
-public class UserDTOValidation : AbstractValidator<UserDTO>
+public class UserValidator : AbstractValidator<UserDTO>
 {
-    public UserDTOValidation()
+    public UserValidator()
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.")

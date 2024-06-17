@@ -1,11 +1,11 @@
-﻿using System.Linq.Expressions;
-using Backend.Application.Common.Paging;
+﻿using Backend.Application.Common.Paging;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
 using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Backend.Infrastructure.Repositories
 {
@@ -19,6 +19,10 @@ namespace Backend.Infrastructure.Repositories
         {
             int maxId = await _table.CountAsync();
             string staffCode = $"SD{(maxId + 1).ToString("D4")}";
+            if (maxId > 9998)
+            {
+                staffCode = $"SD{(maxId + 1).ToString("D5")}";
+            }
 
             // Generate Username
             string baseUsername = $"{user.FirstName.ToLower()}{string.Concat(user.LastName.ToLower().Split(' ').Select(w => w[0]))}";
@@ -49,9 +53,9 @@ namespace Backend.Infrastructure.Repositories
 
             return user;
         }
-        public async Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request)
+        public async Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request, Location location)
         {
-            IQueryable<User> query = _table;
+            IQueryable<User> query = _table.Where(u => u.Location == location);
 
             if (!string.IsNullOrWhiteSpace(request.Type))
             {

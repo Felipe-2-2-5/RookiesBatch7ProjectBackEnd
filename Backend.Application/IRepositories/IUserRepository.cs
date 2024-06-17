@@ -1,5 +1,6 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Domain.Entities;
+using Backend.Domain.Enum;
 
 namespace Backend.Application.IRepositories
 {
@@ -7,7 +8,7 @@ namespace Backend.Application.IRepositories
     {
         Task<User?> FindUserByUserNameAsync(string userName);
         Task<User> GenerateUserInformation(User user);
-        Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request);
+        Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request, Location location);
     }
 }
 
