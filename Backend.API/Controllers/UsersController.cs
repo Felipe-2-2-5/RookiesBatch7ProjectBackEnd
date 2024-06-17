@@ -14,7 +14,8 @@ namespace Backend.API.Controllers
     {
         private readonly IUserService _userService;
         private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
-        private Location Location => (Location)Enum.Parse(typeof(Location), User.Claims.First(c => c.Type == "Location").Value); public UsersController(IUserService userService)
+        private Location Location => (Location)Enum.Parse(typeof(Location), User.Claims.First(c => c.Type == "Location").Value);
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
