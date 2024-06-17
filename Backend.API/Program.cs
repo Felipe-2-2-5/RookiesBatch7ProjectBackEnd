@@ -6,6 +6,7 @@ using Backend.Application.Middleware;
 using Backend.Application.Services.UserServices;
 using Backend.Application.Validations;
 using Backend.Infrastructure.Data;
+using Backend.Infrastructure.Repositories;
 using Backend.Infrastructure.Repository;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

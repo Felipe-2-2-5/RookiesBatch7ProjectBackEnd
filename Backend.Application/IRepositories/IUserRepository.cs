@@ -1,5 +1,5 @@
 ﻿using Backend.Application.Common.Paging;
-using Backend.Domain.Entity;
+using Backend.Domain.Entities;
 
 namespace Backend.Application.IRepositories
 {

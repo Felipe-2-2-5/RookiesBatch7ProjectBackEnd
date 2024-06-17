@@ -1,12 +1,13 @@
-﻿using Backend.Application.Common.Paging;
+﻿using System.Linq.Expressions;
+using Backend.Application.Common.Paging;
 using Backend.Application.IRepositories;
-using Backend.Domain.Entity;
+using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
+using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
-namespace Backend.Infrastructure.Repository
+namespace Backend.Infrastructure.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
