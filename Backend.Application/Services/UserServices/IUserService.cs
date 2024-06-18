@@ -1,7 +1,7 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Domain.Entities;
-using Backend.Domain.Entity;
+using Backend.Domain.Enum;
 
 namespace Backend.Application.Services.UserServices
 {
@@ -15,8 +15,8 @@ namespace Backend.Application.Services.UserServices
 
         Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
 
-        Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request);
+        Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request, Location location);
 
-        Task<UserResponse> InsertAsync(UserDTO dto);
+        Task<UserResponse> InsertAsync(UserDTO dto, string createName);
     }
 }

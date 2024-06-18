@@ -4,13 +4,13 @@ using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Services.UserServices;
-using Backend.Domain.Entity;
+using Backend.Domain.Entities;
+using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using System.Security.Claims;
-using Backend.Domain.Entities;
 
 namespace Backend.Tests.ServiceTests
 {
@@ -177,11 +177,11 @@ namespace Backend.Tests.ServiceTests
             var paginationResponse = new PaginationResponse<User>(users, 1);
             var userResponses = new List<UserResponse> { new UserResponse() };
 
-            _userRepoMock.Setup(repo => repo.GetFilterAsync(filterRequest)).ReturnsAsync(paginationResponse);
+            _userRepoMock.Setup(repo => repo.GetFilterAsync(filterRequest, Location.HaNoi)).ReturnsAsync(paginationResponse);
             _mapperMock.Setup(mapper => mapper.Map<IEnumerable<UserResponse>>(users)).Returns(userResponses);
 
             // Act
-            var result = await _userService.GetFilterAsync(filterRequest);
+            var result = await _userService.GetFilterAsync(filterRequest, Location.HaNoi);
 
             // Assert
             Assert.That(result.Data, Is.EqualTo(userResponses));
