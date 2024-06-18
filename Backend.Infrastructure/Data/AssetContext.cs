@@ -44,10 +44,10 @@ namespace Backend.Infrastructure.Data
                .HasOne(b => b.Category)
                .WithMany(c => c.Assets)
                .HasForeignKey(b => b.CategoryId);
-            /*
-                        var users = new SeedUsersData().GenerateSeedData();
 
-                        modelBuilder.Entity<User>().HasData(users);*/
+            var users = new SeedUsersData().GenerateSeedData();
+
+            modelBuilder.Entity<User>().HasData(users);
         }
     }
 }
