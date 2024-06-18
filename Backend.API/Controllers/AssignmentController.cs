@@ -1,7 +1,10 @@
 using Backend.Application.Common.Paging;
+using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.Services.AssignmentServices;
+using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Backend.API.Controllers;
 
@@ -10,7 +13,7 @@ namespace Backend.API.Controllers;
 public class AssignmentController : ControllerBase
 {
     private readonly IAssignmentService _assignmentService;
-
+    private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
     public AssignmentController(IAssignmentService assignmentService)
     {
         _assignmentService = assignmentService;
@@ -37,6 +40,14 @@ public class AssignmentController : ControllerBase
             request.ToDate = DateTime.Today;
         }
         var res = await _assignmentService.GetFilterAsync(request);
+        return Ok(res);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = nameof(Role.Admin))]
+    public async Task<IActionResult> InserAsync(AssignmentDTO dto)
+    {
+        var res = await _assignmentService.InsertAsync(dto, UserName);
         return Ok(res);
     }
 }

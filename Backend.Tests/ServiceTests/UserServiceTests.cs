@@ -80,7 +80,7 @@ namespace Backend.Tests.ServiceTests
             _mapperMock.Setup(mapper => mapper.Map<UserResponse>(user)).Returns(userResponse);
 
             // Act
-            var result = await _userService.InsertAsync(userDto);
+            var result = await _userService.InsertAsync(userDto, "abc");
 
             // Assert
             Assert.That(result, Is.EqualTo(userResponse));
@@ -98,7 +98,7 @@ namespace Backend.Tests.ServiceTests
             _validatorMock.Setup(validator => validator.ValidateAsync(userDto, default)).ReturnsAsync(validationResult);
 
             // Act & Assert
-            Assert.ThrowsAsync<DataInvalidException>(() => _userService.InsertAsync(userDto));
+            Assert.ThrowsAsync<DataInvalidException>(() => _userService.InsertAsync(userDto, "abc"));
         }
 
         [Test]
