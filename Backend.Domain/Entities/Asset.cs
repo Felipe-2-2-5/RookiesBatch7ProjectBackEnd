@@ -9,7 +9,7 @@ namespace Backend.Domain.Entities
         [StringLength(maximumLength: 10)]
         public string AssetCode { get; set; }
 
-        [StringLength(maximumLength: 30)]
+        [StringLength(maximumLength: 50)]
         public string AssetName { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
