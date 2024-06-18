@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    [Migration("20240614152727_init")]
-    partial class init
+    [Migration("20240617153823_updateAsset")]
+    partial class updateAsset
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,13 +35,16 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<string>("AssetCode")
                         .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("AssetName")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -58,6 +61,9 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Location")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
@@ -91,8 +97,14 @@ namespace Backend.Infrastructure.Migrations
                     b.Property<int>("AssetId")
                         .HasColumnType("int");
 
+                    b.Property<int>("AssignedById")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("AssignedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("AssignedToId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -111,62 +123,21 @@ namespace Backend.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime?>("ReturnedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AssignedById");
+
+                    b.HasIndex("AssignedToId");
 
                     b.ToTable("Assignments");
                 });
 
-            modelBuilder.Entity("Backend.Domain.Entity.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<bool?>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Prefix")
-                        .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Backend.Domain.Entity.User", b =>
+            modelBuilder.Entity("Backend.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -256,7 +227,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "$2a$11$xgCh/RwgM.Hb.i4B1jOmCelf5gA.4EIs3VdwAS7X0eeyrNbBWHf0u",
+                            Password = "$2a$11$gpoEMRfihL7mvAc2b5xvtuZVu0f1y4KWJXWcBje1YGVxBRo4G.Ts6",
                             StaffCode = "SD0001",
                             Type = 1,
                             UserName = "johnd"
@@ -271,7 +242,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "$2a$11$//qYOk.Byx9cxN1bTF36.u.as4SI/CkjRvMmsyQvisn6logEjVIBm",
+                            Password = "$2a$11$qT2B7IGRCCL2EZrqg93g3emxvKkKIeLgDgfB0FBHbzNCba2hWO8Cy",
                             StaffCode = "SD0002",
                             Type = 0,
                             UserName = "janes"
@@ -286,7 +257,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "$2a$11$HtN9/mZDmIWyUb5wKu3cbuRi9QbbZLZ100/miEZ948nwyU7UyWr/S",
+                            Password = "$2a$11$pE6V6A8okMYbYMRFELpzyeH3TdAbFvt/3WZq6DDTa/YG4Kb65Ekky",
                             StaffCode = "SD0003",
                             Type = 1,
                             UserName = "michaelb"
@@ -301,7 +272,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "$2a$11$trA.63QjNLvzbr9/SVN9SOeLhlJUU/0chddEriIAsSlm6TWPmWPjK",
+                            Password = "$2a$11$qqcFmrBMH1e66q2ym1L0z.Vp9EePfNMmresXyMukUP6j/5N0WUDu6",
                             StaffCode = "SD0004",
                             Type = 0,
                             UserName = "emilyj"
@@ -316,11 +287,51 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "$2a$11$gJ90ppXfyqAVqzvyWSZWiumFgJZv/hHSnfUEpUAwzifEry9FEABVe",
+                            Password = "$2a$11$RxIWeZedXvlr1dkFFATEGuZ0UxvQmOjeMZisx2cW.kx1u3yWUVWm2",
                             StaffCode = "SD0005",
                             Type = 0,
                             UserName = "davidw"
                         });
+                });
+
+            modelBuilder.Entity("Backend.Domain.Entity.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Prefix")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.Asset", b =>
@@ -337,20 +348,33 @@ namespace Backend.Infrastructure.Migrations
             modelBuilder.Entity("Backend.Domain.Entities.Assignment", b =>
                 {
                     b.HasOne("Backend.Domain.Entities.Asset", "Asset")
-                        .WithMany()
+                        .WithMany("Assignments")
                         .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Backend.Domain.Entity.User", "User")
+                    b.HasOne("Backend.Domain.Entities.User", "AssignedBy")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("AssignedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Domain.Entities.User", "AssignedTo")
+                        .WithMany()
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Asset");
 
-                    b.Navigation("User");
+                    b.Navigation("AssignedBy");
+
+                    b.Navigation("AssignedTo");
+                });
+
+            modelBuilder.Entity("Backend.Domain.Entities.Asset", b =>
+                {
+                    b.Navigation("Assignments");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entity.Category", b =>

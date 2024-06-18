@@ -1,12 +1,16 @@
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AuthDTOs;
+using Backend.Application.DTOs.CategoryDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Middleware;
+using Backend.Application.Services.AssetServices;
+using Backend.Application.Services.AssignmentServices;
+using Backend.Application.Services.CategoryServices;
 using Backend.Application.Services.UserServices;
 using Backend.Application.Validations;
 using Backend.Infrastructure.Data;
-using Backend.Infrastructure.Repository;
+using Backend.Infrastructure.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -84,9 +88,20 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 //User services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+
+//Category services
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+//Asset services
+builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<IAssetService, AssetService>();
 
 //Add FluentValidation services
-builder.Services.AddTransient<IValidator<UserDTO>, UserDTOValidation>();
+builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
+builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 
 var app = builder.Build();
 

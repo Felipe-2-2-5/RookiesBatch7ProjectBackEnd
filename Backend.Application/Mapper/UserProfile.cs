@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend.Application.DTOs.AuthDTOs;
+using Backend.Domain.Entities;
 using Backend.Domain.Entity;
 
 namespace Backend.Application.Mapper

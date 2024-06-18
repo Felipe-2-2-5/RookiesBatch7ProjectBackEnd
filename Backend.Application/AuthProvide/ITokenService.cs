@@ -1,5 +1,6 @@
 ﻿using Backend.Domain.Entity;
 using System.Security.Claims;
+using Backend.Domain.Entities;
 
 namespace Backend.Application.AuthProvide
 {

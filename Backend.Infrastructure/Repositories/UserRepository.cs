@@ -1,12 +1,13 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Application.IRepositories;
-using Backend.Domain.Entity;
+using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
+using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Backend.Infrastructure.Repository
+namespace Backend.Infrastructure.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
@@ -18,14 +19,31 @@ namespace Backend.Infrastructure.Repository
         {
             int maxId = await _table.CountAsync();
             string staffCode = $"SD{(maxId + 1).ToString("D4")}";
+            if (maxId > 9998)
+            {
+                staffCode = $"SD{(maxId + 1).ToString("D5")}";
+            }
 
             // Generate Username
-            string baseUsername = $"{user.FirstName.ToLower()}{string.Concat(user.LastName.ToLower().Split(' ').Select(w => w[0]))}"; string username = baseUsername;
-            int usernameIndex = 1;
-            while (await _context.Users.AnyAsync(s => s.UserName == username))
-            {
-                username = $"{baseUsername}{usernameIndex++}";
-            }
+            string baseUsername = $"{user.FirstName.ToLower()}{string.Concat(user.LastName.ToLower().Split(' ').Select(w => w[0]))}";
+            string username = baseUsername;
+
+            var users = await _context.Users
+                .Where(s => s.UserName.StartsWith(baseUsername))
+                .Select(s => s.UserName)
+                .ToListAsync();
+
+            var numbers = users
+                .Select(u =>
+                {
+                    string suffix = u.Substring(baseUsername.Length);
+                    return int.TryParse(suffix, out int n) ? n : 0;
+                })
+                .ToList();
+
+            int maxNumber = numbers.Count > 0 ? numbers.Max() + 1 : 0;
+
+            username = $"{baseUsername}{(maxNumber == 0 ? "" : maxNumber.ToString())}";
 
             // Generate Password
             string password = $"{char.ToUpper(username[0])}{username.Substring(1)}@{user.DateOfBirth:ddMMyyyy}";
@@ -35,9 +53,9 @@ namespace Backend.Infrastructure.Repository
 
             return user;
         }
-        public async Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request)
+        public async Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request, Location location)
         {
-            IQueryable<User> query = _table;
+            IQueryable<User> query = _table.Where(u => u.Location == location);
 
             if (!string.IsNullOrWhiteSpace(request.Type))
             {

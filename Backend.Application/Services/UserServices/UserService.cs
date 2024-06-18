@@ -4,7 +4,8 @@ using Backend.Application.Common;
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.IRepositories;
-using Backend.Domain.Entity;
+using Backend.Domain.Entities;
+using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
 using FluentValidation;
 
@@ -31,7 +32,7 @@ namespace Backend.Application.Services.UserServices
             return dto;
 
         }
-        public async Task<UserResponse> InsertAsync(UserDTO dto)
+        public async Task<UserResponse> InsertAsync(UserDTO dto, string createName)
         {
             var validationResult = await _validator.ValidateAsync(dto);
             if (!validationResult.IsValid)
@@ -46,7 +47,8 @@ namespace Backend.Application.Services.UserServices
                 user = await _userRepo.GenerateUserInformation(user);
 
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
+                user.CreatedBy = createName;
+                user.CreatedAt = DateTime.Now;
                 await _userRepo.InsertAsync(user);
 
                 user = await FindUserByUserNameAsync(user.UserName);
@@ -110,9 +112,9 @@ namespace Backend.Application.Services.UserServices
         }
 
 
-        public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request)
+        public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request, Location location)
         {
-            var res = await _userRepo.GetFilterAsync(request);
+            var res = await _userRepo.GetFilterAsync(request, location);
             var dtos = _mapper.Map<IEnumerable<UserResponse>>(res.Data);
             return new(dtos, res.TotalCount);
 
