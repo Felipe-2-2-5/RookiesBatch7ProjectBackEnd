@@ -6,6 +6,6 @@ namespace Backend.Application.Services.AssetServices
     public interface IAssetService
     {
         Task<AssetResponseDTO> GetByIdAsync(int id);
-        Task InsertAsync(AssetDTO assetDTO, string createName, Location location);
+        Task<AssetResponseDTO> InsertAsync(AssetDTO assetDTO, string createName, Location location);
     }
 }

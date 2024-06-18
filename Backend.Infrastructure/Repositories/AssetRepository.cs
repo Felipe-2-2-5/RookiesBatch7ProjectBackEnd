@@ -33,6 +33,8 @@ namespace Backend.Infrastructure.Repositories
             asset.AssetCode = assetCode;
             return asset;
         }
+        public async Task<Asset?> FindAssetByCodeAsync(string code) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
+
     }
 
 }
