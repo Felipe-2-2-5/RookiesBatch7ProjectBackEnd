@@ -27,13 +27,13 @@ namespace Backend.Infrastructure.Data
                 .HasOne(a => a.AssignedTo)
                 .WithMany()
                 .HasForeignKey(a => a.AssignedToId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.AssignedBy)
                 .WithMany()
                 .HasForeignKey(a => a.AssignedById)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.Asset)
@@ -44,10 +44,10 @@ namespace Backend.Infrastructure.Data
                .HasOne(b => b.Category)
                .WithMany(c => c.Assets)
                .HasForeignKey(b => b.CategoryId);
+            /*
+                        var users = new SeedUsersData().GenerateSeedData();
 
-            var users = new SeedUsersData().GenerateSeedData();
-
-            modelBuilder.Entity<User>().HasData(users);
+                        modelBuilder.Entity<User>().HasData(users);*/
         }
     }
 }

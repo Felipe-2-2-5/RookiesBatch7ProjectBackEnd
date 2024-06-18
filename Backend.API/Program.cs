@@ -1,5 +1,6 @@
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
+using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.DTOs.CategoryDTOs;
 using Backend.Application.IRepositories;
@@ -102,6 +103,7 @@ builder.Services.AddScoped<IAssetService, AssetService>();
 //Add FluentValidation services
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
 builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
+builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
 
 var app = builder.Build();
 

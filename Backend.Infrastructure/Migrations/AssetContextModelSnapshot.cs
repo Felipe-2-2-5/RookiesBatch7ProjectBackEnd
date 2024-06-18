@@ -37,8 +37,8 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<string>("AssetName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("AssignmentId")
                         .HasColumnType("int");
@@ -212,83 +212,6 @@ namespace Backend.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DateOfBirth = new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstLogin = true,
-                            FirstName = "John",
-                            Gender = 1,
-                            JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Doe",
-                            Location = 1,
-                            Password = "$2a$11$gpoEMRfihL7mvAc2b5xvtuZVu0f1y4KWJXWcBje1YGVxBRo4G.Ts6",
-                            StaffCode = "SD0001",
-                            Type = 1,
-                            UserName = "johnd"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DateOfBirth = new DateTime(1990, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstLogin = true,
-                            FirstName = "Jane",
-                            Gender = 2,
-                            JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Smith",
-                            Location = 0,
-                            Password = "$2a$11$qT2B7IGRCCL2EZrqg93g3emxvKkKIeLgDgfB0FBHbzNCba2hWO8Cy",
-                            StaffCode = "SD0002",
-                            Type = 0,
-                            UserName = "janes"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DateOfBirth = new DateTime(1975, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstLogin = true,
-                            FirstName = "Michael",
-                            Gender = 1,
-                            JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Brown",
-                            Location = 1,
-                            Password = "$2a$11$pE6V6A8okMYbYMRFELpzyeH3TdAbFvt/3WZq6DDTa/YG4Kb65Ekky",
-                            StaffCode = "SD0003",
-                            Type = 1,
-                            UserName = "michaelb"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DateOfBirth = new DateTime(1988, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstLogin = true,
-                            FirstName = "Emily",
-                            Gender = 2,
-                            JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Jones",
-                            Location = 1,
-                            Password = "$2a$11$qqcFmrBMH1e66q2ym1L0z.Vp9EePfNMmresXyMukUP6j/5N0WUDu6",
-                            StaffCode = "SD0004",
-                            Type = 0,
-                            UserName = "emilyj"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            DateOfBirth = new DateTime(1995, 7, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstLogin = true,
-                            FirstName = "David",
-                            Gender = 1,
-                            JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Williams",
-                            Location = 0,
-                            Password = "$2a$11$RxIWeZedXvlr1dkFFATEGuZ0UxvQmOjeMZisx2cW.kx1u3yWUVWm2",
-                            StaffCode = "SD0005",
-                            Type = 0,
-                            UserName = "davidw"
-                        });
                 });
 
             modelBuilder.Entity("Backend.Domain.Entity.Category", b =>

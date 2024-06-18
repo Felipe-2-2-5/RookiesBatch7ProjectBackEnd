@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Backend.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/assets")]
     [ApiController]
     public class AssetsController : ControllerBase
     {
@@ -22,8 +22,8 @@ namespace Backend.API.Controllers
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(AssetDTO dto)
         {
-            await _assetService.InsertAsync(dto, UserName, Location);
-            return Ok();
+            var res = await _assetService.InsertAsync(dto, UserName, Location);
+            return Ok(res);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
