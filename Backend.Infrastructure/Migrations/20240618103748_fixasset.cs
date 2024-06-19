@@ -12,6 +12,9 @@ namespace Backend.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+             name: "Location",
+             table: "Assets");
             migrationBuilder.AddColumn<int>(
                name: "Location",
                table: "Assets",
