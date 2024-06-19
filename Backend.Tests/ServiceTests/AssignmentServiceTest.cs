@@ -74,7 +74,7 @@ namespace Backend.Tests.ServiceTests
             _mapperMock.Setup(mapper => mapper.Map<AssignmentResponse>(assignment)).Returns(assignmentResponse);
 
             // Act
-            var result = await _assignmentService.InsertAsync(assignmentDto, "creator");
+            var result = await _assignmentService.InsertAsync(assignmentDto, "creator", 1);
 
             // Assert
             Assert.That(result, Is.EqualTo(assignmentResponse));
