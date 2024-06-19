@@ -34,6 +34,16 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("AssetManager");
 builder.Services.AddDbContext<AssetContext>(options => options.UseSqlServer(connectionString));
 
+//builder.Services.AddDbContext<AssetContext>(options =>
+//    options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+//    {
+//        sqlOptions.EnableRetryOnFailure(
+//            maxRetryCount: 5, // Maximum number of retry attempts
+//            maxRetryDelay: TimeSpan.FromSeconds(30), // Maximum delay between retries
+//            errorNumbersToAdd: null // Additional error numbers to retry on
+//        );
+//    }));
+
 //Add Mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
