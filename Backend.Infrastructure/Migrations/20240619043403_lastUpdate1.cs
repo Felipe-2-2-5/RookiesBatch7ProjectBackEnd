@@ -60,6 +60,15 @@ namespace Backend.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
+               name: "Assetcode",
+               table: "Assets",
+               type: "nvarchar(6)",
+               maxLength: 6,
+               nullable: false,
+               oldClrType: typeof(string),
+               oldType: "nvarchar(10)",
+               oldMaxLength: 10);
+            migrationBuilder.AlterColumn<string>(
                 name: "Note",
                 table: "Assignments",
                 type: "nvarchar(20)",

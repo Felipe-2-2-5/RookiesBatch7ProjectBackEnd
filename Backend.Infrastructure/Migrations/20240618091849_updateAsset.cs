@@ -12,12 +12,6 @@ namespace Backend.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-               name: "Location",
-               table: "Assets",
-               type: "int",
-               nullable: false,
-               defaultValue: 0);
 
             migrationBuilder.DeleteData(
                 table: "Users",
@@ -58,9 +52,6 @@ namespace Backend.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-             name: "Location",
-             table: "Assets");
 
             migrationBuilder.AlterColumn<string>(
                 name: "AssetName",

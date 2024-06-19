@@ -11,9 +11,9 @@ namespace Backend.Application.DTOs.AuthDTOs
 
         public string LastName { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
-        public DateTime JoinedDate { get; set; }
+        public DateTime? JoinedDate { get; set; }
 
         public Gender Gender { get; set; }
 
