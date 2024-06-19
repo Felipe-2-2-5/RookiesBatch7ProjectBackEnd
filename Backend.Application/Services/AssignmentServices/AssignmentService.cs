@@ -3,6 +3,7 @@ using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
+using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,44 +38,35 @@ public class AssignmentService : IAssignmentService
         return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
 
-    public async Task<AssignmentResponse> InsertAsync(AssignmentDTO dto, string createName)
+    public async Task<AssignmentResponse> InsertAsync(AssignmentDTO dto, string createName, int assignedById)
     {
-        //try
-        //{
-        //    var assignment = _mapper.Map<Assignment>(dto);
-        //    assignment.CreatedBy = createName;
-        //    assignment.CreatedAt = DateTime.Now;
-        //    await _assignmentRepository.InsertAsync(assignment);
-
-        //    var returnAssignment = await FindAssignmentByAssetIdAsync(assignment.AssetId);
-        //    var res = _mapper.Map<AssignmentResponse>(returnAssignment);
-        //    return res;
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw new Exception($"An error occurred while create new assignment: {ex.Message}", ex);
-        //}
-
+        
         try
         {
+            var existingAssignmentByAsset = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
+            if (existingAssignmentByAsset != null)
+            {
+                throw new Exception("This asset is already assigned to a user.");
+            }
+            var existingAssignmentByUser = await _assignmentRepository.FindAssignmentByAssignedToId(dto.AssignedToId);
+            if (existingAssignmentByUser != null)
+            {
+                throw new Exception("This user is already assigned to an asset.");
+            }
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.CreatedBy = createName;
             assignment.CreatedAt = DateTime.Now;
+            assignment.State = AssignmentState.Waiting;
+            assignment.AssignedById = assignedById;
             await _assignmentRepository.InsertAsync(assignment);
 
             var returnAssignment = await FindAssignmentByAssetIdAsync(assignment.AssetId);
             var res = _mapper.Map<AssignmentResponse>(returnAssignment);
             return res;
         }
-        catch (DbUpdateException dbEx)
-        {
-            // Log the detailed error message
-            var errorMessage = dbEx.InnerException?.Message ?? dbEx.Message;
-            throw new Exception($"An error occurred while saving the entity changes: {errorMessage}", dbEx);
-        }
         catch (Exception ex)
         {
-            throw new Exception($"An error occurred while create new assignment: {ex.Message}", ex);
+            throw new Exception($"Error {ex.Message}", ex);
         }
     }
 }

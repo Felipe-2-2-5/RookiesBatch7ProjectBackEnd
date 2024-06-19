@@ -1,6 +1,7 @@
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.Services.AssignmentServices;
+using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,18 @@ public class AssignmentController : ControllerBase
 {
     private readonly IAssignmentService _assignmentService;
     private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+    private int AssignedById
+    {
+        get
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+            {
+                return userId;
+            }
+            throw new Exception("User ID is not a valid integer.");
+        }
+    }
     public AssignmentController(IAssignmentService assignmentService)
     {
         _assignmentService = assignmentService;
@@ -47,7 +60,7 @@ public class AssignmentController : ControllerBase
     [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> InserAsync(AssignmentDTO dto)
     {
-        var res = await _assignmentService.InsertAsync(dto, UserName);
+        var res = await _assignmentService.InsertAsync(dto, UserName, AssignedById);
         return Ok(res);
     }
 }

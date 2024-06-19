@@ -1,4 +1,5 @@
 ﻿using Backend.Domain.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Domain.Entities
 {
@@ -13,10 +14,13 @@ namespace Backend.Domain.Entities
         public AssignmentState State { get; set; }
 
         public int AssetId { get; set; }
+        [StringLength(maximumLength: 600)]
+        public string Note { get; set; }
         public Asset Asset { get; set; }
         
         public User AssignedTo { get; set; }
         
         public User AssignedBy { get; set; }
+        
     }
 }
