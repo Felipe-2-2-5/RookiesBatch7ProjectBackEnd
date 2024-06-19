@@ -33,13 +33,14 @@ namespace Backend.Infrastructure.Repositories
             {
                 query = request.State == "Accepted" ? query.Where(p => p.State == AssignmentState.Accepted) : query.Where(p => p.State == AssignmentState.Waiting);
             }
-            if (request.FromDate != DateTime.MinValue)
+            if (request.FromDate.HasValue && request.FromDate.Value != DateTime.MinValue)
             {
-                query = query.Where(p => p.AssignedDate >= request.FromDate);
+                query = query.Where(p => p.AssignedDate >= request.FromDate.Value);
             }
-            if (request.ToDate != DateTime.MinValue)
+
+            if (request.ToDate.HasValue && request.ToDate.Value != DateTime.MinValue)
             {
-                query = query.Where(p => p.AssignedDate <= request.ToDate);
+                query = query.Where(p => p.AssignedDate <= request.ToDate.Value);
             }
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
