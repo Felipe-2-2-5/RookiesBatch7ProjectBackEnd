@@ -27,13 +27,13 @@ namespace Backend.Infrastructure.Data
                 .HasOne(a => a.AssignedTo)
                 .WithMany()
                 .HasForeignKey(a => a.AssignedToId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.AssignedBy)
                 .WithMany()
                 .HasForeignKey(a => a.AssignedById)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.Asset)
