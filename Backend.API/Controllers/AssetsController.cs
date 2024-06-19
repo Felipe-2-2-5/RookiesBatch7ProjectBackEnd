@@ -1,4 +1,5 @@
-﻿using Backend.Application.DTOs.AssetDTOs;
+﻿using Backend.Application.Common.Paging;
+using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.Services.AssetServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +15,12 @@ namespace Backend.API.Controllers
         private readonly IAssetService _assetService;
         private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
         private Location Location => (Location)Enum.Parse(typeof(Location), User.Claims.First(c => c.Type == "Location").Value);
+
         public AssetsController(IAssetService assetService)
         {
             _assetService = assetService;
         }
+
         [HttpPost]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(AssetDTO dto)
@@ -25,11 +28,20 @@ namespace Backend.API.Controllers
             var res = await _assetService.InsertAsync(dto, UserName, Location);
             return Ok(res);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var asset = await _assetService.GetByIdAsync(id);
             return Ok(asset);
+        }
+
+        [HttpPost("filter")]
+        [Authorize]
+        public async Task<IActionResult> GetFilterAsync(AssetFilterRequest request)
+        {
+            var res = await _assetService.GetFilterAsync(request, Location);
+            return Ok(res);
         }
     }
 }

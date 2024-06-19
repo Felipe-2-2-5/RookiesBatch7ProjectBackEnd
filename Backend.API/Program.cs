@@ -1,6 +1,7 @@
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AssetDTOs;
+using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.DTOs.CategoryDTOs;
 using Backend.Application.IRepositories;
@@ -32,6 +33,16 @@ builder.Services.AddSwaggerGen();
 //Db connection
 var connectionString = builder.Configuration.GetConnectionString("AssetManager");
 builder.Services.AddDbContext<AssetContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddDbContext<AssetContext>(options =>
+//    options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+//    {
+//        sqlOptions.EnableRetryOnFailure(
+//            maxRetryCount: 5, // Maximum number of retry attempts
+//            maxRetryDelay: TimeSpan.FromSeconds(30), // Maximum delay between retries
+//            errorNumbersToAdd: null // Additional error numbers to retry on
+//        );
+//    }));
 
 //Add Mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -104,6 +115,7 @@ builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
 builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
+builder.Services.AddTransient<IValidator<AssignmentDTO>, AssignmentValidator>();
 
 var app = builder.Build();
 

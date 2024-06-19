@@ -4,6 +4,7 @@ using Backend.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    partial class AssetContextModelSnapshot : ModelSnapshot
+    [Migration("20240619043159_lastupdate")]
+    partial class lastupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,8 +125,8 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<string>("Note")
                         .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("nvarchar(600)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -229,7 +232,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "$2a$11$JJAoazqMKsAQeRyHXAVmvOVWmpCyWHWC/Z8u.HbX35JOHVNagSKBa",
+                            Password = "$2a$11$PMgBGlVs7DU.lamy9TnHiOEAeOkQMjf9VppQG2pl0DduQ.GDQ11iG",
                             StaffCode = "SD0001",
                             Type = 1,
                             UserName = "johnd"
@@ -244,7 +247,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "$2a$11$TFLqU9booOUTVq3PWAhiguPtuqtFtbMFNGw4ZOzXabwzAJ3KLsrCq",
+                            Password = "$2a$11$t3pCujUie5QcErIp.W.o2ubkg4bXrBz0/WLr/oiuFh6tjM.7V4BMi",
                             StaffCode = "SD0002",
                             Type = 0,
                             UserName = "janes"
@@ -259,7 +262,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "$2a$11$KYBG8L1w5xnaFTmAz4UkseO1q/qGA70ci/uEJVCL71LTP7eUCO4oe",
+                            Password = "$2a$11$wtQABknmm5j2XrF1Q1m0lujanNgnV3xpu1lVLDDUmDUfSdD2GSzX6",
                             StaffCode = "SD0003",
                             Type = 1,
                             UserName = "michaelb"
@@ -274,7 +277,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "$2a$11$wQy.k8NidS81BzQ5d0jXc.ZEHImVzw71Wsl/dPhwipxBNkTpz2Pzq",
+                            Password = "$2a$11$fmZlG31IHBp0w.20EsgC4.UliWE4HuitwGceusVp4oPD3kgCiUpge",
                             StaffCode = "SD0004",
                             Type = 0,
                             UserName = "emilyj"
@@ -289,7 +292,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "$2a$11$qLipztaWwK3bIyubY5R4WuWgZ4OGKTTdiV8Ka1xrNBHRGu5F7K/eW",
+                            Password = "$2a$11$8nJItDxFG5YdYbEplofuMORKGilnNLdFwWGvR9cHMCYMF69YOjPpG",
                             StaffCode = "SD0005",
                             Type = 0,
                             UserName = "davidw"
