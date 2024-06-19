@@ -33,7 +33,15 @@ namespace Backend.Application.Services.AssetServices
             asset.CreatedBy = createName;
             asset.Location = location;
             await _assetRepository.GenerateAssetInfo(asset);
-            await _assetRepository.InsertAsync(asset);
+            try
+            {
+                await _assetRepository.InsertAsync(asset);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             asset = await _assetRepository.FindAssetByCodeAsync(asset.AssetCode);
             var dto = _mapper.Map<AssetResponseDTO>(asset);
             return dto;

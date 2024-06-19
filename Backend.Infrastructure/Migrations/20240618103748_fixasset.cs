@@ -12,12 +12,17 @@ namespace Backend.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Location",
+                table: "Assets");
             migrationBuilder.AddColumn<int>(
                name: "Location",
                table: "Assets",
                type: "int",
                nullable: false,
                defaultValue: 0);
+
+
 
             migrationBuilder.InsertData(
                 table: "Users",
@@ -35,6 +40,20 @@ namespace Backend.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<string>(
+               name: "AssetCode",
+               table: "Assets",
+               type: "nvarchar(6)",
+               maxLength: 6,
+               nullable: false,
+               oldClrType: typeof(string),
+               oldType: "nvarchar(10)",
+               oldMaxLength: 10);
+
+            migrationBuilder.DropColumn(
+                name: "Location",
+                table: "Assets");
+
             migrationBuilder.DeleteData(
                 table: "Users",
                 keyColumn: "Id",
