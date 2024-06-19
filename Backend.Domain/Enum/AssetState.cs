@@ -4,7 +4,7 @@
     {
         Available = 0,
         NotAvailable = 1,
-        WatingForRecycling = 2,
+        WaitingForRecycling = 2,
         Recycled = 3,
         Assigned = 4
     }
