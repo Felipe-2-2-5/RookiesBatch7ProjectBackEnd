@@ -48,11 +48,6 @@ public class AssignmentService : IAssignmentService
             {
                 throw new Exception("This asset is already assigned to a user.");
             }
-            var existingAssignmentByUser = await _assignmentRepository.FindAssignmentByAssignedToId(dto.AssignedToId);
-            if (existingAssignmentByUser != null)
-            {
-                throw new Exception("This user is already assigned to an asset.");
-            }
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.CreatedBy = createName;
             assignment.CreatedAt = DateTime.Now;

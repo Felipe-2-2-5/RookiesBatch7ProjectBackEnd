@@ -19,10 +19,6 @@ namespace Backend.Application.Validations
                 .GreaterThan(0).WithMessage("AssignedToId must be a positive integer.")
                 .NotEmpty().WithMessage("AssignedToId is required.");
 
-            RuleFor(x => x.AssignedById)
-                .GreaterThan(0).WithMessage("AssignedById must be a positive integer.")
-                .NotEmpty().WithMessage("AssignedById is required.");
-
             RuleFor(x => x.AssignedDate)
                 .NotEmpty().WithMessage("Assigned date is required.")
                 .Must(BeAValidDate).WithMessage("Assigned date must be in the format dd/MM/yyyy.")

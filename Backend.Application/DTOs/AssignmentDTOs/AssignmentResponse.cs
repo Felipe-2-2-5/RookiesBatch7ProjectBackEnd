@@ -10,5 +10,6 @@ namespace Backend.Application.DTOs.AssignmentDTOs
         public DateTime AssignedDate { get; set; }
         public AssignmentState State { get; set; }
         public int AssetId { get; set; }
+        public string? Note { get; set; }
     }
 }

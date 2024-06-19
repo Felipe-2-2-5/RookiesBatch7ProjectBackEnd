@@ -64,13 +64,12 @@ namespace Backend.Tests.ServiceTests
         public async Task InsertAsync_WhenAssignmentIsValid_ReturnsAssignmentResponse()
         {
             // Arrange
-            var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 4 };
+            var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 1 };
             var assignment = new Assignment { AssetId = 1, AssignedToId = 1 };
-            var assignmentResponse = new AssignmentResponse { AssetId = 3, AssignedToId = 4 };
+            var assignmentResponse = new AssignmentResponse { AssetId = 3, AssignedToId = 1 };
 
             _mapperMock.Setup(mapper => mapper.Map<Assignment>(assignmentDto)).Returns(assignment);
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignmentDto.AssetId)).ReturnsAsync((Assignment)null);
-            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssignedToId(assignmentDto.AssignedToId)).ReturnsAsync((Assignment)null);
             _assignmentRepoMock.Setup(repo => repo.InsertAsync(assignment)).Returns(Task.CompletedTask);
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignment.AssetId)).ReturnsAsync(assignment);
             _mapperMock.Setup(mapper => mapper.Map<AssignmentResponse>(assignment)).Returns(assignmentResponse);
