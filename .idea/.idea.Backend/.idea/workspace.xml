@@ -10,24 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Common/Paging/AssignmentFilterRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Common/Paging/BaseFilterRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentDTO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Mapper/AssignmentProfile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Services/Assignment/AssignmentService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Services/Assignment/IAssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Common/Paging/AssignmentFilterRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Common/Paging/AssignmentFilterRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c765e47ec58cf89220cd5779fc5cce70b01abab88edf4ed2b5deaba1244c610/IValidator.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -37,25 +32,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.34246576",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\Acer\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\Acer\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\Acer\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\Acer\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\Acer\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\Acer\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Backend.API: https">
     <configuration name="Backend.API: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Backend.API/Backend.API.csproj" />
@@ -116,6 +112,8 @@
       <workItem from="1718534465709" duration="5109000" />
       <workItem from="1718591873923" duration="12237000" />
       <workItem from="1718631713925" duration="5425000" />
+      <workItem from="1718785573209" duration="1629000" />
+      <workItem from="1718791876043" duration="13250000" />
     </task>
     <servers />
   </component>
@@ -124,5 +122,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1" memberName="DebugView" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

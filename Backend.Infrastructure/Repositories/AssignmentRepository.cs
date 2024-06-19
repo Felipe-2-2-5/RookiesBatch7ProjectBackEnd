@@ -14,9 +14,20 @@ namespace Backend.Infrastructure.Repositories
         public AssignmentRepository(AssetContext context) : base(context)
         {
         }
+        public override async Task<Assignment?> GetByIdAsync(int id)
+        {
+            return await _context.Assignments
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy)
+                .Include(a => a.Asset)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == true);
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false)
+                .Include(a => a.Asset)
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
