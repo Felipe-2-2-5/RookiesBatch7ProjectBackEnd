@@ -25,5 +25,7 @@ namespace Backend.Application.DTOs.AssignmentDTOs
         public UserResponse? AssignedBy { get; set; }
         
         public AssetResponseDTO? Asset { get; set; }
+        public int AssetId { get; set; }
+        public string? Note { get; set; }
     }
 }

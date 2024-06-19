@@ -71,10 +71,5 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.Assignments.AsNoTracking().FirstOrDefaultAsync(a => a.AssetId == assetId);
         }
-
-        public async Task<Assignment?> FindAssignmentByAssignedToId(int assignedToId)
-        {
-            return await _context.Assignments.AsNoTracking().FirstOrDefaultAsync(a => a.AssignedToId == assignedToId);
-        }
     }
 }
