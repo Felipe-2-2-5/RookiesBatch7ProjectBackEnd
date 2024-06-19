@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -17,10 +17,10 @@ namespace Backend.API.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet("filter")]
-        public async Task<IActionResult> GetFilterAsync(string? searchTeam)
+        [HttpPost("filter")]
+        public async Task<IActionResult> GetFilterAsync([FromBody] string? searchTerm)
         {
-            var res = await _categoryService.GetFilterAsync(searchTeam);
+            var res = await _categoryService.GetFilterAsync(searchTerm);
             return Ok(res);
         }
         [HttpPost]

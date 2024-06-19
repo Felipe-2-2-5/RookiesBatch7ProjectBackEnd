@@ -6,6 +6,7 @@ namespace Backend.Application.IRepositories
 {
     public interface IAssetRepository : IBaseRepository<Asset>
     {
+        Task<Asset?> FindAssetByCodeAsync(string code);
         Task<Asset> GenerateAssetInfo(Asset asset);
         Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location);
     }

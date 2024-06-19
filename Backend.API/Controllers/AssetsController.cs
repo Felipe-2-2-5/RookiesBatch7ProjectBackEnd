@@ -25,8 +25,8 @@ namespace Backend.API.Controllers
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(AssetDTO dto)
         {
-            await _assetService.InsertAsync(dto, UserName, Location);
-            return Ok();
+            var res = await _assetService.InsertAsync(dto, UserName, Location);
+            return Ok(res);
         }
 
         [HttpGet("{id}")]

@@ -36,6 +36,8 @@ namespace Backend.Infrastructure.Repositories
             asset.AssetCode = assetCode;
             return asset;
         }
+        public async Task<Asset?> FindAssetByCodeAsync(string code) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
+
 
         public async Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location)
         {
