@@ -1,6 +1,7 @@
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AssetDTOs;
+using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.DTOs.CategoryDTOs;
 using Backend.Application.IRepositories;
@@ -104,6 +105,7 @@ builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
 builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
+builder.Services.AddTransient<IValidator<AssignmentDTO>, AssignmentValidator>();
 
 var app = builder.Build();
 
