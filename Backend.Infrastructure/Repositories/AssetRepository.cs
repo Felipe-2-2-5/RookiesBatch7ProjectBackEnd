@@ -70,20 +70,15 @@ namespace Backend.Infrastructure.Repositories
             return new(items, totalCount);
         }
 
-        private static Expression<Func<Asset, object>> GetSortProperty(AssetFilterRequest request)
-        {
-            var sortColumn = request.SortColumn?.Trim().ToLower();
-
-            Expression<Func<Asset, object>> sortProperty = sortColumn switch
-            {
-                "assetcode" => asset => asset.AssetCode,
-                "assetname" => asset => asset.AssetName,
-                "category" => asset => asset.Category,
-                "state" => asset => asset.State
-            };
-
-            return sortProperty;
-        }
+        private static Expression<Func<Asset, object>> GetSortProperty(AssetFilterRequest request) =>
+       request.SortColumn?.ToLower() switch
+       {
+           "assetcode" => asset => asset.AssetCode,
+           "assetname" => asset => asset.AssetName,
+           "category" => asset => asset.Category,
+           "state" => asset => asset.State,
+           _ => user => user.AssetName
+       };
     }
 
 }
