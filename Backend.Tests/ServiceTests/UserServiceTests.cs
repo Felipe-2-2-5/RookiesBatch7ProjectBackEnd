@@ -30,7 +30,7 @@ namespace Backend.Tests.ServiceTests
             _tokenServiceMock = new Mock<ITokenService>();
             _mapperMock = new Mock<IMapper>();
             _validatorMock = new Mock<IValidator<UserDTO>>();
-            userService = new UserService(_userRepoMock.Object, tokenServiceMock.Object, mapperMock.Object, validatorMock.Object);
+            _userService = new UserService(_userRepoMock.Object, _tokenServiceMock.Object, _mapperMock.Object, _validatorMock.Object);
         }
 
         [Test]
