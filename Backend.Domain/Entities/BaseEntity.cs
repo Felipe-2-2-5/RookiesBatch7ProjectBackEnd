@@ -12,6 +12,6 @@ namespace Backend.Domain.Entities
         [StringLength(maximumLength: 30)]
         public string? ModifiedBy { get; set; }
         public DateTime? ModifiedAt { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
     }
 }
