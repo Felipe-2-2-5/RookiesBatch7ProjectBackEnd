@@ -14,11 +14,14 @@ public class AssignmentService : IAssignmentService
     private readonly IAssignmentRepository _assignmentRepository;
     private readonly IMapper _mapper;
     private readonly IAssetRepository _assetRepository;
-    public AssignmentService(IAssignmentRepository assignmentRepository, IMapper mapper, IAssetRepository assetRepository)
+    private readonly IUserRepository _userRepository;
+
+    public AssignmentService(IAssignmentRepository assignmentRepository, IMapper mapper, IAssetRepository assetRepository, IUserRepository userRepository)
     {
         _assignmentRepository = assignmentRepository;
         _mapper = mapper;
         _assetRepository = assetRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId)
@@ -42,9 +45,19 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResponse> InsertAsync(AssignmentDTO dto, string createName, int assignedById)
     {
-        
         try
         {
+            //asset is already assigned
+            var existingAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new InvalidOperationException("Asset not found");
+
+            if (existingAsset.State == AssetState.Assigned)
+            {
+                var assignmentAssigned = await FindAssignmentByAssetIdAsync(dto.AssetId);
+                var userAssigned = await _userRepository.GetByIdAsync(assignmentAssigned.AssignedToId);
+
+                throw new DataInvalidException($"Asset is already assigned to {userAssigned.UserName}");
+            }
+
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.CreatedBy = createName;
             assignment.CreatedAt = DateTime.Now;
@@ -53,7 +66,7 @@ public class AssignmentService : IAssignmentService
             await _assignmentRepository.InsertAsync(assignment);
 
             var assignedAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new InvalidOperationException("Asset not found");
-            assignedAsset.State = AssetState.Recycled;
+            assignedAsset.State = AssetState.Assigned;
             await _assetRepository.UpdateAsync(assignedAsset);
 
             var returnAssignment = await FindAssignmentByAssetIdAsync(assignment.AssetId);
