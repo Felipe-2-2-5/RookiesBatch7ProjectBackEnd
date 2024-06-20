@@ -7,5 +7,6 @@ namespace Backend.Application.IRepositories
         Task<Category?> FindCategoryByNameAsync(string name);
         Task<Category?> FindCategoryByPrefixAsync(string prefix);
         Task<IEnumerable<Category>> GetFilterAsync(string? searchTerm);
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
     }
 }

@@ -14,21 +14,33 @@ namespace Backend.Infrastructure.Repositories
         public AssignmentRepository(AssetContext context) : base(context)
         {
         }
+        public override async Task<Assignment?> GetByIdAsync(int id)
+        {
+            return await _context.Assignments
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy)
+                .Include(a => a.Asset)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == true);
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false)
+                .Include(a => a.Asset)
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
                 query = request.State == "Accepted" ? query.Where(p => p.State == AssignmentState.Accepted) : query.Where(p => p.State == AssignmentState.Waiting);
             }
-            if (request.FromDate != DateTime.MinValue)
+            if (request.FromDate.HasValue && request.FromDate.Value != DateTime.MinValue)
             {
-                query = query.Where(p => p.AssignedDate >= request.FromDate);
+                query = query.Where(p => p.AssignedDate >= request.FromDate.Value);
             }
-            if (request.ToDate != DateTime.MinValue)
+
+            if (request.ToDate.HasValue && request.ToDate.Value != DateTime.MinValue)
             {
-                query = query.Where(p => p.AssignedDate <= request.ToDate);
+                query = query.Where(p => p.AssignedDate <= request.ToDate.Value);
             }
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {

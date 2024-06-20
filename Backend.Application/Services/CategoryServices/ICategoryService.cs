@@ -6,5 +6,6 @@ namespace Backend.Application.Services.CategoryServices
     {
         Task<IEnumerable<CategoryResponseDTO>> GetFilterAsync(string? searchTerm);
         Task<CategoryResponseDTO> InsertAsync(CategoryDTO dto);
+        Task<IEnumerable<CategoryResponseDTO>> GetAllAsync();
     }
 }

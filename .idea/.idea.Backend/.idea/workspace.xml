@@ -10,28 +10,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Common/Paging/AssignmentFilterRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Common/Paging/BaseFilterRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentDTO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Mapper/AssignmentProfile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Services/Assignment/AssignmentService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend.Application/Services/Assignment/IAssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/DTOs/AssetDTOs/AssetResponseDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssetDTOs/AssetResponseDTO.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c765e47ec58cf89220cd5779fc5cce70b01abab88edf4ed2b5deaba1244c610/IValidator.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectId" id="2huZxpNOGJFpOXAp47JA2fpev8o" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -42,10 +36,12 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.34246576&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -116,13 +112,34 @@
       <workItem from="1718534465709" duration="5109000" />
       <workItem from="1718591873923" duration="12237000" />
       <workItem from="1718631713925" duration="5425000" />
+      <workItem from="1718785573209" duration="1629000" />
+      <workItem from="1718791876043" duration="24432000" />
+      <workItem from="1718849505969" duration="305000" />
     </task>
+    <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
+      <created>1718812892311</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718812892311</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="fix view assignment list and detailed assignment" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix view assignment list and detailed assignment" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1" memberName="DebugView" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

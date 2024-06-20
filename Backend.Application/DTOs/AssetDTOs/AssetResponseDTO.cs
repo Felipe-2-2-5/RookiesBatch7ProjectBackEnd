@@ -15,6 +15,5 @@ namespace Backend.Application.DTOs.AssetDTOs
         public DateTime InstalledDate { get; set; }
         public AssetState State { get; set; }
         public int AssignmentId { get; set; }
-        public ICollection<Assignment> Assignments { get; set; }
     }
 }
