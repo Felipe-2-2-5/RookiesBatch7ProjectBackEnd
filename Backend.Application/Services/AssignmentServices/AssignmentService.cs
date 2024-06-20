@@ -5,7 +5,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services.AssignmentServices;
 
@@ -48,14 +47,11 @@ public class AssignmentService : IAssignmentService
         try
         {
             //asset is already assigned
-            var existingAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new InvalidOperationException("Asset not found");
+            var assignedAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Asset not found");
 
-            if (existingAsset.State == AssetState.Assigned)
+            if (assignedAsset.State == AssetState.Assigned)
             {
-                var assignmentAssigned = await FindAssignmentByAssetIdAsync(dto.AssetId);
-                var userAssigned = await _userRepository.GetByIdAsync(assignmentAssigned.AssignedToId);
-
-                throw new DataInvalidException($"Asset is already assigned to {userAssigned.UserName}");
+                throw new DataInvalidException("Asassigned");
             }
 
             var assignment = _mapper.Map<Assignment>(dto);
@@ -65,7 +61,6 @@ public class AssignmentService : IAssignmentService
             assignment.AssignedById = assignedById;
             await _assignmentRepository.InsertAsync(assignment);
 
-            var assignedAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new InvalidOperationException("Asset not found");
             assignedAsset.State = AssetState.Assigned;
             await _assetRepository.UpdateAsync(assignedAsset);
 
