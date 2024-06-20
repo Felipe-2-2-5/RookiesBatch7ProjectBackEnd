@@ -38,21 +38,27 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<Asset?> FindAssetByCodeAsync(string code) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
 
+        public override async Task<Asset?> GetByIdAsync(int id)
+        {
+            return await _context.Assets
+                .Include(a => a.Category)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
 
         public async Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location)
         {
-            IQueryable<Asset> query = _table.Where(u => u.Location == location);
+            IQueryable<Asset> query = _table.Where(u => u.Location == location)
+                .Include(u => u.Category);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
-                query = (global::System.Object)request.State switch
+                query = request.State switch
                 {
                     "Available" => query.Where(p => p.State == AssetState.Available),
-                    "NotAvailable" => query.Where(p => p.State == AssetState.NotAvailable),
-                    "WaitingForRecycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
+                    "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
+                    "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
                     "Recycled" => query.Where(p => p.State == AssetState.Recycled),
-                    "Assigned" => query.Where(p => p.State == AssetState.Assigned),
-                    _ => throw new ArgumentException("Invalid state provided"),// Handle unknown state or throw exception if necessary
+                    "Assigned" => query.Where(p => p.State == AssetState.Assigned)
                 };
             }
 

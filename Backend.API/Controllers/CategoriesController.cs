@@ -27,8 +27,16 @@ namespace Backend.API.Controllers
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(CategoryDTO dto)
         {
-            await _categoryService.InsertAsync(dto);
-            return Ok();
+            var res = await _categoryService.InsertAsync(dto);
+            return Ok(res);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var categories = await _categoryService.GetAllAsync();
+            return Ok(categories);
+        }
+        
     }
 }

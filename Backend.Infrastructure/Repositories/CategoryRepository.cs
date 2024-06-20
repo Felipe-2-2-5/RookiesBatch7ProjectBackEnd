@@ -25,5 +25,9 @@ namespace Backend.Infrastructure.Repositories
         public async Task<Category?> FindCategoryByNameAsync(string name) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.Name == name);
         public async Task<Category?> FindCategoryByPrefixAsync(string prefix) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.Prefix == prefix);
 
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        {
+            return await _table.ToListAsync();
+        }
     }
 }
