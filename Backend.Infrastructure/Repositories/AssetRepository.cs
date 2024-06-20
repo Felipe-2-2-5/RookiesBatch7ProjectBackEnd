@@ -42,13 +42,15 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.Assets
                 .Include(a => a.Category)
+                .Include(a => a.Assignments)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location)
         {
             IQueryable<Asset> query = _table.Where(u => u.Location == location)
-                .Include(u => u.Category);
+                .Include(u => u.Category)
+                .Include(u => u.Assignments);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
