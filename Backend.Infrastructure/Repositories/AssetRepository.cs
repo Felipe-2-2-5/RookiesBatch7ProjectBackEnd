@@ -62,6 +62,11 @@ namespace Backend.Infrastructure.Repositories
                 };
             }
 
+            if (!string.IsNullOrWhiteSpace(request.Category))
+            {
+                query = query.Where(p => p.Category.Name == request.Category);
+            }
+
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(p => p.AssetCode.Contains(request.SearchTerm) || p.AssetName.Contains(request.SearchTerm));
@@ -77,14 +82,14 @@ namespace Backend.Infrastructure.Repositories
         }
 
         private static Expression<Func<Asset, object>> GetSortProperty(AssetFilterRequest request) =>
-       request.SortColumn?.ToLower() switch
-       {
-           "assetcode" => asset => asset.AssetCode,
-           "assetname" => asset => asset.AssetName,
-           "category.name" => asset => asset.Category.Name,
-           "state" => asset => asset.State,
-           _ => user => user.AssetName
-       };
+            request.SortColumn?.ToLower() switch
+            {
+                "assetcode" => asset => asset.AssetCode,
+                "assetname" => asset => asset.AssetName,
+                "category.name" => asset => asset.Category.Name,
+                "state" => asset => asset.State,
+                _ => user => user.AssetName
+            };
     }
 
 }
