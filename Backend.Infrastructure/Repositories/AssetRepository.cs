@@ -81,7 +81,7 @@ namespace Backend.Infrastructure.Repositories
        {
            "assetcode" => asset => asset.AssetCode,
            "assetname" => asset => asset.AssetName,
-           "category" => asset => asset.Category,
+           "category" => asset => asset.Category.Name,
            "state" => asset => asset.State,
            _ => user => user.AssetName
        };
