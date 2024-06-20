@@ -45,14 +45,13 @@ namespace Backend.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
-                query = (global::System.Object)request.State switch
+                query = request.State switch
                 {
                     "Available" => query.Where(p => p.State == AssetState.Available),
-                    "NotAvailable" => query.Where(p => p.State == AssetState.NotAvailable),
-                    "WaitingForRecycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
+                    "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
+                    "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
                     "Recycled" => query.Where(p => p.State == AssetState.Recycled),
-                    "Assigned" => query.Where(p => p.State == AssetState.Assigned),
-                    _ => throw new ArgumentException("Invalid state provided"),// Handle unknown state or throw exception if necessary
+                    "Assigned" => query.Where(p => p.State == AssetState.Assigned)
                 };
             }
 
