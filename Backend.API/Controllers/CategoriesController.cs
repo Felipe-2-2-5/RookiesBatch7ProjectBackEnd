@@ -30,5 +30,13 @@ namespace Backend.API.Controllers
             var res = await _categoryService.InsertAsync(dto);
             return Ok(res);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var categories = await _categoryService.GetAllAsync();
+            return Ok(categories);
+        }
+        
     }
 }
