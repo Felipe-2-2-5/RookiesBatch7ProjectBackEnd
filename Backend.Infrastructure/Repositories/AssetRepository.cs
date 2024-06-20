@@ -41,7 +41,8 @@ namespace Backend.Infrastructure.Repositories
 
         public async Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location)
         {
-            IQueryable<Asset> query = _table.Where(u => u.Location == location);
+            IQueryable<Asset> query = _table.Where(u => u.Location == location)
+                .Include(u => u.Category);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
