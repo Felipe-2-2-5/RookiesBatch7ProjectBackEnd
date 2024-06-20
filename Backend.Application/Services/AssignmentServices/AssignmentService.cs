@@ -13,10 +13,12 @@ public class AssignmentService : IAssignmentService
 {
     private readonly IAssignmentRepository _assignmentRepository;
     private readonly IMapper _mapper;
-    public AssignmentService(IAssignmentRepository assignmentRepository, IMapper mapper)
+    private readonly IAssetRepository _assetRepository;
+    public AssignmentService(IAssignmentRepository assignmentRepository, IMapper mapper, IAssetRepository assetRepository)
     {
         _assignmentRepository = assignmentRepository;
         _mapper = mapper;
+        _assetRepository = assetRepository;
     }
 
     public async Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId)
@@ -43,11 +45,6 @@ public class AssignmentService : IAssignmentService
         
         try
         {
-            var existingAssignmentByAsset = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
-            if (existingAssignmentByAsset != null)
-            {
-                throw new Exception("This asset is already assigned to a user.");
-            }
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.CreatedBy = createName;
             assignment.CreatedAt = DateTime.Now;
@@ -55,7 +52,12 @@ public class AssignmentService : IAssignmentService
             assignment.AssignedById = assignedById;
             await _assignmentRepository.InsertAsync(assignment);
 
+            var assignedAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new InvalidOperationException("Asset not found");
+            assignedAsset.State = AssetState.NotAvailable;
+            await _assetRepository.UpdateAsync(assignedAsset);
+
             var returnAssignment = await FindAssignmentByAssetIdAsync(assignment.AssetId);
+
             var res = _mapper.Map<AssignmentResponse>(returnAssignment);
             return res;
         }

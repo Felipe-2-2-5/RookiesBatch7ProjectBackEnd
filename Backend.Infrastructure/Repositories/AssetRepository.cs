@@ -38,22 +38,35 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<Asset?> FindAssetByCodeAsync(string code) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
 
+        public override async Task<Asset?> GetByIdAsync(int id)
+        {
+            return await _context.Assets
+                .Include(a => a.Category)
+                .Include(a => a.Assignments)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
 
         public async Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location)
         {
-            IQueryable<Asset> query = _table.Where(u => u.Location == location);
+            IQueryable<Asset> query = _table.Where(u => u.Location == location)
+                .Include(u => u.Category)
+                .Include(u => u.Assignments);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
-                query = (global::System.Object)request.State switch
+                query = request.State switch
                 {
                     "Available" => query.Where(p => p.State == AssetState.Available),
-                    "NotAvailable" => query.Where(p => p.State == AssetState.NotAvailable),
-                    "WaitingForRecycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
+                    "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
+                    "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
                     "Recycled" => query.Where(p => p.State == AssetState.Recycled),
                     "Assigned" => query.Where(p => p.State == AssetState.Assigned),
-                    _ => throw new ArgumentException("Invalid state provided"),// Handle unknown state or throw exception if necessary
                 };
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Category))
+            {
+                query = query.Where(p => p.Category.Name == request.Category);
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
@@ -71,14 +84,14 @@ namespace Backend.Infrastructure.Repositories
         }
 
         private static Expression<Func<Asset, object>> GetSortProperty(AssetFilterRequest request) =>
-       request.SortColumn?.ToLower() switch
-       {
-           "assetcode" => asset => asset.AssetCode,
-           "assetname" => asset => asset.AssetName,
-           "category" => asset => asset.Category,
-           "state" => asset => asset.State,
-           _ => user => user.AssetName
-       };
+            request.SortColumn?.ToLower() switch
+            {
+                "assetcode" => asset => asset.AssetCode,
+                "assetname" => asset => asset.AssetName,
+                "category" => asset => asset.Category.Name,
+                "state" => asset => asset.State,
+                _ => user => user.AssetName
+            };
     }
 
 }
