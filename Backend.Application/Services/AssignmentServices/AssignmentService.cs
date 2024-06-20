@@ -53,7 +53,7 @@ public class AssignmentService : IAssignmentService
             await _assignmentRepository.InsertAsync(assignment);
 
             var assignedAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new InvalidOperationException("Asset not found");
-            assignedAsset.State = AssetState.Recycled;
+            assignedAsset.State = AssetState.Assigned;
             await _assetRepository.UpdateAsync(assignedAsset);
 
             var returnAssignment = await FindAssignmentByAssetIdAsync(assignment.AssetId);
