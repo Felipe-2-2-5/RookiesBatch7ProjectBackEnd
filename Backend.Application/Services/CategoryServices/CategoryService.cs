@@ -58,5 +58,12 @@ namespace Backend.Application.Services.CategoryServices
             return dtos;
         }
 
+        public async Task<IEnumerable<CategoryResponseDTO>> GetAllAsync()
+        {
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            var dtos = _mapper.Map<IEnumerable<CategoryResponseDTO>>(categories);
+            return dtos;
+        }
+
     }
 }
