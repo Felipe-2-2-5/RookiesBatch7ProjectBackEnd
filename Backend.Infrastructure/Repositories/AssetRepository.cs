@@ -60,7 +60,7 @@ namespace Backend.Infrastructure.Repositories
                     "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
                     "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
                     "Recycled" => query.Where(p => p.State == AssetState.Recycled),
-                    "Assigned" => query.Where(p => p.State == AssetState.Assigned)
+                    "Assigned" => query.Where(p => p.State == AssetState.Assigned),
                 };
             }
 
@@ -88,7 +88,7 @@ namespace Backend.Infrastructure.Repositories
             {
                 "assetcode" => asset => asset.AssetCode,
                 "assetname" => asset => asset.AssetName,
-                "category.name" => asset => asset.Category.Name,
+                "category" => asset => asset.Category.Name,
                 "state" => asset => asset.State,
                 _ => user => user.AssetName
             };
