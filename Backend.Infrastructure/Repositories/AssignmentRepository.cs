@@ -59,11 +59,11 @@ namespace Backend.Infrastructure.Repositories
         private static Expression<Func<Assignment, object>> GetSortProperty(AssignmentFilterRequest request) =>
             request.SortColumn?.ToLower() switch
             {
-                "assetCode" => asset => asset.Asset.AssetCode,
-                "assetName" => asset => asset.Asset.AssetName,
-                "assignedTo" => asset => asset.AssignedTo.UserName,
-                "assignedBy" => asset => asset.AssignedBy.UserName,
-                "dateAssigned" => asset => asset.AssignedDate,
+                "code" => asset => asset.Asset.AssetCode,
+                "name" => asset => asset.Asset.AssetName,
+                "receiver" => asset => asset.AssignedTo.UserName,
+                "provider" => asset => asset.AssignedBy.UserName,
+                "date" => asset => asset.AssignedDate,
                 "state" => asset => asset.State,
                 _ => asset => asset.AssignedDate
             };
