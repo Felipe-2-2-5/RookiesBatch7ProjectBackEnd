@@ -38,6 +38,12 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<Asset?> FindAssetByCodeAsync(string code) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
 
+        public override async Task<Asset?> GetByIdAsync(int id)
+        {
+            return await _context.Assets
+                .Include(a => a.Category)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
 
         public async Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location)
         {
