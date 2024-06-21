@@ -4,6 +4,7 @@ using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Services.AssignmentServices;
 using Backend.Domain.Entities;
+using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
 using Moq;
 
@@ -16,6 +17,8 @@ namespace Backend.Tests.ServiceTests
         private Mock<IAssetRepository> _assetRepoMock;
         private Mock<IMapper> _mapperMock;
         private AssignmentService _assignmentService;
+        private Mock<IAssetRepository> _assetRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
 
         [SetUp]
         public void SetUp()
@@ -23,7 +26,14 @@ namespace Backend.Tests.ServiceTests
             _assignmentRepoMock = new Mock<IAssignmentRepository>();
             _assetRepoMock = new Mock<IAssetRepository>();
             _mapperMock = new Mock<IMapper>();
-            _assignmentService = new AssignmentService(_assignmentRepoMock.Object, _mapperMock.Object, _assetRepoMock.Object);
+            _assetRepoMock = new Mock<IAssetRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _assignmentService = new AssignmentService(
+                _assignmentRepoMock.Object,
+                _mapperMock.Object,
+                _assetRepoMock.Object,
+                _userRepoMock.Object
+            );
         }
 
         [Test]
@@ -61,19 +71,32 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 1 };
-            var assignment = new Assignment { AssetId = 1, AssignedToId = 1 };
+            var assignment = new Assignment { AssetId = 3, AssignedToId = 1 };
             var assignmentResponse = new AssignmentResponse { AssetId = 3, AssignedToId = 1 };
+            var asset = new Asset { Id = 3, State = AssetState.Available };
 
+            // Mocking the mapper
             _mapperMock.Setup(mapper => mapper.Map<Assignment>(assignmentDto)).Returns(assignment);
+
+            // Mocking the repository calls
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignmentDto.AssetId)).ReturnsAsync((Assignment)null);
-            _assignmentRepoMock.Setup(repo => repo.InsertAsync(assignment)).Returns(Task.CompletedTask);
-            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignment.AssetId)).ReturnsAsync(assignment);
-            _mapperMock.Setup(mapper => mapper.Map<AssignmentResponse>(assignment)).Returns(assignmentResponse);
+            _assignmentRepoMock.Setup(repo => repo.InsertAsync(It.IsAny<Assignment>())).Returns(Task.CompletedTask);
+            _assignmentRepoMock.Setup(repo => repo.FindLastestAssignment()).ReturnsAsync(assignment);
+
+            // Mocking the asset repository
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssetId)).ReturnsAsync(asset);
+            _assetRepoMock.Setup(repo => repo.UpdateAsync(It.IsAny<Asset>())).Returns(Task.CompletedTask);
+
+            // Mocking the mapper for response
+            _mapperMock.Setup(mapper => mapper.Map<AssignmentResponse>(It.IsAny<Assignment>())).Returns(assignmentResponse);
+
             // Act
             var result = await _assignmentService.InsertAsync(assignmentDto, "creator", 1);
 
             // Assert
             Assert.That(result, Is.EqualTo(assignmentResponse));
+            _assignmentRepoMock.Verify(repo => repo.InsertAsync(It.IsAny<Assignment>()), Times.Once);
+            _assetRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Asset>()), Times.Once);
         }
 
         [Test]
