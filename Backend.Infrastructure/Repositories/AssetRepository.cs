@@ -45,7 +45,11 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.Assets
                 .Include(a => a.Category)
-                .Include(a => a.Assignments).AsNoTracking()
+                .Include(a => a.Assignments)
+                    .ThenInclude(assignment => assignment.AssignedBy)
+                .Include(a => a.Assignments)
+                .ThenInclude(assignment => assignment.AssignedTo)
+                    .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
