@@ -1,5 +1,4 @@
-﻿using Backend.Domain.Entities;
-using Backend.Domain.Entity;
+﻿using Backend.Application.DTOs.CategoryDTOs;
 using Backend.Domain.Enum;
 
 namespace Backend.Application.DTOs.AssetDTOs
@@ -10,7 +9,7 @@ namespace Backend.Application.DTOs.AssetDTOs
         public string AssetCode { get; set; }
         public string AssetName { get; set; }
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public CategoryResponseDTO Category { get; set; }
         public string? Specification { get; set; }
         public DateTime InstalledDate { get; set; }
         public AssetState State { get; set; }
