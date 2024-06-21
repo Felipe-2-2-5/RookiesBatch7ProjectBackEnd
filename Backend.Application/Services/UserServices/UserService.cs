@@ -110,8 +110,7 @@ namespace Backend.Application.Services.UserServices
                 return new LoginResponse(false, "Invalid credentials");
             }
         }
-
-
+        
         public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request, Location location)
         {
             var res = await _userRepo.GetFilterAsync(request, location);
@@ -119,6 +118,22 @@ namespace Backend.Application.Services.UserServices
             return new(dtos, res.TotalCount);
 
         }
+        
+        public async Task DisableUserAsync(int userId)
+        {
+            var user = await _userRepo.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+            if (await _userRepo.HasActiveAssignmentsAsync(userId))
+            {
+                throw new InvalidOperationException("There are valid assignments belonging to this user. \nPlease close all assignments before disabling user.");
+            }
 
+            user.IsDeleted = true;
+            await _userRepo.UpdateAsync(user);
+            await _userRepo.SaveChangeAsync();
+        }
     }
 }

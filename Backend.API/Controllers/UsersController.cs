@@ -27,12 +27,14 @@ namespace Backend.API.Controllers
             var dto = await _userService.GetByIdAsync(id);
             return Ok(dto);
         }
+        
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> LoginAsync(LoginDTO dto)
         {
             var result = await _userService.LoginAsync(dto);
             return Ok(result);
         }
+        
         [HttpPost("change_password")]
         [Authorize]
         public async Task<ActionResult<LoginResponse>> ChangePasswordAsync(ChangePasswordDTO dto)
@@ -40,6 +42,7 @@ namespace Backend.API.Controllers
             var result = await _userService.ChangePasswordAsync(dto);
             return Ok(result);
         }
+        
         [HttpPost("filter")]
         [Authorize]
         public async Task<IActionResult> GetFilterAsync(UserFilterRequest request)
@@ -47,12 +50,21 @@ namespace Backend.API.Controllers
             var res = await _userService.GetFilterAsync(request, Location);
             return Ok(res);
         }
+        
         [HttpPost]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(UserDTO dto)
         {
             var res = await _userService.InsertAsync(dto, UserName);
             return Ok(res);
+        }
+        
+        [HttpPut("disable/{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> DisableUserAsync(int id)
+        {
+            await _userService.DisableUserAsync(id);
+            return Ok();
         }
     }
 
