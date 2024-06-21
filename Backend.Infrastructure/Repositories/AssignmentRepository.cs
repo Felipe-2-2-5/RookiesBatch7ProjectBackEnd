@@ -79,7 +79,12 @@ namespace Backend.Infrastructure.Repositories
 
         public async Task<Assignment?> FindLastestAssignment()
         {
-            return await _context.Assignments.OrderByDescending(a => a.Id).FirstOrDefaultAsync();
+            return await _context.Assignments
+                            .Include(a => a.Asset)
+                            .Include(a => a.AssignedTo)
+                            .Include(a => a.AssignedBy)
+                            .OrderByDescending(a => a.Id)
+                            .AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }
