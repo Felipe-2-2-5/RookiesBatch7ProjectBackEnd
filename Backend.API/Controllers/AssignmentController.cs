@@ -58,7 +58,7 @@ public class AssignmentController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = nameof(Role.Admin))]
-    public async Task<IActionResult> InserAsync(AssignmentDTO dto)
+    public async Task<IActionResult> InsertAsync(AssignmentDTO dto)
     {
         var res = await _assignmentService.InsertAsync(dto, UserName, AssignedById);
         return Ok(res);
