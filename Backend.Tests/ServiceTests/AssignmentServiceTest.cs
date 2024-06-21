@@ -6,13 +6,7 @@ using Backend.Application.Services.AssignmentServices;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
-using FluentValidation;
-using FluentValidation.Results;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Backend.Tests.ServiceTests
 {
@@ -20,6 +14,7 @@ namespace Backend.Tests.ServiceTests
     public class AssignmentServiceTests
     {
         private Mock<IAssignmentRepository> _assignmentRepoMock;
+        private Mock<IAssetRepository> _assetRepoMock;
         private Mock<IMapper> _mapperMock;
         private AssignmentService _assignmentService;
         private Mock<IAssetRepository> _assetRepoMock;
@@ -29,6 +24,7 @@ namespace Backend.Tests.ServiceTests
         public void SetUp()
         {
             _assignmentRepoMock = new Mock<IAssignmentRepository>();
+            _assetRepoMock = new Mock<IAssetRepository>();
             _mapperMock = new Mock<IMapper>();
             _assetRepoMock = new Mock<IAssetRepository>();
             _userRepoMock = new Mock<IUserRepository>();

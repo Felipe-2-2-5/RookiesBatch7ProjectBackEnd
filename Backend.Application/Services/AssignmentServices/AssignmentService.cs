@@ -5,7 +5,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services.AssignmentServices;
 

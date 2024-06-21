@@ -14,6 +14,7 @@ namespace Backend.Infrastructure.Repositories
         public AssetRepository(AssetContext dbContext) : base(dbContext)
         {
         }
+
         public async Task<Asset> GenerateAssetInfo(Asset asset)
         {
             var category = await _context.Categories.FindAsync(asset.CategoryId);
@@ -36,13 +37,19 @@ namespace Backend.Infrastructure.Repositories
             asset.AssetCode = assetCode;
             return asset;
         }
-        public async Task<Asset?> FindAssetByCodeAsync(string code) => await _table.AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
+        public async Task<Asset?> FindAssetByCodeAsync(string code) =>
+            await _table.Include(a => a.Category)
+                .Include(a => a.Assignments).AsNoTracking().FirstOrDefaultAsync(u => u.AssetCode == code);
 
         public override async Task<Asset?> GetByIdAsync(int id)
         {
             return await _context.Assets
                 .Include(a => a.Category)
                 .Include(a => a.Assignments)
+                    .ThenInclude(assignment => assignment.AssignedBy)
+                .Include(a => a.Assignments)
+                .ThenInclude(assignment => assignment.AssignedTo)
+                    .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -62,6 +69,10 @@ namespace Backend.Infrastructure.Repositories
                     "Recycled" => query.Where(p => p.State == AssetState.Recycled),
                     "Assigned" => query.Where(p => p.State == AssetState.Assigned),
                 };
+            }
+            else
+            {
+                query.Where(p => p.State == AssetState.Available || p.State == AssetState.NotAvailable || p.State == AssetState.Assigned);
             }
 
             if (!string.IsNullOrWhiteSpace(request.Category))
