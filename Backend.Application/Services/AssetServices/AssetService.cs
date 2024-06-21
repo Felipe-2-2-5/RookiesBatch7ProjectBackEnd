@@ -47,6 +47,41 @@ namespace Backend.Application.Services.AssetServices
             var dto = _mapper.Map<AssetResponseDTO>(asset);
             return dto;
         }
+        public async Task<AssetResponseDTO> UpdateAsync(int id, AssetDTO assetDTO, string updatedName)
+        {
+            var validationResult = await _validator.ValidateAsync(assetDTO);
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new DataInvalidException(string.Join(", ", errors));
+            }
+            var asset = await _assetRepository.GetByIdAsync(id);
+            if (asset == null)
+            {
+                throw new NotFoundException();
+            }
+            {
+                asset.AssetName = assetDTO.AssetName;
+                asset.Specification = assetDTO.Specification;
+                asset.InstalledDate = (DateTime)assetDTO.InstalledDate;
+                asset.State = assetDTO.AssetState;
+                asset.ModifiedBy = updatedName;
+                asset.ModifiedAt = DateTime.Now;
+                asset.Category = null;
+                asset.Assignments = null;
+                try
+                {
+                    await _assetRepository.UpdateAsync(asset);
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message, ex);
+                }
+            }
+            var assetDto = _mapper.Map<AssetResponseDTO>(asset);
+            return assetDto;
+        }
         public async Task<AssetResponseDTO> GetByIdAsync(int id)
         {
             var asset = await _assetRepository.GetByIdAsync(id) ?? throw new NotFoundException();

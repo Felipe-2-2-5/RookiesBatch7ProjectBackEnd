@@ -29,6 +29,13 @@ namespace Backend.API.Controllers
             return Ok(res);
         }
 
+        [HttpPut("{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> UpdateAsync(int id, AssetDTO dto)
+        {
+            var res = await _assetService.UpdateAsync(id, dto, UserName);
+            return Ok(res);
+        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
@@ -37,7 +44,7 @@ namespace Backend.API.Controllers
         }
 
         [HttpPost("filter")]
-        [Authorize]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> GetFilterAsync(AssetFilterRequest request)
         {
             var res = await _assetService.GetFilterAsync(request, Location);
