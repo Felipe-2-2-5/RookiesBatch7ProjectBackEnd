@@ -10,8 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Backend.Domain/Exceptions/ForbiddenException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/IRepositories/IUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/IRepositories/IUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Middleware/ExceptionMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Middleware/ExceptionMiddleware.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/IUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +120,11 @@
       <workItem from="1718631713925" duration="5425000" />
       <workItem from="1718785573209" duration="1629000" />
       <workItem from="1718791876043" duration="24432000" />
-      <workItem from="1718849505969" duration="12177000" />
+      <workItem from="1718849505969" duration="13711000" />
+      <workItem from="1718888480129" duration="4424000" />
+      <workItem from="1718936129290" duration="3667000" />
+      <workItem from="1718959346741" duration="8349000" />
+      <workItem from="1718988034836" duration="1542000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
