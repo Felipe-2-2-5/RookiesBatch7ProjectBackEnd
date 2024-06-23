@@ -47,7 +47,7 @@ namespace Backend.Application.Middleware
             }
             catch (ForbiddenException ex)
             {
-                await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status403Forbidden);
+                await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status405MethodNotAllowed);
 
             }
 
