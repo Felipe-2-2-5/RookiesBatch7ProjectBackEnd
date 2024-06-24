@@ -11,4 +11,5 @@ public interface IAssignmentService
     Task<PaginationResponse<AssignmentResponse>> GetFilterAsync(AssignmentFilterRequest request);
     Task<AssignmentResponse> InsertAsync(AssignmentDTO dto, string createName, int assignedById);
     Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId);
+    Task<AssignmentResponse> UpdateAsync(AssignmentDTO dto, int id, string modifiedName);
 }

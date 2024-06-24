@@ -74,17 +74,24 @@ namespace Backend.Infrastructure.Repositories
                             .Include(a => a.Asset)
                             .Include(a => a.AssignedTo)
                             .Include(a => a.AssignedBy)
-                            .AsNoTracking().FirstOrDefaultAsync();
+                            .AsNoTracking().FirstOrDefaultAsync(a => a.AssetId == assetId);
         }
 
+        public async Task<Assignment?> FindAssignmentByAssetIdWithoutAsset(int id)
+        {
+            return await _context.Assignments
+                            .Include(a => a.AssignedTo)
+                            .Include(a => a.AssignedBy)
+                            .FirstOrDefaultAsync(a => a.Id == id);
+        }
         public async Task<Assignment?> FindLastestAssignment()
         {
             return await _context.Assignments
-                .Include(a => a.Asset)
-                .Include(a => a.AssignedTo)
-                .Include(a => a.AssignedBy)
-                .OrderByDescending(a => a.Id)
-                .AsNoTracking().FirstOrDefaultAsync();
+                            .Include(a => a.Asset)
+                            .Include(a => a.AssignedTo)
+                            .Include(a => a.AssignedBy)
+                            .OrderByDescending(a => a.Id)
+                            .AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }

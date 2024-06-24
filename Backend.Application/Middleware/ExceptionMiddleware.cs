@@ -39,7 +39,7 @@ namespace Backend.Application.Middleware
                 await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status404NotFound);
 
             }
-            
+
             catch (ConflictException ex)
             {
                 await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status409Conflict);
@@ -47,8 +47,11 @@ namespace Backend.Application.Middleware
             }
             catch (ForbiddenException ex)
             {
+                await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status403Forbidden);
+            }
+            catch (NotAllowedException ex)
+            {
                 await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status405MethodNotAllowed);
-
             }
 
             catch (Exception ex)
