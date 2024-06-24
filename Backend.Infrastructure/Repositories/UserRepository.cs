@@ -14,7 +14,7 @@ namespace Backend.Infrastructure.Repositories
         public UserRepository(AssetContext context) : base(context)
         {
         }
-        public async Task<User?> FindUserByUserNameAsync(string email) => await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == email);
+        public async Task<User?> FindUserByUserNameAsync(string email) => await _context.Users.AsNoTracking().Where(u => u.IsDeleted != true).FirstOrDefaultAsync(u => u.UserName == email);
         public async Task<User> GenerateUserInformation(User user)
         {
             int maxId = await _table.CountAsync();
@@ -55,7 +55,7 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request, Location location)
         {
-            IQueryable<User> query = _table.Where(u => u.Location == location);
+            IQueryable<User> query = _table.Where(u => u.Location == location && u.IsDeleted != true);
 
             if (!string.IsNullOrWhiteSpace(request.Type))
             {
