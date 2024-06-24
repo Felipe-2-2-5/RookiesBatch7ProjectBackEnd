@@ -18,5 +18,7 @@ namespace Backend.Application.Services.UserServices
         Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request, Location location);
 
         Task<UserResponse> InsertAsync(UserDTO dto, string createName);
+
+        Task DisableUserAsync(int userId);
     }
 }

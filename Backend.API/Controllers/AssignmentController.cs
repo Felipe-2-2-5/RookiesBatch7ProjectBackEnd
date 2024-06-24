@@ -63,4 +63,12 @@ public class AssignmentController : ControllerBase
         var res = await _assignmentService.InsertAsync(dto, UserName, AssignedById);
         return Ok(res);
     }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = nameof(Role.Admin))]
+    public async Task<IActionResult> UpdateAsync(AssignmentDTO dto, int id)
+    {
+        var res = await _assignmentService.UpdateAsync(dto, id, UserName);
+        return Ok(res);
+    }
 }

@@ -14,7 +14,6 @@ namespace Backend.Tests.ServiceTests
     public class AssignmentServiceTests
     {
         private Mock<IAssignmentRepository> _assignmentRepoMock;
-        private Mock<IAssetRepository> _assetRepoMock;
         private Mock<IMapper> _mapperMock;
         private AssignmentService _assignmentService;
         private Mock<IAssetRepository> _assetRepoMock;

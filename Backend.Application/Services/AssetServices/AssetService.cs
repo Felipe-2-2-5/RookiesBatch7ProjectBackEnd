@@ -95,5 +95,24 @@ namespace Backend.Application.Services.AssetServices
             var dtos = _mapper.Map<IEnumerable<AssetResponse>>(res.Data);
             return new(dtos, res.TotalCount);
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var asset = await _assetRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Asset with id {id} not found.");
+
+            // Check if the asset state is assigned
+            if (asset.State == AssetState.Assigned)
+            {
+                throw new DataInvalidException("Cannot delete asset because its state is 'Assigned'.");
+            }
+
+            // Check if the asset has assignments
+            if (asset.Assignments != null && asset.Assignments.Count != 0)
+            {
+                throw new DataInvalidException("Cannot delete asset because it has assignments.");
+            }
+
+            await _assetRepository.DeleteAsync(asset);
+        }
     }
 }

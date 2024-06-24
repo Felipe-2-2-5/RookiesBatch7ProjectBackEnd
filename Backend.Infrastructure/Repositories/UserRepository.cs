@@ -97,5 +97,10 @@ namespace Backend.Infrastructure.Repositories
             "type" => user => user.Type,
             _ => user => user.FirstName + " " + user.LastName
         };
+        public async Task<bool> HasActiveAssignmentsAsync(int userId)
+        {
+            return await _context.Assignments
+                .AnyAsync(a => a.AssignedToId == userId && a.State != AssignmentState.Accepted && a.State != AssignmentState.Waiting);
+        }
     }
 }

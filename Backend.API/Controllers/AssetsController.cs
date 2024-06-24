@@ -50,5 +50,14 @@ namespace Backend.API.Controllers
             var res = await _assetService.GetFilterAsync(request, Location);
             return Ok(res);
         }
+
+        // DELETE: api/asset/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            await _assetService.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }
