@@ -2,6 +2,7 @@
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
+using Backend.Domain.Exceptions;
 using Backend.Infrastructure.Data;
 using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -100,7 +101,8 @@ namespace Backend.Infrastructure.Repositories
         public async Task<bool> HasActiveAssignmentsAsync(int userId)
         {
             return await _context.Assignments
-                .AnyAsync(a => a.AssignedToId == userId && a.State != AssignmentState.Accepted && a.State != AssignmentState.Waiting);
+                .AnyAsync(a => a.AssignedToId == userId && (a.State == AssignmentState.Accepted || a.State == AssignmentState.Waiting));
         }
+
     }
 }

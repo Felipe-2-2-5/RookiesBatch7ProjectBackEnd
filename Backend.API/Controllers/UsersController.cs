@@ -66,6 +66,14 @@ namespace Backend.API.Controllers
             await _userService.DisableUserAsync(id);
             return Ok();
         }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> UpdateAsync(int id, UserDTO dto)
+        {
+            var res = await _userService.UpdateAsync(id, dto, UserName);
+            return Ok(res);
+        }
     }
 
 }
