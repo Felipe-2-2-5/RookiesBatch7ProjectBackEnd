@@ -7,9 +7,9 @@ namespace Backend.Application.DTOs.AuthDTOs
 {
     public class UserDTO
     {
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime? DateOfBirth { get; set; }

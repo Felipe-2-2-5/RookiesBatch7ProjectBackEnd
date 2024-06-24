@@ -135,5 +135,37 @@ namespace Backend.Application.Services.UserServices
             await _userRepo.UpdateAsync(user);
             await _userRepo.SaveChangeAsync();
         }
+
+        public async Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy)
+        {
+            var user = await _userRepo.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            var validationResult = await _validator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new DataInvalidException(string.Join(", ", errors));
+            }
+
+            _mapper.Map(dto, user);
+            user.ModifiedAt = DateTime.UtcNow;
+            user.ModifiedBy = modifiedBy;
+
+            try
+            {
+                await _userRepo.UpdateAsync(user);
+            }
+            catch (Exception ex)
+            {
+                throw new DataInvalidException(ex.Message);
+            }
+
+            var res = _mapper.Map<UserResponse>(user);
+            return res;
+        }
     }
 }
