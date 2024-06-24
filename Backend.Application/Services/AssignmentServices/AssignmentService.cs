@@ -98,10 +98,13 @@ public class AssignmentService : IAssignmentService
             }
 
             var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            oldAsset.Assignments = null;
             oldAsset.State = AssetState.Available;
             await _assetRepository.UpdateAsync(oldAsset);
 
             _mapper.Map(dto, assignment);
+            assignment.ModifiedBy = modifiedName;
+            assignment.ModifiedAt = DateTime.Now;
             await _assignmentRepository.UpdateAsync(assignment);
 
             newAsset.State = AssetState.Assigned;
