@@ -128,7 +128,7 @@ namespace Backend.Application.Services.UserServices
             }
             if (await _userRepo.HasActiveAssignmentsAsync(userId))
             {
-                throw new InvalidOperationException("There are valid assignments belonging to this user. \nPlease close all assignments before disabling user.");
+                throw new NotAllowedException("There are valid assignments belonging to this user. \nPlease close all assignments before disabling user.");
             }
 
             user.IsDeleted = true;
