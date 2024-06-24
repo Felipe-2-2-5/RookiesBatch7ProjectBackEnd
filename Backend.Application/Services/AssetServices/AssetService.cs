@@ -65,6 +65,12 @@ namespace Backend.Application.Services.AssetServices
         {
             var asset = await _assetRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Asset with id {id} not found.");
 
+            // Check if the asset state is assigned
+            if (asset.State == AssetState.Assigned)
+            {
+                throw new InvalidOperationException("Cannot delete asset because its state is 'Assigned'.");
+            }
+
             // Check if the asset has assignments
             if (asset.Assignments != null && asset.Assignments.Count != 0)
             {
