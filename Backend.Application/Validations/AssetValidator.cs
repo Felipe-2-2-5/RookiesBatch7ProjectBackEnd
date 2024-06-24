@@ -26,7 +26,7 @@ namespace Backend.Application.Validations
                 .Must((dto, dob) => dob.HasValue && BeAValidDate(dob.Value)).WithMessage("Date of birth must be in the format dd/MM/yyyy.");
             ;
 
-            RuleFor(asset => asset.AssetState)
+            RuleFor(asset => asset.State)
                 .NotNull()
                 .WithMessage("State is required.");
 
