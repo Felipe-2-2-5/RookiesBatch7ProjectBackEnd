@@ -187,7 +187,53 @@ namespace Backend.Tests.ServiceTests
             Assert.That(result.Data, Is.EqualTo(userResponses));
             Assert.That(result.TotalCount, Is.EqualTo(1));
         }
+        
+        [Test]
+        public async Task DisableUserAsync_WhenUserExists_SetsIsDeletedToTrue()
+        {
+            // Arrange
+            var userId = 1;
+            var user = new User { Id = userId, IsDeleted = false };
 
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+            _userRepoMock.Setup(repo => repo.HasActiveAssignmentsAsync(userId)).ReturnsAsync(false);
+            _userRepoMock.Setup(repo => repo.UpdateAsync(user)).Returns(Task.CompletedTask);
+            _userRepoMock.Setup(repo => repo.SaveChangeAsync()).Returns(Task.CompletedTask);
+
+            // Act
+            await _userService.DisableUserAsync(userId);
+
+            // Assert
+            Assert.That(user.IsDeleted, Is.True);
+            _userRepoMock.Verify(repo => repo.UpdateAsync(user), Times.Once);
+            _userRepoMock.Verify(repo => repo.SaveChangeAsync(), Times.Once);
+        }
+        
+        [Test]
+        public void DisableUserAsync_WhenUserDoesNotExist_ThrowsNotFoundException()
+        {
+            // Arrange
+            var userId = 1;
+
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User)null);
+
+            // Act & Assert
+            Assert.ThrowsAsync<NotFoundException>(() => _userService.DisableUserAsync(userId));
+        }
+        
+        [Test]
+        public void DisableUserAsync_WhenUserHasActiveAssignments_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var userId = 1;
+            var user = new User { Id = userId, IsDeleted = false };
+
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+            _userRepoMock.Setup(repo => repo.HasActiveAssignmentsAsync(userId)).ReturnsAsync(true);
+
+            // Act & Assert
+            Assert.ThrowsAsync<InvalidOperationException>(() => _userService.DisableUserAsync(userId));
+        }
     }
 
 }

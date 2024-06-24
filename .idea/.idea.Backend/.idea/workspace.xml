@@ -10,15 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Backend.Domain/Exceptions/ForbiddenException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/UsersController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/IRepositories/IUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/IRepositories/IUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/AssetsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssetsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.Application/Middleware/ExceptionMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Middleware/ExceptionMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/IUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/AssetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/AssetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/IAssetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/IAssetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/AssignmentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/AssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Validations/AssignmentValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Validations/AssignmentValidator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +30,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/564d11e3c8cbbd636fa9aa3a7b73d9ef576176dfee78aff1abcc84c359c266a/InvalidOperationException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c765e47ec58cf89220cd5779fc5cce70b01abab88edf4ed2b5deaba1244c610/IValidator.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -124,7 +129,11 @@
       <workItem from="1718888480129" duration="4424000" />
       <workItem from="1718936129290" duration="3667000" />
       <workItem from="1718959346741" duration="8349000" />
-      <workItem from="1718988034836" duration="1542000" />
+      <workItem from="1718988034836" duration="2502000" />
+      <workItem from="1719139166927" duration="3693000" />
+      <workItem from="1719170515590" duration="3236000" />
+      <workItem from="1719196952020" duration="1739000" />
+      <workItem from="1719200471038" duration="1003000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
