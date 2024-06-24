@@ -10,11 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Backend.Domain/Exceptions/NotAllowedException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/AssetsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssetsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/DTOs/AssignmentDTOs/AssignmentDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/IRepositories/IAssignmentRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.Application/Middleware/ExceptionMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Middleware/ExceptionMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/AssetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/AssetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/IAssetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssetServices/IAssetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/AssignmentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/AssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Validations/AssignmentValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Validations/AssignmentValidator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +133,7 @@
       <workItem from="1719139166927" duration="3693000" />
       <workItem from="1719170515590" duration="3236000" />
       <workItem from="1719196952020" duration="1739000" />
-      <workItem from="1719200471038" duration="687000" />
+      <workItem from="1719200471038" duration="1003000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
