@@ -70,7 +70,21 @@ namespace Backend.Infrastructure.Repositories
 
         public async Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId)
         {
-            return await _context.Assignments.AsNoTracking().FirstOrDefaultAsync(a => a.AssetId == assetId);
+            return await _context.Assignments
+                            .Include(a => a.Asset)
+                            .Include(a => a.AssignedTo)
+                            .Include(a => a.AssignedBy)
+                            .AsNoTracking().FirstOrDefaultAsync();
+        }
+
+        public async Task<Assignment?> FindLastestAssignment()
+        {
+            return await _context.Assignments
+                .Include(a => a.Asset)
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy)
+                .OrderByDescending(a => a.Id)
+                .AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }

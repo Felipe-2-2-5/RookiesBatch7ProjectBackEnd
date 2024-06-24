@@ -7,9 +7,9 @@ namespace Backend.Application.Services.AssetServices
 {
     public interface IAssetService
     {
-        Task<AssetResponseDTO> InsertAsync(AssetDTO assetDTO, string createName, Location location);
-        Task<AssetResponseDTO> GetByIdAsync(int id);
-        Task<PaginationResponse<AssetResponseDTO>> GetFilterAsync(AssetFilterRequest request, Location location);
-        Task<AssetResponseDTO> UpdateAsync(int id, AssetDTO assetDTO, string updatedName);
+        Task<AssetResponse> InsertAsync(AssetDTO assetDTO, string createName, Location location);
+        Task<AssetResponse> GetByIdAsync(int id);
+        Task<PaginationResponse<AssetResponse>> GetFilterAsync(AssetFilterRequest request, Location location);
+        Task<AssetResponse> UpdateAsync(int id, AssetDTO assetDTO, string updatedName);
     }
 }

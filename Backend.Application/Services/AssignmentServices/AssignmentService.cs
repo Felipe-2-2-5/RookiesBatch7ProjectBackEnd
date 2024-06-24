@@ -51,7 +51,9 @@ public class AssignmentService : IAssignmentService
 
             if (assignedAsset.State == AssetState.Assigned)
             {
-                throw new DataInvalidException("Asassigned");
+                var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
+                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment.AssignedToId);
+                throw new DataInvalidException($"Asset has been assigned to {assignedUser.UserName} ");
             }
 
             var assignment = _mapper.Map<Assignment>(dto);
@@ -64,7 +66,7 @@ public class AssignmentService : IAssignmentService
             assignedAsset.State = AssetState.Assigned;
             await _assetRepository.UpdateAsync(assignedAsset);
 
-            var returnAssignment = await FindAssignmentByAssetIdAsync(assignment.AssetId);
+            var returnAssignment = await _assignmentRepository.FindLastestAssignment();
 
             var res = _mapper.Map<AssignmentResponse>(returnAssignment);
             return res;
