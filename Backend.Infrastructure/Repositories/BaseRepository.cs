@@ -30,6 +30,7 @@ namespace Backend.Infrastructure.Repository
         {
             _table.Add(entity);
             await SaveChangeAsync();
+
         }
 
         public virtual async Task UpdateAsync(TEntity entity)

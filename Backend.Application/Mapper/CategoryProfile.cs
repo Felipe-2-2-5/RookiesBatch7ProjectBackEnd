@@ -9,7 +9,7 @@ namespace Backend.Application.Mapper
         public CategoryProfile()
         {
             CreateMap<CategoryDTO, Category>();
-            CreateMap<Category, CategoryResponseDTO>();
+            CreateMap<Category, CategoryResponse>();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Backend.Application.Services.CategoryServices
             _mapper = mapper;
             _validator = validator;
         }
-        public async Task<CategoryResponseDTO> InsertAsync(CategoryDTO dto)
+        public async Task<CategoryResponse> InsertAsync(CategoryDTO dto)
         {
             var validationResult = await _validator.ValidateAsync(dto);
             if (!validationResult.IsValid)
@@ -43,7 +43,7 @@ namespace Backend.Application.Services.CategoryServices
                 var category = _mapper.Map<Category>(dto);
                 await _categoryRepository.InsertAsync(category);
                 category = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);
-                var newDto = _mapper.Map<CategoryResponseDTO>(category);
+                var newDto = _mapper.Map<CategoryResponse>(category);
                 return newDto;
             }
             catch (Exception ex)
@@ -51,17 +51,17 @@ namespace Backend.Application.Services.CategoryServices
                 throw new DataInvalidException(ex.Message);
             }
         }
-        public async Task<IEnumerable<CategoryResponseDTO>> GetFilterAsync(string? searchTerm)
+        public async Task<IEnumerable<CategoryResponse>> GetFilterAsync(string? searchTerm)
         {
             var categories = await _categoryRepository.GetFilterAsync(searchTerm);
-            var dtos = _mapper.Map<IEnumerable<CategoryResponseDTO>>(categories);
+            var dtos = _mapper.Map<IEnumerable<CategoryResponse>>(categories);
             return dtos;
         }
 
-        public async Task<IEnumerable<CategoryResponseDTO>> GetAllAsync()
+        public async Task<IEnumerable<CategoryResponse>> GetAllAsync()
         {
             var categories = await _categoryRepository.GetAllCategoriesAsync();
-            var dtos = _mapper.Map<IEnumerable<CategoryResponseDTO>>(categories);
+            var dtos = _mapper.Map<IEnumerable<CategoryResponse>>(categories);
             return dtos;
         }
 

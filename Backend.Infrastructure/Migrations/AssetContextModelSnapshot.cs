@@ -40,9 +40,6 @@ namespace Backend.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("AssignmentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -226,10 +223,11 @@ namespace Backend.Infrastructure.Migrations
                             FirstLogin = true,
                             FirstName = "John",
                             Gender = 1,
+                            IsDeleted = false,
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "$2a$11$JJAoazqMKsAQeRyHXAVmvOVWmpCyWHWC/Z8u.HbX35JOHVNagSKBa",
+                            Password = "$2a$11$FQgJ5INYTnlqFsBi6JokXu87XRoI7hX0ChTxpkBuerLq3fU5r67Iy",
                             StaffCode = "SD0001",
                             Type = 1,
                             UserName = "johnd"
@@ -241,10 +239,11 @@ namespace Backend.Infrastructure.Migrations
                             FirstLogin = true,
                             FirstName = "Jane",
                             Gender = 2,
+                            IsDeleted = false,
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "$2a$11$TFLqU9booOUTVq3PWAhiguPtuqtFtbMFNGw4ZOzXabwzAJ3KLsrCq",
+                            Password = "$2a$11$Ha1sEO9BGt2PlTS47zQdUud9PnPyrRm.P.tI4pmgWWrGgx7bwjHBC",
                             StaffCode = "SD0002",
                             Type = 0,
                             UserName = "janes"
@@ -256,10 +255,11 @@ namespace Backend.Infrastructure.Migrations
                             FirstLogin = true,
                             FirstName = "Michael",
                             Gender = 1,
+                            IsDeleted = false,
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "$2a$11$KYBG8L1w5xnaFTmAz4UkseO1q/qGA70ci/uEJVCL71LTP7eUCO4oe",
+                            Password = "$2a$11$HVygcNRgjKnElS2GyliX3uydegQHwTZEDz9ezUzwhffS1Dzw9AC8G",
                             StaffCode = "SD0003",
                             Type = 1,
                             UserName = "michaelb"
@@ -271,10 +271,11 @@ namespace Backend.Infrastructure.Migrations
                             FirstLogin = true,
                             FirstName = "Emily",
                             Gender = 2,
+                            IsDeleted = false,
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "$2a$11$wQy.k8NidS81BzQ5d0jXc.ZEHImVzw71Wsl/dPhwipxBNkTpz2Pzq",
+                            Password = "$2a$11$3Vo3iO46gG549An4TtHRhOmIcz4BKr3fl5V.zTjzReZPZTSjMRrWu",
                             StaffCode = "SD0004",
                             Type = 0,
                             UserName = "emilyj"
@@ -286,10 +287,11 @@ namespace Backend.Infrastructure.Migrations
                             FirstLogin = true,
                             FirstName = "David",
                             Gender = 1,
+                            IsDeleted = false,
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "$2a$11$qLipztaWwK3bIyubY5R4WuWgZ4OGKTTdiV8Ka1xrNBHRGu5F7K/eW",
+                            Password = "$2a$11$QwsGuvhd7PrSSX6f37cv1ODg9s.9MLVP4yJJ/NCePGRCeYZ.5XUSi",
                             StaffCode = "SD0005",
                             Type = 0,
                             UserName = "davidw"

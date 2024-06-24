@@ -44,7 +44,7 @@ namespace Backend.API.Controllers
         }
         
         [HttpPost("filter")]
-        [Authorize]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> GetFilterAsync(UserFilterRequest request)
         {
             var res = await _userService.GetFilterAsync(request, Location);
