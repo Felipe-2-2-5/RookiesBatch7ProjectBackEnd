@@ -5,6 +5,8 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
+using FluentValidation.Validators;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services.AssignmentServices;
 
@@ -46,9 +48,9 @@ public class AssignmentService : IAssignmentService
     {
         try
         {
-            //asset is already assigned
             var assignedAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Asset not found");
-
+            
+            //asset is already assigned
             if (assignedAsset.State == AssetState.Assigned)
             {
                 var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
@@ -72,6 +74,41 @@ public class AssignmentService : IAssignmentService
             return res;
         }
         catch (Exception ex)
+        {
+            throw new Exception($"Error {ex.Message}", ex);
+        }
+    }
+
+    public async Task<AssignmentResponse> UpdateAsync(AssignmentDTO dto, int id, string modifiedName)
+    {
+        try
+        {
+            var assignment = await _assignmentRepository.FindAssignmentByAssetIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
+            if (assignment.State == AssignmentState.Accepted)
+            {
+                throw new DataInvalidException("Assignment is assigned to user");
+            }
+
+            var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found assignment");
+            if (newAsset.State == AssetState.Assigned)
+            {
+                var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
+                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment.AssignedToId);
+                throw new DataInvalidException($"Asset has been assigned to {assignedUser.UserName} ");
+            }
+
+            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            oldAsset.State = AssetState.Available;
+            await _assetRepository.UpdateAsync(oldAsset);
+
+            _mapper.Map(dto, assignment);
+            await _assignmentRepository.UpdateAsync(assignment);
+
+            newAsset.State = AssetState.Assigned;
+            await _assetRepository.UpdateAsync(newAsset);
+
+            return _mapper.Map<AssignmentResponse>(assignment);
+        } catch (Exception ex)
         {
             throw new Exception($"Error {ex.Message}", ex);
         }

@@ -52,7 +52,6 @@ namespace Backend.Application.Middleware
             catch (NotAllowedException ex)
             {
                 await HandleExceptionAsync(context, ex, ex.Message, StatusCodes.Status405MethodNotAllowed);
-
             }
 
             catch (Exception ex)
