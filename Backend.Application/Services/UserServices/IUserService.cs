@@ -20,5 +20,7 @@ namespace Backend.Application.Services.UserServices
         Task<UserResponse> InsertAsync(UserDTO dto, string createName);
 
         Task DisableUserAsync(int userId);
+
+        Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy);
     }
 }
