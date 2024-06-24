@@ -43,5 +43,30 @@ namespace Backend.API.Controllers
             var res = await _assetService.GetFilterAsync(request, Location);
             return Ok(res);
         }
+
+        // DELETE: api/asset/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _assetService.DeleteAsync(id);
+                return NoContent(); // 204 No Content
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
