@@ -56,6 +56,7 @@ namespace Backend.Application.Services.AssetServices
                 throw new DataInvalidException(string.Join(", ", errors));
             }
             var asset = await _assetRepository.GetByIdAsync(id);
+            var category = asset.Category;
             if (asset == null)
             {
                 throw new NotFoundException();
@@ -79,6 +80,7 @@ namespace Backend.Application.Services.AssetServices
                     throw new Exception(ex.Message, ex);
                 }
             }
+            asset.Category = category;
             var assetDto = _mapper.Map<AssetResponse>(asset);
             return assetDto;
         }
