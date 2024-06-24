@@ -151,7 +151,11 @@ namespace Backend.Application.Services.UserServices
                 throw new DataInvalidException(string.Join(", ", errors));
             }
 
-            _mapper.Map(dto, user);
+            user.DateOfBirth = (DateTime)dto.DateOfBirth;
+            user.JoinedDate = (DateTime)dto.JoinedDate;
+            user.Gender = dto.Gender;
+            user.Type = dto.Type;
+            user.Location = dto.Location;
             user.ModifiedAt = DateTime.UtcNow;
             user.ModifiedBy = modifiedBy;
 
