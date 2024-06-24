@@ -79,7 +79,10 @@ namespace Backend.Infrastructure.Repositories
 
         public async Task<Assignment?> FindAssignmentByAssetIdWithoutAsset(int id)
         {
-            return await _context.Assignments.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.Assignments
+                            .Include(a => a.AssignedTo)
+                            .Include(a => a.AssignedBy)
+                            .FirstOrDefaultAsync(a => a.Id == id);
         }
         public async Task<Assignment?> FindLastestAssignment()
         {
@@ -90,22 +93,5 @@ namespace Backend.Infrastructure.Repositories
                             .OrderByDescending(a => a.Id)
                             .AsNoTracking().FirstOrDefaultAsync();
         }
-/*        public override async Task UpdateAsync(Assignment entity)
-        {
-            var existingAssignment = await _table.AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.Id);
-            if (existingAssignment != null)
-            {
-                _context.Entry(entity).State = EntityState.Detached;
-
-                _context.Entry(entity).State = EntityState.Modified;
-            }
-            else
-            {
-                _table.Attach(entity);
-                _context.Entry(entity).State = EntityState.Modified;
-
-            }
-            await _context.SaveChangesAsync();
-        }*/
     }
 }
