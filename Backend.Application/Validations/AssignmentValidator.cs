@@ -24,10 +24,6 @@ namespace Backend.Application.Validations
                 .Must(BeAValidDate).WithMessage("Assigned date must be in the format dd/MM/yyyy.")
                 .GreaterThan(DateTime.Today).WithMessage("Assigned date must be greater than today.");
 
-            RuleFor(x => x.State)
-                .NotNull().WithMessage("Please enter Assignment State")
-                .Must(state => Enum.IsDefined(typeof(AssignmentState), state)).WithMessage("Invalid state.");
-
             RuleFor(x => x.AssetId)
                 .GreaterThan(0).WithMessage("AssetId must be a positive integer.")
                 .NotEmpty().WithMessage("AssetId is required.");
