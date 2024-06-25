@@ -41,24 +41,18 @@ namespace Backend.Application.Services.UserServices
                 throw new DataInvalidException(string.Join(", ", errors));
             }
 
-            try
-            {
-                var user = _mapper.Map<User>(dto);
-                user = await _userRepo.GenerateUserInformation(user);
+            var user = _mapper.Map<User>(dto);
+            user = await _userRepo.GenerateUserInformation(user);
 
-                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                user.CreatedBy = createName;
-                user.CreatedAt = DateTime.Now;
-                await _userRepo.InsertAsync(user);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.CreatedBy = createName;
+            user.CreatedAt = DateTime.Now;
+            await _userRepo.InsertAsync(user);
 
-                user = await FindUserByUserNameAsync(user.UserName);
-                var res = _mapper.Map<UserResponse>(user);
-                return res;
-            }
-            catch (Exception ex)
-            {
-                throw new DataInvalidException(ex.Message);
-            }
+            user = await FindUserByUserNameAsync(user.UserName);
+            var res = _mapper.Map<UserResponse>(user);
+            return res;
+
         }
         public async Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO)
         {
@@ -80,15 +74,9 @@ namespace Backend.Application.Services.UserServices
             user.ModifiedAt = DateTime.UtcNow;
             user.ModifiedBy = user.FirstName;
             user.FirstLogin = false;
-            try
-            {
-                await _userRepo.UpdateAsync(user);
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _userRepo.UpdateAsync(user);
+
             return true;
         }
         public async Task<User?> FindUserByUserNameAsync(string email) => await _userRepo.FindUserByUserNameAsync(email);
@@ -110,7 +98,7 @@ namespace Backend.Application.Services.UserServices
                 return new LoginResponse(false, "Invalid credentials");
             }
         }
-        
+
         public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request, Location location)
         {
             var res = await _userRepo.GetFilterAsync(request, location);
@@ -118,7 +106,7 @@ namespace Backend.Application.Services.UserServices
             return new(dtos, res.TotalCount);
 
         }
-        
+
         public async Task DisableUserAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);

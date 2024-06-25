@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Backend.Application.DTOs.AssignmentDTOs;
-using Backend.Domain.Enum;
+﻿using Backend.Application.DTOs.AssignmentDTOs;
 using FluentValidation;
+using System.Globalization;
 
 
 namespace Backend.Application.Validations

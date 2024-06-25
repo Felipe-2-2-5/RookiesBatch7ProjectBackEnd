@@ -38,18 +38,11 @@ namespace Backend.Application.Services.CategoryServices
                 throw new DataInvalidException("Existing category prefix");
 
             }
-            try
-            {
-                var category = _mapper.Map<Category>(dto);
-                await _categoryRepository.InsertAsync(category);
-                category = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);
-                var newDto = _mapper.Map<CategoryResponse>(category);
-                return newDto;
-            }
-            catch (Exception ex)
-            {
-                throw new DataInvalidException(ex.Message);
-            }
+            var category = _mapper.Map<Category>(dto);
+            await _categoryRepository.InsertAsync(category);
+            category = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);
+            var newDto = _mapper.Map<CategoryResponse>(category);
+            return newDto;
         }
         public async Task<IEnumerable<CategoryResponse>> GetFilterAsync(string? searchTerm)
         {

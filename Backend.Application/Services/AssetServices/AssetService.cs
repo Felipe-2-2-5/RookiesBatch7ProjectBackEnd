@@ -33,16 +33,10 @@ namespace Backend.Application.Services.AssetServices
             asset.CreatedAt = DateTime.Now;
             asset.CreatedBy = createName;
             asset.Location = location;
-            await _assetRepository.GenerateAssetInfo(asset);
-            try
-            {
-                await _assetRepository.InsertAsync(asset);
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _assetRepository.GenerateAssetInfo(asset);
+            await _assetRepository.InsertAsync(asset);
+
             asset = await _assetRepository.FindAssetByCodeAsync(asset.AssetCode);
             var dto = _mapper.Map<AssetResponse>(asset);
             return dto;
@@ -56,30 +50,23 @@ namespace Backend.Application.Services.AssetServices
                 throw new DataInvalidException(string.Join(", ", errors));
             }
             var asset = await _assetRepository.GetByIdAsync(id);
-            var category = asset.Category;
             if (asset == null)
             {
                 throw new NotFoundException();
             }
-            {
-                asset.AssetName = assetDTO.AssetName;
-                asset.Specification = assetDTO.Specification;
-                asset.InstalledDate = (DateTime)assetDTO.InstalledDate;
-                asset.State = assetDTO.State;
-                asset.ModifiedBy = updatedName;
-                asset.ModifiedAt = DateTime.Now;
-                asset.Category = null;
-                asset.Assignments = null;
-                try
-                {
-                    await _assetRepository.UpdateAsync(asset);
+            var category = asset.Category;
 
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message, ex);
-                }
-            }
+            asset.AssetName = assetDTO.AssetName;
+            asset.Specification = assetDTO.Specification;
+            asset.InstalledDate = (DateTime)assetDTO.InstalledDate;
+            asset.State = assetDTO.State;
+            asset.ModifiedBy = updatedName;
+            asset.ModifiedAt = DateTime.Now;
+            asset.Category = null;
+            asset.Assignments = null;
+
+            await _assetRepository.UpdateAsync(asset);
+
             asset.Category = category;
             var assetDto = _mapper.Map<AssetResponse>(asset);
             return assetDto;

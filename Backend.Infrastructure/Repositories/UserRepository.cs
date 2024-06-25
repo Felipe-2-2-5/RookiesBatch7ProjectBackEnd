@@ -2,7 +2,6 @@
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
-using Backend.Domain.Exceptions;
 using Backend.Infrastructure.Data;
 using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
