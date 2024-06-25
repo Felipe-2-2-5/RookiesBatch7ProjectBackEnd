@@ -88,29 +88,56 @@ public class AssignmentService : IAssignmentService
             {
                 throw new DataInvalidException("Assignment is assigned to user");
             }
-
-            var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found assignment");
-            if (newAsset.State == AssetState.Assigned)
+            // Change asset, not change user
+            if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId != dto.AssetId)
             {
-                var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
-                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment.AssignedToId);
-                throw new DataInvalidException($"Asset has been assigned to {assignedUser.UserName} ");
+                var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found assignment");
+                if (newAsset.State == AssetState.Assigned && newAsset.AssignmentId != id)
+                {
+                    var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
+                    var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment.AssignedToId);
+                    throw new DataInvalidException($"Asset has been assigned to {assignedUser.UserName} ");
+                }
+
+                var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+                oldAsset.Assignments = null;
+                oldAsset.State = AssetState.Available;
+                await _assetRepository.UpdateAsync(oldAsset);
+
+                _mapper.Map(dto, assignment);
+                assignment.ModifiedBy = modifiedName;
+                assignment.ModifiedAt = DateTime.Now;
+                await _assignmentRepository.UpdateAsync(assignment);
+
+                newAsset.State = AssetState.Assigned;
+                await _assetRepository.UpdateAsync(newAsset);
+
+                return _mapper.Map<AssignmentResponse>(assignment);
             }
+            //Change user, not change asset
+            else if (assignment.AssignedToId != dto.AssignedToId && assignment.AssetId == dto.AssetId)
+            {
+                var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
 
-            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
-            oldAsset.Assignments = null;
-            oldAsset.State = AssetState.Available;
-            await _assetRepository.UpdateAsync(oldAsset);
+                _mapper.Map(dto, assignment);
+                assignment.AssignedTo = newUser;
+                assignment.ModifiedBy = modifiedName;
+                assignment.ModifiedAt = DateTime.Now;
 
-            _mapper.Map(dto, assignment);
-            assignment.ModifiedBy = modifiedName;
-            assignment.ModifiedAt = DateTime.Now;
-            await _assignmentRepository.UpdateAsync(assignment);
+                await _assignmentRepository.UpdateAsync(assignment);
 
-            newAsset.State = AssetState.Assigned;
-            await _assetRepository.UpdateAsync(newAsset);
-
-            return _mapper.Map<AssignmentResponse>(assignment);
+                return _mapper.Map<AssignmentResponse>(assignment);
+            }
+            //Not change user, not change asset
+            else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId )
+            {
+                throw new DataInvalidException("You must change Asset or User to Update");
+            }
+            //Change user, change asset
+            else
+            {
+                throw new DataInvalidException("You can not change Asset and User at the same time");
+            }
         } catch (Exception ex)
         {
             throw new Exception($"Error {ex.Message}", ex);
