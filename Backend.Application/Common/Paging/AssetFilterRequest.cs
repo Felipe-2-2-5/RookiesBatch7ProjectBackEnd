@@ -1,5 +1,3 @@
-using Backend.Domain.Enum;
-
 namespace Backend.Application.Common.Paging
 {
     public class AssetFilterRequest

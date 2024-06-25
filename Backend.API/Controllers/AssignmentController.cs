@@ -1,7 +1,6 @@
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.Services.AssignmentServices;
-using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +41,7 @@ public class AssignmentController : ControllerBase
 
     [HttpPost("filter")]
     //[Authorize]
+    [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> GetFilterAsync(AssignmentFilterRequest request)
     {
         if (request.FromDate == DateTime.MinValue)

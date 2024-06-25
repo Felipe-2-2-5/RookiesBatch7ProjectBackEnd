@@ -5,8 +5,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
-using FluentValidation.Validators;
-using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services.AssignmentServices;
 
@@ -49,7 +47,7 @@ public class AssignmentService : IAssignmentService
         try
         {
             var assignedAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Asset not found");
-            
+
             //asset is already assigned
             if (assignedAsset.State == AssetState.Assigned)
             {

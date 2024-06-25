@@ -9,7 +9,7 @@ namespace Backend.Application.Mapper
         public AssetProfile()
         {
             CreateMap<AssetDTO, Asset>();
-            CreateMap<Asset, AssetResponseDTO>();
+            CreateMap<Asset, AssetResponse>();
         }
     }
 }

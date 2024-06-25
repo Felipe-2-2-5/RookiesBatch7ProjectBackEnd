@@ -67,9 +67,30 @@ namespace Backend.Tests.ServiceTests
         public async Task InsertAsync_WhenUserIsValid_ReturnsUserResponse()
         {
             // Arrange
-            var userDto = new UserDTO();
+            var userDto = new UserDTO
+            {
+                FirstName = "abc",
+                LastName = "adc",
+                Gender = Gender.Male,
+                Location = Location.HaNoi,
+                JoinedDate = DateTime.Now,
+                Type = Role.Staff,
+                DateOfBirth = new DateTime(2002 - 02 - 22),
+            };
+
+
             var validationResult = new ValidationResult();
-            var user = new User();
+            var user = new User
+            {
+                FirstName = "abc",
+                LastName = "adc",
+                Gender = Gender.Male,
+                Location = Location.HaNoi,
+                JoinedDate = DateTime.Now,
+                Type = Role.Staff,
+                Password = "ads",
+                DateOfBirth = new DateTime(2002 - 02 - 22),
+            };
             var userResponse = new UserResponse();
 
             _validatorMock.Setup(validator => validator.ValidateAsync(userDto, default)).ReturnsAsync(validationResult);
@@ -106,7 +127,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var changePasswordDto = new ChangePasswordDTO { Id = 1, OldPassword = "oldPass", NewPassword = "NewPass123!" };
-            var user = new User { Id = 1, Password = "oldPass" };
+            var user = new User { Id = 1, Password = BCrypt.Net.BCrypt.HashPassword("oldPass") };
 
             _userRepoMock.Setup(repo => repo.GetByIdAsync(changePasswordDto.Id)).ReturnsAsync(user);
 
@@ -115,7 +136,7 @@ namespace Backend.Tests.ServiceTests
 
             // Assert
             Assert.That(result, Is.True);
-            Assert.That(user.Password, Is.EqualTo(changePasswordDto.NewPassword));
+            Assert.That(BCrypt.Net.BCrypt.Verify(changePasswordDto.NewPassword, user.Password), Is.True);
         }
 
         [Test]
@@ -123,7 +144,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var changePasswordDto = new ChangePasswordDTO { Id = 1, OldPassword = "wrongPass", NewPassword = "NewPass123!" };
-            var user = new User { Id = 1, Password = "oldPass" };
+            var user = new User { Id = 1, Password = BCrypt.Net.BCrypt.HashPassword("oldPass") };
 
             _userRepoMock.Setup(repo => repo.GetByIdAsync(changePasswordDto.Id)).ReturnsAsync(user);
 
@@ -136,7 +157,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var loginDto = new LoginDTO { UserName = "user", Password = "password" };
-            var user = new User { UserName = "user", Password = "password" };
+            var user = new User { UserName = "user", Password = BCrypt.Net.BCrypt.HashPassword("password") };
             var token = "token";
 
             _userRepoMock.Setup(repo => repo.FindUserByUserNameAsync(loginDto.UserName)).ReturnsAsync(user);
@@ -156,7 +177,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var loginDto = new LoginDTO { UserName = "user", Password = "wrongPassword" };
-            var user = new User { UserName = "user", Password = "password" };
+            var user = new User { UserName = "user", Password = BCrypt.Net.BCrypt.HashPassword("password") };
 
             _userRepoMock.Setup(repo => repo.FindUserByUserNameAsync(loginDto.UserName)).ReturnsAsync(user);
 
@@ -187,7 +208,7 @@ namespace Backend.Tests.ServiceTests
             Assert.That(result.Data, Is.EqualTo(userResponses));
             Assert.That(result.TotalCount, Is.EqualTo(1));
         }
-        
+
         [Test]
         public async Task DisableUserAsync_WhenUserExists_SetsIsDeletedToTrue()
         {
@@ -208,7 +229,7 @@ namespace Backend.Tests.ServiceTests
             _userRepoMock.Verify(repo => repo.UpdateAsync(user), Times.Once);
             _userRepoMock.Verify(repo => repo.SaveChangeAsync(), Times.Once);
         }
-        
+
         [Test]
         public void DisableUserAsync_WhenUserDoesNotExist_ThrowsNotFoundException()
         {
@@ -220,9 +241,9 @@ namespace Backend.Tests.ServiceTests
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _userService.DisableUserAsync(userId));
         }
-        
+
         [Test]
-        public void DisableUserAsync_WhenUserHasActiveAssignments_ThrowsInvalidOperationException()
+        public void DisableUserAsync_WhenUserHasActiveAssignments_ThrowsNotAllowedException()
         {
             // Arrange
             var userId = 1;
@@ -232,8 +253,7 @@ namespace Backend.Tests.ServiceTests
             _userRepoMock.Setup(repo => repo.HasActiveAssignmentsAsync(userId)).ReturnsAsync(true);
 
             // Act & Assert
-            Assert.ThrowsAsync<InvalidOperationException>(() => _userService.DisableUserAsync(userId));
+            Assert.ThrowsAsync<NotAllowedException>(() => _userService.DisableUserAsync(userId));
         }
     }
-
 }

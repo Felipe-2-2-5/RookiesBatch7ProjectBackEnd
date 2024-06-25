@@ -102,5 +102,6 @@ namespace Backend.Infrastructure.Repositories
             return await _context.Assignments
                 .AnyAsync(a => a.AssignedToId == userId && (a.State == AssignmentState.Accepted || a.State == AssignmentState.Waiting));
         }
+
     }
 }

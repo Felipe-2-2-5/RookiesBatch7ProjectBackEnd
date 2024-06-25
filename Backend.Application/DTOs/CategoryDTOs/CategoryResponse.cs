@@ -1,6 +1,6 @@
 ﻿namespace Backend.Application.DTOs.CategoryDTOs
 {
-    public class CategoryResponseDTO
+    public class CategoryResponse
     {
         public int Id { get; set; }
 

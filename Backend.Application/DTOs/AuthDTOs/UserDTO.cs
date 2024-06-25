@@ -1,15 +1,15 @@
-﻿using System.Text.Json.Serialization;
+﻿using Backend.Application.Common.Converter;
 using Backend.Domain.Enum;
-using Backend.Application.Common.Converter;
+using System.Text.Json.Serialization;
 
 
 namespace Backend.Application.DTOs.AuthDTOs
 {
     public class UserDTO
     {
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime? DateOfBirth { get; set; }
@@ -22,6 +22,6 @@ namespace Backend.Application.DTOs.AuthDTOs
         public Role Type { get; set; }
 
         public Location Location { get; set; }
-        
+
     }
 }

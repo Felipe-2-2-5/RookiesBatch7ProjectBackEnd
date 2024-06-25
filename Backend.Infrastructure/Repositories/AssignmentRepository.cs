@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Backend.Application.Common.Paging;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
@@ -6,9 +5,10 @@ using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
 using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
-namespace Backend.Infrastructure.Repositories 
-{ 
+namespace Backend.Infrastructure.Repositories
+{
     public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepository
     {
         public AssignmentRepository(AssetContext context) : base(context)

@@ -18,6 +18,7 @@ namespace Backend.API.Controllers
         }
 
         [HttpPost("filter")]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> GetFilterAsync([FromBody] string? searchTerm)
         {
             var res = await _categoryService.GetFilterAsync(searchTerm);
@@ -32,11 +33,12 @@ namespace Backend.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> GetAllAsync()
         {
             var categories = await _categoryService.GetAllAsync();
             return Ok(categories);
         }
-        
+
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Backend.Domain.Enum;
+﻿using Backend.Domain.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Domain.Entities
 {
@@ -31,5 +31,6 @@ namespace Backend.Domain.Entities
         [StringLength(maximumLength: 30)]
         public Location Location { get; set; }
         public bool FirstLogin { get; set; } = true;
+
     }
 }
