@@ -77,7 +77,7 @@ namespace Backend.Infrastructure.Repositories
                             .AsNoTracking().FirstOrDefaultAsync(a => a.AssetId == assetId);
         }
 
-        public async Task<Assignment?> FindAssignmentByAssetIdWithoutAsset(int id)
+        public async Task<Assignment?> FindAssignmentByIdWithoutAsset(int id)
         {
             return await _context.Assignments
                             .Include(a => a.AssignedTo)
