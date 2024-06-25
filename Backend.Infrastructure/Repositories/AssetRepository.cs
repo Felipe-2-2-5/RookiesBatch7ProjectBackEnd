@@ -72,7 +72,7 @@ namespace Backend.Infrastructure.Repositories
             }
             else
             {
-                query.Where(p => p.State == AssetState.Available || p.State == AssetState.NotAvailable || p.State == AssetState.Assigned);
+                query = query.Where(p => p.State == AssetState.Available || p.State == AssetState.NotAvailable || p.State == AssetState.Assigned);
             }
 
             if (!string.IsNullOrWhiteSpace(request.Category))
