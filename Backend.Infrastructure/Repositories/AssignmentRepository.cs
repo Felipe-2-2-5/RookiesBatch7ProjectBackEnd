@@ -20,6 +20,7 @@ namespace Backend.Infrastructure.Repositories
                 .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy)
                 .Include(a => a.Asset)
+                .ThenInclude(a => a.Category)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request)

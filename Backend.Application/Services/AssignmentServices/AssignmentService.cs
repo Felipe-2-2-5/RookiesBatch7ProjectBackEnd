@@ -115,8 +115,11 @@ public class AssignmentService : IAssignmentService
             else if (assignment.AssignedToId != dto.AssignedToId && assignment.AssetId == dto.AssetId)
             {
                 var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
+                var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId);
+                oldAsset.Assignments = null;
 
                 _mapper.Map(dto, assignment);
+                assignment.Asset = oldAsset;
                 assignment.AssignedTo = newUser;
                 assignment.ModifiedBy = modifiedName;
                 assignment.ModifiedAt = DateTime.Now;
@@ -128,7 +131,18 @@ public class AssignmentService : IAssignmentService
             //Not change user, not change asset
             else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId )
             {
-                throw new DataInvalidException("You must change Asset or User to Update");
+                var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+                oldAsset.Assignments = null;
+
+                _mapper.Map(dto, assignment);
+                assignment.Asset = oldAsset;
+                assignment.ModifiedBy = modifiedName;
+                assignment.ModifiedAt = DateTime.Now;
+
+                await _assignmentRepository.UpdateAsync(assignment);
+
+                return _mapper.Map<AssignmentResponse>(assignment);
+
             }
             //Change user, change asset
             else
@@ -138,12 +152,14 @@ public class AssignmentService : IAssignmentService
                 {
                     throw new DataInvalidException($"Asset has been assigned to other Staff");
                 }
+                newAsset.State = AssetState.Assigned;
+                newAsset.Category = null;
 
                 var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
                 oldAsset.Assignments = null;
                 oldAsset.State = AssetState.Available;
-                newAsset.State = AssetState.Assigned;
-                newAsset.Category = null;
+
+                
 
                 var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
 
