@@ -1,6 +1,4 @@
-﻿using Backend.Domain.Enum;
-
-namespace Backend.Application.Common.Paging
+﻿namespace Backend.Application.Common.Paging
 {
     public class UserFilterRequest
     {

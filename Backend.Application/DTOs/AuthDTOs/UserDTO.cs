@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using Backend.Application.Common.Converter;
 using Backend.Domain.Enum;
-using Backend.Application.Common.Converter;
+using System.Text.Json.Serialization;
 
 
 namespace Backend.Application.DTOs.AuthDTOs
@@ -22,6 +22,6 @@ namespace Backend.Application.DTOs.AuthDTOs
         public Role Type { get; set; }
 
         public Location Location { get; set; }
-        
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Backend.Domain.Entities;
-using Backend.Domain.Entity;
 using Backend.Domain.Enum;
 
 namespace Backend.Infrastructure.Data

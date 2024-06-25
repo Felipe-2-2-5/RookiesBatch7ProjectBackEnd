@@ -1,5 +1,4 @@
 using Backend.Application.Common.Converter;
-using Backend.Domain.Enum;
 using System.Text.Json.Serialization;
 namespace Backend.Application.DTOs.AssignmentDTOs
 {
