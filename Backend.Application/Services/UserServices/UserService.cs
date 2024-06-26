@@ -60,7 +60,7 @@ namespace Backend.Application.Services.UserServices
             bool checkPassword = BCrypt.Net.BCrypt.Verify(changePasswordDTO.OldPassword, user.Password);
             if (!checkPassword)
             {
-                throw new DataInvalidException("Wrong password");
+                throw new DataInvalidException("Password is incorrect");
             }
             if (changePasswordDTO.NewPassword == changePasswordDTO.OldPassword)
             {
