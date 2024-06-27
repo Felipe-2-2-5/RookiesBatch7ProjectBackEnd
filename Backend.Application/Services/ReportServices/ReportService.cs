@@ -14,14 +14,10 @@ namespace Backend.Application.Services.ReportServices
 {
     public class ReportService : IReportService
     {
-        private readonly IMapper _mapper;
-        private readonly IValidator<AssetDTO> _validator;
         private readonly IReportRepository _reportRepository;
 
-        public ReportService (  IMapper mapper, IValidator<AssetDTO> validator, IReportRepository reportRepository)
+        public ReportService ( IReportRepository reportRepository)
         {
-            _mapper = mapper;
-            _validator = validator;
             _reportRepository = reportRepository;
         }
 
