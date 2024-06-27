@@ -131,7 +131,7 @@ namespace Backend.Application.Tests.Services
             var validationResult = new ValidationResult();
 
             _validatorMock.Setup(v => v.ValidateAsync(assetDTO, default)).ReturnsAsync(validationResult);
-            _assetRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Asset)null);
+            _assetRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Asset?)null);
 
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _assetService.UpdateAsync(1, assetDTO, "testUser"));
@@ -158,7 +158,7 @@ namespace Backend.Application.Tests.Services
         public void GetByIdAsync_AssetNotFound_ShouldThrowNotFoundException()
         {
             // Arrange
-            _assetRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Asset)null);
+            _assetRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Asset?)null);
 
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _assetService.GetByIdAsync(1));
@@ -184,7 +184,7 @@ namespace Backend.Application.Tests.Services
         public void DeleteAsync_AssetNotFound_ShouldThrowNotFoundException()
         {
             // Arrange
-            _assetRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Asset)null);
+            _assetRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Asset?)null);
 
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _assetService.DeleteAsync(1));

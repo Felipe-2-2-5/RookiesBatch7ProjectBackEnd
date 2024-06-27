@@ -3,7 +3,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
-using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 

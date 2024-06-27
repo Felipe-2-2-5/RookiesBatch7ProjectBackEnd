@@ -59,7 +59,7 @@ namespace Backend.Tests.ServiceTests
             // Arrange
             var assignmentId = 1;
 
-            _assignmentRepoMock.Setup(repo => repo.GetByIdAsync(assignmentId)).ReturnsAsync((Assignment)null);
+            _assignmentRepoMock.Setup(repo => repo.GetByIdAsync(assignmentId)).ReturnsAsync((Assignment?)null);
 
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _assignmentService.GetByIdAsync(assignmentId));
@@ -78,7 +78,7 @@ namespace Backend.Tests.ServiceTests
             _mapperMock.Setup(mapper => mapper.Map<Assignment>(assignmentDto)).Returns(assignment);
 
             // Mocking the repository calls
-            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignmentDto.AssetId)).ReturnsAsync((Assignment)null);
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignmentDto.AssetId)).ReturnsAsync((Assignment?)null);
             _assignmentRepoMock.Setup(repo => repo.InsertAsync(It.IsAny<Assignment>())).Returns(Task.CompletedTask);
             _assignmentRepoMock.Setup(repo => repo.FindLastestAssignment()).ReturnsAsync(assignment);
 
@@ -140,7 +140,7 @@ namespace Backend.Tests.ServiceTests
             // Arrange
             var assetId = 1;
 
-            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assetId)).ReturnsAsync((Assignment)null);
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assetId)).ReturnsAsync((Assignment?)null);
 
             // Act
             var result = await _assignmentService.FindAssignmentByAssetIdAsync(assetId);

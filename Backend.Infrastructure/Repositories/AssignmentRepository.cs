@@ -3,7 +3,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
-using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -45,9 +44,9 @@ namespace Backend.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(p =>
-                    p.Asset.AssetCode.Contains(request.SearchTerm) ||
+                    p.Asset!.AssetCode.Contains(request.SearchTerm) ||
                     p.Asset.AssetName.Contains(request.SearchTerm) ||
-                    p.AssignedTo.UserName.Contains(request.SearchTerm));
+                    p.AssignedTo!.UserName.Contains(request.SearchTerm));
             }
 
             query = request.SortOrder?.ToLower() == "descend" ? query.OrderByDescending(GetSortProperty(request)) : query.OrderBy(GetSortProperty(request));
@@ -59,10 +58,10 @@ namespace Backend.Infrastructure.Repositories
         private static Expression<Func<Assignment, object>> GetSortProperty(AssignmentFilterRequest request) =>
             request.SortColumn?.ToLower() switch
             {
-                "code" => asset => asset.Asset.AssetCode,
-                "name" => asset => asset.Asset.AssetName,
-                "receiver" => asset => asset.AssignedTo.UserName,
-                "provider" => asset => asset.AssignedBy.UserName,
+                "code" => asset => asset.Asset!.AssetCode,
+                "name" => asset => asset.Asset!.AssetName,
+                "receiver" => asset => asset.AssignedTo!.UserName,
+                "provider" => asset => asset.AssignedBy!.UserName,
                 "date" => asset => asset.AssignedDate,
                 "state" => asset => asset.State,
                 _ => asset => asset.AssignedDate

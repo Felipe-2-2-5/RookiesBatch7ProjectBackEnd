@@ -1,7 +1,6 @@
 ﻿using Backend.Application.IRepositories;
 using Backend.Domain.Entity;
 using Backend.Infrastructure.Data;
-using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Infrastructure.Repositories

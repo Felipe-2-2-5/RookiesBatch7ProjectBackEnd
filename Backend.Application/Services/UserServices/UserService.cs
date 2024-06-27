@@ -139,8 +139,8 @@ namespace Backend.Application.Services.UserServices
                 throw new DataInvalidException(string.Join(", ", errors));
             }
 
-            user.DateOfBirth = (DateTime)dto.DateOfBirth;
-            user.JoinedDate = (DateTime)dto.JoinedDate;
+            user.DateOfBirth = (DateTime)dto.DateOfBirth!;
+            user.JoinedDate = (DateTime)dto.JoinedDate!;
             user.Gender = dto.Gender;
             user.Type = dto.Type;
             user.Location = dto.Location;
