@@ -21,6 +21,7 @@ namespace Backend.Domain.Entities
         public User AssignedTo { get; set; }
 
         public User AssignedBy { get; set; }
+        public ReturnRequest ReturnRequest { get; set; }
 
     }
 }
