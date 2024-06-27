@@ -1,4 +1,5 @@
-﻿using Backend.Domain.Entities;
+﻿using Backend.Application.DTOs.AssetDTOs;
+using Backend.Domain.Entities;
 using Backend.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ namespace Backend.Infrastructure.Data
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ReturnRequest> ReturnRequests { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
