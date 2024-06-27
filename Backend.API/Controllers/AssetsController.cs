@@ -1,6 +1,7 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.Services.AssetServices;
+using Backend.Application.Services.ReportServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,14 @@ namespace Backend.API.Controllers
     public class AssetsController : ControllerBase
     {
         private readonly IAssetService _assetService;
+        private readonly IReportService _reportService;
         private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
         private Location Location => (Location)Enum.Parse(typeof(Location), User.Claims.First(c => c.Type == "Location").Value);
 
-        public AssetsController(IAssetService assetService)
+        public AssetsController(IAssetService assetService, IReportService reportService)
         {
             _assetService = assetService;
+            _reportService = reportService;
         }
 
         [HttpPost]
@@ -58,6 +61,14 @@ namespace Backend.API.Controllers
         {
             await _assetService.DeleteAsync(id);
             return NoContent();
+        }
+
+        //get report by category and state
+        [HttpGet("report")]
+        public async Task<ActionResult<List<AssetReportDto>>> GetAssetReport([FromQuery] string sortColumn, [FromQuery] string sortDirection)
+        {
+            var result = await _reportService.GetAssetReportAsync(sortColumn, sortDirection);
+            return Ok(result);
         }
     }
 }
