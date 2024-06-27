@@ -13,12 +13,12 @@ namespace Backend.Application.Validations
                 .WithMessage("AssetName is required.")
                 .Matches("^[a-zA-Z0-9 ]*$")
                 .WithMessage("AssetName can only contain alphabets, numbers, and white spaces.")
-                .MaximumLength(30)
-                .WithMessage("AssetName must not exceed 30 characters.");
+                .MaximumLength(50)
+                .WithMessage("AssetName must not exceed 50 characters.");
 
             RuleFor(asset => asset.Specification)
-                .MaximumLength(600)
-                .WithMessage("Specification must not exceed 600 characters.");
+                .MaximumLength(500)
+                .WithMessage("Specification must not exceed 500 characters.");
 
             RuleFor(asset => asset.InstalledDate)
                 .NotEmpty()
