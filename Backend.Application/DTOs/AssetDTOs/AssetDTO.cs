@@ -6,7 +6,7 @@ namespace Backend.Application.DTOs.AssetDTOs
 {
     public class AssetDTO
     {
-        public string AssetName { get; set; }
+        public string AssetName { get; set; } = "";
 
         public int CategoryId { get; set; }
 

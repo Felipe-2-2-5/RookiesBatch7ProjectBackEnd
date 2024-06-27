@@ -8,6 +8,6 @@ namespace Backend.Application.DTOs.AssignmentDTOs
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime? AssignedDate { get; set; }
         public int AssetId { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
     }
 }

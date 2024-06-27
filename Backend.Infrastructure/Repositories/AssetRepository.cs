@@ -3,7 +3,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
-using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -19,13 +18,13 @@ namespace Backend.Infrastructure.Repositories
         {
             var category = await _context.Categories.FindAsync(asset.CategoryId);
             var users = await _table
-                .Where(s => s.AssetCode.StartsWith(category.Prefix))
+                .Where(s => s.AssetCode.StartsWith(category!.Prefix))
                 .Select(s => s.AssetCode).ToListAsync();
 
             var numbers = users
                 .Select(u =>
                 {
-                    string suffix = u.Substring(category.Prefix.Length);
+                    string suffix = u.Substring(category!.Prefix.Length);
                     return int.TryParse(suffix, out int n) ? n : 0;
                 })
                 .ToList();
@@ -33,7 +32,7 @@ namespace Backend.Infrastructure.Repositories
             int maxNumber = numbers.Count > 0 ? numbers.Max() + 1 : 1; // Start from 1 if no existing codes
 
             string maxNumberString = maxNumber.ToString("D6");
-            var assetCode = $"{category.Prefix}{maxNumberString.PadLeft(6, '0')}"; // Format as [Prefix][000001]
+            var assetCode = $"{category!.Prefix}{maxNumberString.PadLeft(6, '0')}"; // Format as [Prefix][000001]
             asset.AssetCode = assetCode;
             return asset;
         }
@@ -45,11 +44,11 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.Assets
                 .Include(a => a.Category)
-                .Include(a => a.Assignments)
+                .Include(a => a.Assignments!)
                     .ThenInclude(assignment => assignment.AssignedBy)
-                .Include(a => a.Assignments)
-                .ThenInclude(assignment => assignment.AssignedTo)
-                    .AsNoTracking()
+                .Include(a => a.Assignments!)
+                    .ThenInclude(assignment => assignment.AssignedTo)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -59,31 +58,25 @@ namespace Backend.Infrastructure.Repositories
                 .Include(u => u.Category)
                 .Include(u => u.Assignments);
 
-            if (!string.IsNullOrWhiteSpace(request.State))
+            query = request.State switch
             {
-                query = request.State switch
-                {
-                    "All" => query = query.Where(p =>
-                        p.State == AssetState.Available ||
-                        p.State == AssetState.NotAvailable ||
-                        p.State == AssetState.WaitingForRecycling ||
-                        p.State == AssetState.Assigned ||
-                        p.State == AssetState.Recycled),
-                    "Available" => query.Where(p => p.State == AssetState.Available),
-                    "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
-                    "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
-                    "Recycled" => query.Where(p => p.State == AssetState.Recycled),
-                    "Assigned" => query.Where(p => p.State == AssetState.Assigned),
-                };
-            }
-            else
-            {
-                query = query.Where(p => p.State == AssetState.Available || p.State == AssetState.NotAvailable || p.State == AssetState.Assigned);
-            }
+                "All" => query.Where(p =>
+                    p.State == AssetState.Available ||
+                    p.State == AssetState.NotAvailable ||
+                    p.State == AssetState.WaitingForRecycling ||
+                    p.State == AssetState.Assigned ||
+                    p.State == AssetState.Recycled),
+                "Available" => query.Where(p => p.State == AssetState.Available),
+                "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
+                "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
+                "Recycled" => query.Where(p => p.State == AssetState.Recycled),
+                "Assigned" => query.Where(p => p.State == AssetState.Assigned),
+                _ => query.Where(p => p.State == AssetState.Available || p.State == AssetState.NotAvailable || p.State == AssetState.Assigned)
+            };
 
             if (!string.IsNullOrWhiteSpace(request.Category))
             {
-                query = query.Where(p => p.Category.Name == request.Category);
+                query = query.Where(p => p.Category!.Name == request.Category);
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
@@ -105,7 +98,7 @@ namespace Backend.Infrastructure.Repositories
             {
                 "assetcode" => asset => asset.AssetCode,
                 "assetname" => asset => asset.AssetName,
-                "category" => asset => asset.Category.Name,
+                "category" => asset => asset.Category!.Name,
                 "state" => asset => asset.State,
                 _ => user => user.AssetName
             };

@@ -52,8 +52,8 @@ public class AssignmentService : IAssignmentService
             if (assignedAsset.State == AssetState.Assigned)
             {
                 var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
-                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment.AssignedToId);
-                throw new DataInvalidException($"Asset has been assigned to {assignedUser.UserName} ");
+                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment!.AssignedToId);
+                throw new DataInvalidException($"Asset has been assigned to {assignedUser!.UserName} ");
             }
 
             var assignment = _mapper.Map<Assignment>(dto);
@@ -129,7 +129,7 @@ public class AssignmentService : IAssignmentService
                 return _mapper.Map<AssignmentResponse>(assignment);
             }
             //Not change user, not change asset
-            else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId )
+            else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId)
             {
                 var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
                 oldAsset.Assignments = null;
@@ -173,7 +173,8 @@ public class AssignmentService : IAssignmentService
 
                 return _mapper.Map<AssignmentResponse>(assignment);
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             throw new Exception($"Error {ex.Message}", ex);
         }

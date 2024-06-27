@@ -6,19 +6,19 @@ namespace Backend.Domain.Entities
     public class User : BaseEntity
     {
         [StringLength(maximumLength: 8)]
-        public string StaffCode { get; set; }
+        public string StaffCode { get; set; } = "";
 
-        [StringLength(maximumLength: 20)]
-        public string UserName { get; set; }
+        [StringLength(maximumLength: 35)]
+        public string UserName { get; set; } = "";
 
         [StringLength(maximumLength: 200)]
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
 
         [StringLength(maximumLength: 20)]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = "";
 
         [StringLength(maximumLength: 40)]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = "";
 
         public DateTime DateOfBirth { get; set; }
 
