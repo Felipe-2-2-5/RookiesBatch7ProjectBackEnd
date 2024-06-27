@@ -4,10 +4,8 @@
 
 namespace Backend.Infrastructure.Migrations
 {
-    /// <inheritdoc />
     public partial class addReturnRequest : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -100,9 +98,37 @@ namespace Backend.Infrastructure.Migrations
                 name: "IX_ReturnRequests_RequestorId",
                 table: "ReturnRequests",
                 column: "RequestorId");
+
+            string procedure = @"CREATE PROCEDURE getAssetReportByCategoryAndState
+                @SortColumn NVARCHAR(50) = 'Category', 
+                @SortDirection NVARCHAR(4) = 'ASC'    
+            AS
+            BEGIN
+                DECLARE @SQL NVARCHAR(MAX);
+
+                SET @SQL = '
+                    SELECT 
+                        c.Name AS Category,
+                        COUNT(a.Id) AS Total,
+                        SUM(CASE WHEN a.State = 0 THEN 1 ELSE 0 END) AS Assigned,
+                        SUM(CASE WHEN a.State = 1 THEN 1 ELSE 0 END) AS Available,
+                        SUM(CASE WHEN a.State = 2 THEN 1 ELSE 0 END) AS NotAvailable,
+                        SUM(CASE WHEN a.State = 3 THEN 1 ELSE 0 END) AS WaitingForRecycling,
+                        SUM(CASE WHEN a.State = 4 THEN 1 ELSE 0 END) AS Recycled
+                    FROM 
+                        Assets a
+                    INNER JOIN 
+                        Categories c ON a.CategoryId = c.Id
+                    GROUP BY 
+                        c.Name
+                    ORDER BY ' + @SortColumn + ' ' + @SortDirection;
+
+                EXEC sp_executesql @SQL;
+            END";
+
+            migrationBuilder.Sql(procedure);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -142,6 +168,9 @@ namespace Backend.Infrastructure.Migrations
                 keyValue: 5,
                 column: "Password",
                 value: "$2a$11$QwsGuvhd7PrSSX6f37cv1ODg9s.9MLVP4yJJ/NCePGRCeYZ.5XUSi");
+
+            string procedure = "DROP PROCEDURE IF EXISTS getAssetReportByCategoryAndState";
+            migrationBuilder.Sql(procedure);
         }
     }
 }
