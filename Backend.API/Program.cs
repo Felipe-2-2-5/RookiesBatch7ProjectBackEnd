@@ -9,6 +9,7 @@ using Backend.Application.Middleware;
 using Backend.Application.Services.AssetServices;
 using Backend.Application.Services.AssignmentServices;
 using Backend.Application.Services.CategoryServices;
+using Backend.Application.Services.ReportServices;
 using Backend.Application.Services.UserServices;
 using Backend.Application.Validations;
 using Backend.Infrastructure.Data;
@@ -109,10 +110,13 @@ builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 //Category services
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
 //Asset services
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+
 
 //Add FluentValidation services
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();

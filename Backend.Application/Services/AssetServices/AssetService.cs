@@ -6,6 +6,7 @@ using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services.AssetServices
 {
