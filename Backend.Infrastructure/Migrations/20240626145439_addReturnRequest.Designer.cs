@@ -4,6 +4,7 @@ using Backend.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    partial class AssetContextModelSnapshot : ModelSnapshot
+    [Migration("20240626145439_addReturnRequest")]
+    partial class addReturnRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,7 +282,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "$2a$11$Zo7QcIxMeHT1P/l6uvVg4uAoIBkRu/y87lXga.KEn/DrzqdMW.ihO",
+                            Password = "$2a$11$csxVZkakwYZrcnlnF1y9eOe4loscS1Tdqv2fGLZbauOwiblFVP0NO",
                             StaffCode = "SD0001",
                             Type = 1,
                             UserName = "johnd"
@@ -295,7 +298,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "$2a$11$QtJ3vzmKCvZCJJ6X/YW8uOCz2CzaCaqTWMKdgP7WWbhBE5QIQpKaO",
+                            Password = "$2a$11$wUIJ3WdA4cqSp0XlcdA7R.HSegabE/lk55QmjbpC8ZYokHiSUM3Am",
                             StaffCode = "SD0002",
                             Type = 0,
                             UserName = "janes"
@@ -311,7 +314,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "$2a$11$kLuuo6zoDdk0OZKyuafeO.QJTvl7hj5IBzwAjrZFRO3y6arUAi/w6",
+                            Password = "$2a$11$gleLrnRQ1KztAUdJJ6kNROfrk3uFlUcxhfazmoXGciti8idCPBuDi",
                             StaffCode = "SD0003",
                             Type = 1,
                             UserName = "michaelb"
@@ -327,7 +330,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "$2a$11$X/fpz.zMJbbjXG8g8I6OpuATc25y3LQWcCw4HeStk7aGNR10ePySe",
+                            Password = "$2a$11$nJECDMe.XIbx4/x0jAgO..eNq4dzUL7IDNLGwUS4mz.57San7lLt6",
                             StaffCode = "SD0004",
                             Type = 0,
                             UserName = "emilyj"
@@ -343,7 +346,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "$2a$11$88qEx85HMaxsEFMx6Xj1vOAd95fvKxaTXwxEpZ8UwA1AGOgjynB3q",
+                            Password = "$2a$11$sqvXMW3J5w3RBKBs0nQ88u1pqA7PcrtEqnjl2zNLOzvGzf16cQvdS",
                             StaffCode = "SD0005",
                             Type = 0,
                             UserName = "davidw"
@@ -433,7 +436,7 @@ namespace Backend.Infrastructure.Migrations
                     b.HasOne("Backend.Domain.Entities.User", "Acceptor")
                         .WithMany()
                         .HasForeignKey("AcceptorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Backend.Domain.Entities.Assignment", "Assignment")
@@ -445,7 +448,7 @@ namespace Backend.Infrastructure.Migrations
                     b.HasOne("Backend.Domain.Entities.User", "Requestor")
                         .WithMany()
                         .HasForeignKey("RequestorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Acceptor");

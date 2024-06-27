@@ -12,6 +12,7 @@ namespace Backend.Infrastructure.Data
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ReturnRequest> ReturnRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,23 @@ namespace Backend.Infrastructure.Data
                 .HasOne(a => a.Asset)
                 .WithMany(a => a.Assignments)
                 .HasForeignKey(a => a.AssetId);
+
+            modelBuilder.Entity<ReturnRequest>()
+                .HasOne(r => r.Requestor)
+                .WithMany()
+                .HasForeignKey(r => r.RequestorId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ReturnRequest>()
+               .HasOne(r => r.Acceptor)
+               .WithMany()
+               .HasForeignKey(r => r.AcceptorId)
+               .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ReturnRequest>()
+               .HasOne(r => r.Assignment)
+               .WithOne(a => a.ReturnRequest)
+               .HasForeignKey<ReturnRequest>(r => r.AssignmentId);
 
             modelBuilder.Entity<Asset>()
                .HasOne(b => b.Category)
