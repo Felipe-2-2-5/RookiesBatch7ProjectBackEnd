@@ -35,9 +35,9 @@ public class AssignmentService : IAssignmentService
         return dto;
     }
 
-    public async Task<PaginationResponse<AssignmentResponse>> GetFilterAsync(AssignmentFilterRequest request)
+    public async Task<PaginationResponse<AssignmentResponse>> GetFilterAsync(AssignmentFilterRequest request, Location location)
     {
-        var res = await _assignmentRepository.GetFilterAsync(request);
+        var res = await _assignmentRepository.GetFilterAsync(request,location);
         var dto = _mapper.Map<IEnumerable<AssignmentResponse>>(res.Data);
         return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
@@ -66,7 +66,7 @@ public class AssignmentService : IAssignmentService
             assignedAsset.State = AssetState.Assigned;
             await _assetRepository.UpdateAsync(assignedAsset);
 
-            var returnAssignment = await _assignmentRepository.FindLastestAssignment();
+            var returnAssignment = await _assignmentRepository.FindLatestAssignment();
 
             var res = _mapper.Map<AssignmentResponse>(returnAssignment);
             return res;
@@ -178,5 +178,12 @@ public class AssignmentService : IAssignmentService
         {
             throw new Exception($"Error {ex.Message}", ex);
         }
+    }
+
+    public async Task<PaginationResponse<AssignmentResponse>> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
+    {
+        var res = await _assignmentRepository.GetMyAssignmentsAsync(request);
+        var dto = _mapper.Map<IEnumerable<AssignmentResponse>>(res.Data);
+        return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
 }

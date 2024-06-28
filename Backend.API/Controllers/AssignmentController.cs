@@ -14,6 +14,7 @@ public class AssignmentController : ControllerBase
 {
     private readonly IAssignmentService _assignmentService;
     private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+    private string Location => User.Claims.First(c => c.Type == "Location").Value;
     private int AssignedById
     {
         get
@@ -40,9 +41,8 @@ public class AssignmentController : ControllerBase
     }
 
     [HttpPost("filter")]
-    //[Authorize]
     [Authorize(Roles = nameof(Role.Admin))]
-    public async Task<IActionResult> GetFilterAsync(AssignmentFilterRequest request)
+    public async Task<IActionResult> GetFilterAsync(AssignmentFilterRequest request, Location location)
     {
         if (request.FromDate == DateTime.MinValue)
         {
@@ -52,7 +52,7 @@ public class AssignmentController : ControllerBase
         {
             request.ToDate = DateTime.Today;
         }
-        var res = await _assignmentService.GetFilterAsync(request);
+        var res = await _assignmentService.GetFilterAsync(request, location);
         return Ok(res);
     }
 
@@ -69,6 +69,13 @@ public class AssignmentController : ControllerBase
     public async Task<IActionResult> UpdateAsync(AssignmentDTO dto, int id)
     {
         var res = await _assignmentService.UpdateAsync(dto, id, UserName);
+        return Ok(res);
+    }
+    [HttpPost("my-assignments")]
+    [Authorize]
+    public async Task<IActionResult> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
+    {
+        var res = await _assignmentService.GetMyAssignmentsAsync(request);
         return Ok(res);
     }
 }
