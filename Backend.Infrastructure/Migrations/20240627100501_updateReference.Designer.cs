@@ -13,7 +13,7 @@ namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
     [Migration("20240627100501_updateReference")]
-    partial class updateReference
+    partial class UpdateReference
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

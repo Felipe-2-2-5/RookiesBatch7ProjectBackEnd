@@ -8,7 +8,7 @@ namespace Backend.Application.Validations
         public CategoryValidator()
         {
             RuleFor(x => x.Prefix).NotEmpty().MaximumLength(4).Matches("^[a-zA-Z]*$");
-            RuleFor(x => x.Name).NotEmpty().MaximumLength(50).Matches("^[a-zA-Z]*$");
+            RuleFor(x => x.Name).NotEmpty().MaximumLength(50).Matches("^[a-zA-Z ]*$");
         }
     }
 }

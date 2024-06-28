@@ -4,7 +4,7 @@
 
 namespace Backend.Infrastructure.Migrations
 {
-    public partial class addReturnRequest : Migration
+    public partial class AddReturnRequest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
