@@ -63,7 +63,7 @@ namespace Backend.Infrastructure.Repositories
                 "name" => asset => asset.Asset!.AssetName,
                 "receiver" => asset => asset.AssignedTo!.UserName,
                 "provider" => asset => asset.AssignedBy!.UserName,
-                "date" => asset => asset.AssignedDate,
+                "date" => asset => new { asset.AssignedDate, asset.Asset!.AssetCode },
                 "state" => asset => asset.State,
                 _ => asset => new { asset.AssignedDate, asset.Asset!.AssetCode }
             };
