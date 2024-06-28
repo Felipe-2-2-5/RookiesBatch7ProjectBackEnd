@@ -21,20 +21,46 @@ public class ReportRepository : IReportRepository
     }
 
 
-    public async Task<List<AssetReportDto>> GetAssetReportAsync(string sortColumn, string sortDirection)
+    //public async Task<List<AssetReportDto>> GetAssetReportAsync(string sortColumn, string sortDirection)
+    //{
+    //    var sortColumnParameter = new SqlParameter("@SortColumn", sortColumn ?? "Category");
+    //    var sortDirectionParameter = new SqlParameter("@SortDirection", sortDirection ?? "ASC");
+
+    //    var sqlCommand = "getAssetReportByCategoryAndState";
+
+    //    // Execute raw SQL query with Dapper
+    //    using (var connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
+    //    {
+    //        connection.Open();
+    //        var results = await connection.QueryAsync<AssetReportDto>(sqlCommand, new { SortColumn = sortColumnParameter.Value, SortDirection = sortDirectionParameter.Value }, commandType: CommandType.StoredProcedure);
+    //        return  results.AsList();
+    //    }
+    //}
+    public async Task<List<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page)
     {
-        var sortColumnParameter = new SqlParameter("@SortColumn", sortColumn ?? "Category");
-        var sortDirectionParameter = new SqlParameter("@SortDirection", sortDirection ?? "ASC");
+        var sortColumnParameter = new SqlParameter("@SortColumn", SortColumn ?? "Category");
+        var sortDirectionParameter = new SqlParameter("@SortDirection", SortDirection ?? "ASC");
 
         var sqlCommand = "getAssetReportByCategoryAndState";
 
-        // Execute raw SQL query with Dapper
         using (var connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
         {
             connection.Open();
-            var results = await connection.QueryAsync<AssetReportDto>(sqlCommand, new { SortColumn = sortColumnParameter.Value, SortDirection = sortDirectionParameter.Value }, commandType: CommandType.StoredProcedure);
-            return results.AsList();
+            var results = await connection.QueryAsync<AssetReportDto>(sqlCommand, new
+            {
+                SortColumn = sortColumnParameter.Value,
+                SortDirection = sortDirectionParameter.Value
+            }, commandType: CommandType.StoredProcedure);
+
+            // pagination
+            var pagedResults = results
+                .Skip((Page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            return pagedResults;
         }
     }
-    
+
+
 }
