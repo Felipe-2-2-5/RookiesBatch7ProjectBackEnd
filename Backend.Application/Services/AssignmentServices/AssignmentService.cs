@@ -116,7 +116,7 @@ public class AssignmentService : IAssignmentService
             {
                 var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
                 var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId);
-                oldAsset.Assignments = null;
+                oldAsset!.Assignments = null;
 
                 _mapper.Map(dto, assignment);
                 assignment.Asset = oldAsset;
@@ -159,7 +159,7 @@ public class AssignmentService : IAssignmentService
                 oldAsset.Assignments = null;
                 oldAsset.State = AssetState.Available;
 
-                
+
 
                 var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
 
