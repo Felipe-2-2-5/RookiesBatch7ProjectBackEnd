@@ -24,7 +24,7 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.Asset.Location == location)
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset.Location == location)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
             //IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.Asset.Location == location)
