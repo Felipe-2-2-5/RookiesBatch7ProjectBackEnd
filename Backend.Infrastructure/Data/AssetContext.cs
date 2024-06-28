@@ -1,5 +1,4 @@
-﻿using Backend.Application.DTOs.AssetDTOs;
-using Backend.Domain.Entities;
+﻿using Backend.Domain.Entities;
 using Backend.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,6 +68,7 @@ namespace Backend.Infrastructure.Data
             var users = new SeedUsersData().GenerateSeedData();
 
             modelBuilder.Entity<User>().HasData(users);
+
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    [Migration("20240624063716_init")]
-    partial class Init
+    [Migration("20240627100501_updateReference")]
+    partial class UpdateReference
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,7 +121,6 @@ namespace Backend.Infrastructure.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasMaxLength(600)
                         .HasColumnType("nvarchar(600)");
 
@@ -137,6 +136,58 @@ namespace Backend.Infrastructure.Migrations
                     b.HasIndex("AssignedToId");
 
                     b.ToTable("Assignments");
+                });
+
+            modelBuilder.Entity("Backend.Domain.Entities.ReturnRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AcceptorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("RequestorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReturnedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcceptorId");
+
+                    b.HasIndex("AssignmentId")
+                        .IsUnique();
+
+                    b.HasIndex("RequestorId");
+
+                    b.ToTable("ReturnRequests");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.User", b =>
@@ -205,8 +256,8 @@ namespace Backend.Infrastructure.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
 
                     b.HasKey("Id");
 
@@ -230,7 +281,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             Location = 1,
-                            Password = "$2a$11$FQgJ5INYTnlqFsBi6JokXu87XRoI7hX0ChTxpkBuerLq3fU5r67Iy",
+                            Password = "$2a$11$WoNTDCjxrMukRZeKtNvyyuTMnfVPV/pFboyIdUZdg.RkTURpTgO/C",
                             StaffCode = "SD0001",
                             Type = 1,
                             UserName = "johnd"
@@ -246,7 +297,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
                             Location = 0,
-                            Password = "$2a$11$Ha1sEO9BGt2PlTS47zQdUud9PnPyrRm.P.tI4pmgWWrGgx7bwjHBC",
+                            Password = "$2a$11$yePEt8NE6mb/V39tlwrAOe5cEX/CgRbpV6IGjzlXUUA7sNJH.nGvO",
                             StaffCode = "SD0002",
                             Type = 0,
                             UserName = "janes"
@@ -262,7 +313,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Brown",
                             Location = 1,
-                            Password = "$2a$11$HVygcNRgjKnElS2GyliX3uydegQHwTZEDz9ezUzwhffS1Dzw9AC8G",
+                            Password = "$2a$11$3oK6pWM8Ate/8NOB1H9RvOZhipEa8DiK.bDIH3G/V7.5hc4V8K0GS",
                             StaffCode = "SD0003",
                             Type = 1,
                             UserName = "michaelb"
@@ -278,7 +329,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2021, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Jones",
                             Location = 1,
-                            Password = "$2a$11$3Vo3iO46gG549An4TtHRhOmIcz4BKr3fl5V.zTjzReZPZTSjMRrWu",
+                            Password = "$2a$11$Ud.j5r2tUq3L27Exei.BDeyUCyX.GjYW5Q.Pq.U/IbsujJkiO/CJa",
                             StaffCode = "SD0004",
                             Type = 0,
                             UserName = "emilyj"
@@ -294,7 +345,7 @@ namespace Backend.Infrastructure.Migrations
                             JoinedDate = new DateTime(2017, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Williams",
                             Location = 0,
-                            Password = "$2a$11$QwsGuvhd7PrSSX6f37cv1ODg9s.9MLVP4yJJ/NCePGRCeYZ.5XUSi",
+                            Password = "$2a$11$jPRLXCsrThWgIZCn.bTBR.IfkXzKXtZ7NOWxwjm7w5IeE7tj9YsDu",
                             StaffCode = "SD0005",
                             Type = 0,
                             UserName = "davidw"
@@ -379,9 +430,40 @@ namespace Backend.Infrastructure.Migrations
                     b.Navigation("AssignedTo");
                 });
 
+            modelBuilder.Entity("Backend.Domain.Entities.ReturnRequest", b =>
+                {
+                    b.HasOne("Backend.Domain.Entities.User", "Acceptor")
+                        .WithMany()
+                        .HasForeignKey("AcceptorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Backend.Domain.Entities.Assignment", "Assignment")
+                        .WithOne("ReturnRequest")
+                        .HasForeignKey("Backend.Domain.Entities.ReturnRequest", "AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Domain.Entities.User", "Requestor")
+                        .WithMany()
+                        .HasForeignKey("RequestorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Acceptor");
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("Requestor");
+                });
+
             modelBuilder.Entity("Backend.Domain.Entities.Asset", b =>
                 {
                     b.Navigation("Assignments");
+                });
+
+            modelBuilder.Entity("Backend.Domain.Entities.Assignment", b =>
+                {
+                    b.Navigation("ReturnRequest");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entity.Category", b =>

@@ -3,7 +3,6 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Infrastructure.Data;
-using Backend.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -20,12 +19,12 @@ namespace Backend.Infrastructure.Repositories
                 .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy)
                 .Include(a => a.Asset)
-                .ThenInclude(a => a.Category)
+                .ThenInclude(a => a!.Category)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
-        public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request)
+        public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false)
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset.Location == location)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy);
@@ -46,9 +45,9 @@ namespace Backend.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(p =>
-                    p.Asset.AssetCode.Contains(request.SearchTerm) ||
+                    p.Asset!.AssetCode.Contains(request.SearchTerm) ||
                     p.Asset.AssetName.Contains(request.SearchTerm) ||
-                    p.AssignedTo.UserName.Contains(request.SearchTerm));
+                    p.AssignedTo!.UserName.Contains(request.SearchTerm));
             }
 
             query = request.SortOrder?.ToLower() == "descend" ? query.OrderByDescending(GetSortProperty(request)) : query.OrderBy(GetSortProperty(request));
@@ -60,13 +59,13 @@ namespace Backend.Infrastructure.Repositories
         private static Expression<Func<Assignment, object>> GetSortProperty(AssignmentFilterRequest request) =>
             request.SortColumn?.ToLower() switch
             {
-                "code" => asset => asset.Asset.AssetCode,
-                "name" => asset => asset.Asset.AssetName,
-                "receiver" => asset => asset.AssignedTo.UserName,
-                "provider" => asset => asset.AssignedBy.UserName,
+                "code" => asset => asset.Asset!.AssetCode,
+                "name" => asset => asset.Asset!.AssetName,
+                "receiver" => asset => asset.AssignedTo!.UserName,
+                "provider" => asset => asset.AssignedBy!.UserName,
                 "date" => asset => asset.AssignedDate,
                 "state" => asset => asset.State,
-                _ => asset => asset.AssignedDate
+                _ => asset => new { asset.AssignedDate, asset.Asset!.AssetCode }
             };
 
         public async Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId)
@@ -85,7 +84,7 @@ namespace Backend.Infrastructure.Repositories
                             .Include(a => a.AssignedBy)
                             .FirstOrDefaultAsync(a => a.Id == id);
         }
-        public async Task<Assignment?> FindLastestAssignment()
+        public async Task<Assignment?> FindLatestAssignment()
         {
             return await _context.Assignments
                             .Include(a => a.Asset)
@@ -94,5 +93,26 @@ namespace Backend.Infrastructure.Repositories
                             .OrderByDescending(a => a.Id)
                             .AsNoTracking().FirstOrDefaultAsync();
         }
+        public async Task<PaginationResponse<Assignment>> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
+        {
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now)
+                .Include(a => a.Asset)
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy);
+
+            query = request.SortOrder?.ToLower() == "descend" ? query.OrderByDescending(GetSortPropertyMyAssignment(request)) : query.OrderBy(GetSortPropertyMyAssignment(request));
+            var totalCount = await query.CountAsync();
+            var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
+            return new PaginationResponse<Assignment>(items, totalCount);
+        }
+        private static Expression<Func<Assignment, object>> GetSortPropertyMyAssignment(MyAssignmentFilterRequest request) =>
+            request.SortColumn?.ToLower() switch
+            {
+                "code" => asset => asset.Asset!.AssetCode,
+                "name" => asset => asset.Asset!.AssetName,
+                "date" => asset => asset.AssignedDate,
+                "state" => asset => asset.State,
+                _ => asset => new { asset.AssignedDate, asset.Asset!.AssetCode }
+            };
     }
 }

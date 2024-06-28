@@ -2,7 +2,7 @@
 using Backend.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Infrastructure.Repository
+namespace Backend.Infrastructure.Repositories
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {

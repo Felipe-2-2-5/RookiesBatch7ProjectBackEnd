@@ -37,8 +37,8 @@ namespace Backend.Tests.ServiceTests
             var categoryResponse = new CategoryResponse { Name = "TestCategory", Prefix = "TCFF" };
 
             _validatorMock.Setup(v => v.ValidateAsync(categoryDto, default)).ReturnsAsync(validationResult);
-            _categoryRepositoryMock.Setup(r => r.FindCategoryByNameAsync(categoryDto.Name)).ReturnsAsync((Category)null);
-            _categoryRepositoryMock.Setup(r => r.FindCategoryByPrefixAsync(categoryDto.Prefix)).ReturnsAsync((Category)null);
+            _categoryRepositoryMock.Setup(r => r.FindCategoryByNameAsync(categoryDto.Name)).ReturnsAsync((Category?)null);
+            _categoryRepositoryMock.Setup(r => r.FindCategoryByPrefixAsync(categoryDto.Prefix)).ReturnsAsync((Category?)null);
             _mapperMock.Setup(m => m.Map<Category>(categoryDto)).Returns(category);
             _categoryRepositoryMock.Setup(r => r.InsertAsync(category)).Returns(Task.CompletedTask);
             _categoryRepositoryMock.Setup(r => r.FindCategoryByPrefixAsync(categoryDto.Prefix)).ReturnsAsync(category);

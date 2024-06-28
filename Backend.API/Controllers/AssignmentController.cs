@@ -1,19 +1,20 @@
+using System.Security.Claims;
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.Services.AssignmentServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Backend.API.Controllers;
 
 [Route("api/assignments")]
 [ApiController]
-public class AssignmentController : ControllerBase
+public class AssignmentController : BaseController
 {
     private readonly IAssignmentService _assignmentService;
     private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+    private string Location => Convert.ToString(User.Claims.First(c => c.Type == "Location").Value);
     private int AssignedById
     {
         get
@@ -26,6 +27,7 @@ public class AssignmentController : ControllerBase
             throw new Exception("User ID is not a valid integer.");
         }
     }
+
     public AssignmentController(IAssignmentService assignmentService)
     {
         _assignmentService = assignmentService;
@@ -40,7 +42,6 @@ public class AssignmentController : ControllerBase
     }
 
     [HttpPost("filter")]
-    //[Authorize]
     [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> GetFilterAsync(AssignmentFilterRequest request)
     {
@@ -52,7 +53,11 @@ public class AssignmentController : ControllerBase
         {
             request.ToDate = DateTime.Today;
         }
-        var res = await _assignmentService.GetFilterAsync(request);
+        if (!Enum.TryParse(Location, out Location locationEnum))
+        {
+            return BadRequest("Invalid location");
+        }
+        var res = await _assignmentService.GetFilterAsync(request, locationEnum);
         return Ok(res);
     }
 
@@ -60,7 +65,7 @@ public class AssignmentController : ControllerBase
     [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> InsertAsync(AssignmentDTO dto)
     {
-        var res = await _assignmentService.InsertAsync(dto, UserName, AssignedById);
+        var res = await _assignmentService.InsertAsync(dto, UserName, UserId);
         return Ok(res);
     }
 
@@ -69,6 +74,13 @@ public class AssignmentController : ControllerBase
     public async Task<IActionResult> UpdateAsync(AssignmentDTO dto, int id)
     {
         var res = await _assignmentService.UpdateAsync(dto, id, UserName);
+        return Ok(res);
+    }
+    [HttpPost("my-assignments")]
+    [Authorize]
+    public async Task<IActionResult> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
+    {
+        var res = await _assignmentService.GetMyAssignmentsAsync(request);
         return Ok(res);
     }
 }

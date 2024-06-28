@@ -13,7 +13,7 @@ namespace Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetContext))]
     [Migration("20240626145439_addReturnRequest")]
-    partial class addReturnRequest
+    partial class AddReturnRequest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

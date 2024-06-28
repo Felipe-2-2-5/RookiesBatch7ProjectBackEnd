@@ -57,7 +57,7 @@ namespace Backend.Tests.ServiceTests
             // Arrange
             var userId = 1;
 
-            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User)null);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User?)null);
 
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _userService.GetByIdAsync(userId));
@@ -236,7 +236,7 @@ namespace Backend.Tests.ServiceTests
             // Arrange
             var userId = 1;
 
-            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User)null);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User?)null);
 
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _userService.DisableUserAsync(userId));

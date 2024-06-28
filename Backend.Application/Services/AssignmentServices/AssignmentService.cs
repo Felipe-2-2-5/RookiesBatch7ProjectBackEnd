@@ -35,9 +35,9 @@ public class AssignmentService : IAssignmentService
         return dto;
     }
 
-    public async Task<PaginationResponse<AssignmentResponse>> GetFilterAsync(AssignmentFilterRequest request)
+    public async Task<PaginationResponse<AssignmentResponse>> GetFilterAsync(AssignmentFilterRequest request, Location location)
     {
-        var res = await _assignmentRepository.GetFilterAsync(request);
+        var res = await _assignmentRepository.GetFilterAsync(request,location);
         var dto = _mapper.Map<IEnumerable<AssignmentResponse>>(res.Data);
         return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
@@ -52,8 +52,8 @@ public class AssignmentService : IAssignmentService
             if (assignedAsset.State == AssetState.Assigned)
             {
                 var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
-                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment.AssignedToId);
-                throw new DataInvalidException($"Asset has been assigned to {assignedUser.UserName} ");
+                var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment!.AssignedToId);
+                throw new DataInvalidException($"Asset has been assigned to {assignedUser!.UserName} ");
             }
 
             var assignment = _mapper.Map<Assignment>(dto);
@@ -66,7 +66,7 @@ public class AssignmentService : IAssignmentService
             assignedAsset.State = AssetState.Assigned;
             await _assetRepository.UpdateAsync(assignedAsset);
 
-            var returnAssignment = await _assignmentRepository.FindLastestAssignment();
+            var returnAssignment = await _assignmentRepository.FindLatestAssignment();
 
             var res = _mapper.Map<AssignmentResponse>(returnAssignment);
             return res;
@@ -116,7 +116,7 @@ public class AssignmentService : IAssignmentService
             {
                 var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
                 var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId);
-                oldAsset.Assignments = null;
+                oldAsset!.Assignments = null;
 
                 _mapper.Map(dto, assignment);
                 assignment.Asset = oldAsset;
@@ -129,7 +129,7 @@ public class AssignmentService : IAssignmentService
                 return _mapper.Map<AssignmentResponse>(assignment);
             }
             //Not change user, not change asset
-            else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId )
+            else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId)
             {
                 var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
                 oldAsset.Assignments = null;
@@ -159,7 +159,7 @@ public class AssignmentService : IAssignmentService
                 oldAsset.Assignments = null;
                 oldAsset.State = AssetState.Available;
 
-                
+
 
                 var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
 
@@ -173,9 +173,17 @@ public class AssignmentService : IAssignmentService
 
                 return _mapper.Map<AssignmentResponse>(assignment);
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             throw new Exception($"Error {ex.Message}", ex);
         }
+    }
+
+    public async Task<PaginationResponse<AssignmentResponse>> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
+    {
+        var res = await _assignmentRepository.GetMyAssignmentsAsync(request);
+        var dto = _mapper.Map<IEnumerable<AssignmentResponse>>(res.Data);
+        return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
 }
