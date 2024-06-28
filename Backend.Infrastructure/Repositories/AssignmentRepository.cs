@@ -24,7 +24,7 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset.Location == location)
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset!.Location == location)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy);
@@ -50,7 +50,18 @@ namespace Backend.Infrastructure.Repositories
                     p.AssignedTo!.UserName.Contains(request.SearchTerm));
             }
 
-            query = request.SortOrder?.ToLower() == "descend" ? query.OrderByDescending(GetSortProperty(request)) : query.OrderBy(GetSortProperty(request));
+            if (request.SortColumn?.ToLower() == "date")
+            {
+                query = request.SortOrder?.ToLower() == "descend"
+                    ? query.OrderByDescending(a => a.AssignedDate).ThenByDescending(a => a.Asset!.AssetCode)
+                    : query.OrderBy(a => a.AssignedDate).ThenBy(a => a.Asset!.AssetCode);
+            }
+            else
+            {
+                query = request.SortOrder?.ToLower() == "descend"
+                    ? query.OrderByDescending(GetSortProperty(request))
+                    : query.OrderBy(GetSortProperty(request));
+            }
             var totalCount = await query.CountAsync();
             var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             return new PaginationResponse<Assignment>(items, totalCount);
