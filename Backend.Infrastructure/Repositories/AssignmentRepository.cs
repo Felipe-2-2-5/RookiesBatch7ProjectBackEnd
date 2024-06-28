@@ -63,9 +63,9 @@ namespace Backend.Infrastructure.Repositories
                 "name" => asset => asset.Asset!.AssetName,
                 "receiver" => asset => asset.AssignedTo!.UserName,
                 "provider" => asset => asset.AssignedBy!.UserName,
-                "date" => asset => new { asset.AssignedDate, asset.Asset!.AssetCode },
+                "date" => asset => asset.AssignedDate,
                 "state" => asset => asset.State,
-                _ => asset => new { asset.AssignedDate, asset.Asset!.AssetCode }
+                _ => asset => asset.AssignedDate
             };
 
         public async Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId)
