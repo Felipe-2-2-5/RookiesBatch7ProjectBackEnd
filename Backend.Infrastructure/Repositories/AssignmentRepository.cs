@@ -24,11 +24,7 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.Asset.Location == location)
-                .Include(a => a.Asset)
-                .Include(a => a.AssignedTo)
-            //IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.Asset.Location == location)
-
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset.Location == location)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy);
@@ -67,7 +63,7 @@ namespace Backend.Infrastructure.Repositories
                 "name" => asset => asset.Asset!.AssetName,
                 "receiver" => asset => asset.AssignedTo!.UserName,
                 "provider" => asset => asset.AssignedBy!.UserName,
-                "date" => asset => asset.AssignedDate,
+                "date" => asset => new { asset.AssignedDate, asset.Asset!.AssetCode },
                 "state" => asset => asset.State,
                 _ => asset => new { asset.AssignedDate, asset.Asset!.AssetCode }
             };
