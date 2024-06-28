@@ -64,10 +64,10 @@ namespace Backend.API.Controllers
         }
 
         //get report by category and state
-        [HttpGet("report")]
-        public async Task<ActionResult<List<AssetReportDto>>> GetAssetReport([FromQuery] string sortColumn, [FromQuery] string sortDirection)
+        [HttpPost("report")]
+        public async Task<ActionResult<List<AssetReportDto>>> GetAssetReport(BaseFilterRequest filterDto)
         {
-            var result = await _reportService.GetAssetReportAsync(sortColumn, sortDirection);
+            var result = await _reportService.GetAssetReportAsync(filterDto.SortColumn, filterDto.SortOrder, filterDto.PageSize, filterDto.Page);
             return Ok(result);
         }
     }

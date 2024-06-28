@@ -22,9 +22,9 @@ namespace Backend.Application.Services.ReportServices
         }
 
         //get report by category and state 
-        public async Task<List<AssetReportDto>> GetAssetReportAsync(string sortColumn, string sortDirection)
+        public async Task<List<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page)
         {
-            return await _reportRepository.GetAssetReportAsync(sortColumn, sortDirection);
+            return await _reportRepository.GetAssetReportAsync(SortColumn, SortDirection, PageSize, Page);
         }
     }
 }
