@@ -27,10 +27,6 @@ namespace Backend.Infrastructure.Repositories
             IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset.Location == location)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
-            //IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.Asset.Location == location)
-
-                .Include(a => a.Asset)
-                .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy);
 
             if (!string.IsNullOrWhiteSpace(request.State))
