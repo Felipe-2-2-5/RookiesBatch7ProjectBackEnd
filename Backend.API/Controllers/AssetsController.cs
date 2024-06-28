@@ -5,18 +5,16 @@ using Backend.Application.Services.ReportServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Backend.API.Controllers
 {
     [Route("api/assets")]
     [ApiController]
-    public class AssetsController : ControllerBase
+    public class AssetsController : BaseController
     {
         private readonly IAssetService _assetService;
         private readonly IReportService _reportService;
-        private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
-        private Location Location => (Location)Enum.Parse(typeof(Location), User.Claims.First(c => c.Type == "Location").Value);
+
 
         public AssetsController(IAssetService assetService, IReportService reportService)
         {

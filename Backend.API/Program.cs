@@ -10,6 +10,7 @@ using Backend.Application.Services.AssetServices;
 using Backend.Application.Services.AssignmentServices;
 using Backend.Application.Services.CategoryServices;
 using Backend.Application.Services.ReportServices;
+using Backend.Application.Services.ReturnRequestServices;
 using Backend.Application.Services.UserServices;
 using Backend.Application.Validations;
 using Backend.Infrastructure.Data;
@@ -117,7 +118,9 @@ builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
-
+//Return request services
+builder.Services.AddScoped<IReturnRequestRepository, ReturnRequestRepository>();
+builder.Services.AddScoped<IReturnRequestService, ReturnRequestService>();
 //Add FluentValidation services
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
 builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
