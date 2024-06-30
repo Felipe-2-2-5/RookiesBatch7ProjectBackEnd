@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers
 {
-    [Route("api/return_requests")]
+    [Route("api/return-requests")]
     [ApiController]
     public class ReturnRequestsController : BaseController
     {
