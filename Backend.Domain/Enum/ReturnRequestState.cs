@@ -3,6 +3,6 @@
     public enum ReturnRequestState
     {
         Completed = 0,
-        Waiting = 1,
+        WaitingForReturning = 1,
     }
 }

@@ -35,7 +35,7 @@ namespace Backend.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
-                query = request.State == "Completed" ? query.Where(p => p.State == ReturnRequestState.Completed) : query.Where(p => p.State == ReturnRequestState.Waiting);
+                query = request.State == ReturnRequestState.Completed.ToString() ? query.Where(p => p.State == ReturnRequestState.Completed) : query.Where(p => p.State == ReturnRequestState.WaitingForReturning);
             }
 
             if (request.ReturnedDateFrom.HasValue)
