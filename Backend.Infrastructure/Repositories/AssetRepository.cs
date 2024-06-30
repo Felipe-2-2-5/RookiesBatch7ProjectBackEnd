@@ -96,8 +96,8 @@ namespace Backend.Infrastructure.Repositories
         private static Expression<Func<Asset, object>> GetSortProperty(AssetFilterRequest request) =>
             request.SortColumn?.ToLower() switch
             {
-                "assetcode" => asset => asset.AssetCode,
-                "assetname" => asset => asset.AssetName,
+                "assetCode" => asset => asset.AssetCode,
+                "assetName" => asset => asset.AssetName,
                 "category" => asset => asset.Category!.Name,
                 "state" => asset => asset.State,
                 _ => user => user.AssetName
