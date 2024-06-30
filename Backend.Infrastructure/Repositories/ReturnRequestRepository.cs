@@ -71,6 +71,7 @@ namespace Backend.Infrastructure.Repositories
                 "assignedDate" => returnRequest => returnRequest.Assignment.AssignedDate,
                 "acceptedBy" => returnRequest => returnRequest.Acceptor.UserName,
                 "returnedDate" => returnRequest => returnRequest.ReturnedDate,
+                "state" => returnRequest => returnRequest.State,
                 _ => returnRequest => returnRequest.ReturnedDate
             };
     }
