@@ -13,7 +13,7 @@ namespace Backend.Infrastructure.Repositories
         public UserRepository(AssetContext context) : base(context)
         {
         }
-        public async Task<User?> FindUserByUserNameAsync(string email) => await _context.Users.AsNoTracking().Where(u => u.IsDeleted != true).FirstOrDefaultAsync(u => u.UserName == email);
+        public async Task<User?> FindUserByUserNameAsync(string email) => await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == email);
         public async Task<User> GenerateUserInformation(User user)
         {
             int maxId = await _table.CountAsync();
