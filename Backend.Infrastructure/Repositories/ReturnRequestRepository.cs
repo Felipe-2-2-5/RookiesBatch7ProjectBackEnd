@@ -38,14 +38,9 @@ namespace Backend.Infrastructure.Repositories
                 query = request.State == ReturnRequestState.Completed.ToString() ? query.Where(p => p.State == ReturnRequestState.Completed) : query.Where(p => p.State == ReturnRequestState.WaitingForReturning);
             }
 
-            if (request.ReturnedDateFrom.HasValue)
+            if (request.ReturnedDate.HasValue)
             {
-                query = query.Where(p => p.ReturnedDate >= request.ReturnedDateFrom.Value);
-            }
-
-            if (request.ReturnedDateTo.HasValue)
-            {
-                query = query.Where(p => p.ReturnedDate <= request.ReturnedDateTo.Value);
+                query = query.Where(p => p.ReturnedDate == request.ReturnedDate.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
