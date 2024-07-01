@@ -18,7 +18,7 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.ReturnRequests
                  .Include(a => a.Assignment)
-                    .ThenInclude(assignment => assignment.Asset)
+                    .ThenInclude(assignment => assignment!.Asset)
                 .Include(a => a.Requestor)
                 .Include(a => a.Acceptor)
                 .AsNoTracking()
@@ -27,9 +27,9 @@ namespace Backend.Infrastructure.Repositories
 
         public async Task<PaginationResponse<ReturnRequest>> GetFilterAsync(ReturnRequestFilterRequest request, Location location)
         {
-            IQueryable<ReturnRequest> query = _table.Where(a => a.Assignment.Asset.Location == location)
+            IQueryable<ReturnRequest> query = _table.Where(a => a.Assignment!.Asset!.Location == location)
                 .Include(a => a.Assignment)
-                    .ThenInclude(assignment => assignment.Asset)
+                    .ThenInclude(assignment => assignment!.Asset)
                 .Include(a => a.Requestor)
                 .Include(a => a.Acceptor);
 
@@ -50,7 +50,7 @@ namespace Backend.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                query = query.Where(p => p.Assignment.Asset.AssetCode.Contains(request.SearchTerm) || p.Assignment.Asset.AssetName.Contains(request.SearchTerm) || p.Requestor.UserName.Contains(request.SearchTerm));
+                query = query.Where(p => p.Assignment!.Asset!.AssetCode.Contains(request.SearchTerm) || p.Assignment!.Asset.AssetName.Contains(request.SearchTerm) || p.Requestor!.UserName.Contains(request.SearchTerm));
             }
 
             query = request.SortOrder?.ToLower() == "descend"
@@ -65,14 +65,14 @@ namespace Backend.Infrastructure.Repositories
         private static Expression<Func<ReturnRequest, object>> GetSortProperty(ReturnRequestFilterRequest request) =>
             request.SortColumn?.ToLower() switch
             {
-                "assetCode" => returnRequest => returnRequest.Assignment.Asset.AssetCode,
-                "assetName" => returnRequest => returnRequest.Assignment.Asset.AssetName,
-                "requestedBy" => returnRequest => returnRequest.Requestor.UserName,
-                "assignedDate" => returnRequest => returnRequest.Assignment.AssignedDate,
-                "acceptedBy" => returnRequest => returnRequest.Acceptor.UserName,
-                "returnedDate" => returnRequest => returnRequest.ReturnedDate,
+                "assetCode" => returnRequest => returnRequest.Assignment!.Asset!.AssetCode,
+                "assetName" => returnRequest => returnRequest.Assignment!.Asset!.AssetName,
+                "requestedBy" => returnRequest => returnRequest.Requestor!.UserName!,
+                "assignedDate" => returnRequest => returnRequest.Assignment!.AssignedDate!,
+                "acceptedBy" => returnRequest => returnRequest.Acceptor!.UserName!,
+                "returnedDate" => returnRequest => returnRequest.ReturnedDate!,
                 "state" => returnRequest => returnRequest.State,
-                _ => returnRequest => returnRequest.ReturnedDate
+                _ => returnRequest => returnRequest.ReturnedDate!
             };
     }
 }

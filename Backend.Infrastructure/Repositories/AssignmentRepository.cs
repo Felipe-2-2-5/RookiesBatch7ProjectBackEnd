@@ -20,6 +20,7 @@ namespace Backend.Infrastructure.Repositories
                 .Include(a => a.AssignedBy)
                 .Include(a => a.Asset)
                 .ThenInclude(a => a!.Category)
+                .Include(a => a.ReturnRequest)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
         public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
@@ -27,7 +28,8 @@ namespace Backend.Infrastructure.Repositories
             IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset!.Location == location)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
-                .Include(a => a.AssignedBy);
+                .Include(a => a.AssignedBy)
+                .Include(a => a.ReturnRequest);
 
             if (!string.IsNullOrWhiteSpace(request.State))
             {
