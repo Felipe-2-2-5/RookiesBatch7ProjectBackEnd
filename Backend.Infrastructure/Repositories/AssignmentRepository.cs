@@ -108,7 +108,7 @@ namespace Backend.Infrastructure.Repositories
         }
         public async Task<PaginationResponse<Assignment>> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
         {
-            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now)
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.AssignedToId == request.UserId)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
                 .Include(a => a.AssignedBy);
