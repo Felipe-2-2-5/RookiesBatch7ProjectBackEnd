@@ -18,4 +18,5 @@ public interface IAssignmentService
     Task<AssignmentResponse> UpdateAsync(AssignmentDTO dto, int id, string modifiedName);
 
     Task<PaginationResponse<AssignmentResponse>> GetMyAssignmentsAsync(MyAssignmentFilterRequest request);
+    Task RespondAssignment(AssignmentRespondDto dto, int id);
 }

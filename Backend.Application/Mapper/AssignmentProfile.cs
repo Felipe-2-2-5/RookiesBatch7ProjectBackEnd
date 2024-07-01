@@ -10,5 +10,7 @@ public class AssignmentProfile : Profile
     {
         CreateMap<Assignment, AssignmentResponse>();
         CreateMap<AssignmentDTO, Assignment>();
+
+        CreateMap<AssignmentRespondDto, Assignment>();
     }
 }

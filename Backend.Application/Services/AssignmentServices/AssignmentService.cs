@@ -186,4 +186,23 @@ public class AssignmentService : IAssignmentService
         var dto = _mapper.Map<IEnumerable<AssignmentResponse>>(res.Data);
         return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
+
+    public async Task RespondAssignment(AssignmentRespondDto dto, int id)
+    {
+            var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
+        if (dto.State == AssignmentState.Accepted)
+        {
+            _mapper.Map(dto, assignment);
+            await _assignmentRepository.UpdateAsync(assignment);
+        }
+        else
+        {
+            var asset =await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            asset.Assignments = null;
+            asset.State = AssetState.Available;
+            await _assetRepository.UpdateAsync(asset);
+
+            await _assignmentRepository.DeleteAsync(assignment); 
+        }
+    }
 }
