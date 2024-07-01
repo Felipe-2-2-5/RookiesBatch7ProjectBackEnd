@@ -6,6 +6,7 @@ namespace Backend.Application.DTOs.ReturnRequestDTOs
 {
     public class ReturnRequestResponse
     {
+        public int Id { get; set; }
         [Required]
         public int RequestorId { get; set; }
         public User? Requestor { get; set; }
