@@ -87,20 +87,12 @@ namespace Backend.Application.Services.UserServices
             if (getUser == null)
                 return new LoginResponse(false, "User not found");
 
-            // Check if the user is disabled
             if (getUser.IsDeleted == true)
                 throw new ForbiddenException("Your account has been disabled");
 
-            bool checkPassword = BCrypt.Net.BCrypt.Verify(dto.Password, getUser.Password);
+            var checkPassword = BCrypt.Net.BCrypt.Verify(dto.Password, getUser.Password);
 
-            if (checkPassword)
-            {
-                return new LoginResponse(true, "Login success", _tokenService.GenerateJWTWithUser(getUser));
-            }
-            else
-            {
-                return new LoginResponse(false, "Invalid credentials");
-            }
+            return checkPassword ? new LoginResponse(true, "Login success", _tokenService.GenerateJWTWithUser(getUser)) : new LoginResponse(false, "Invalid username or password. Please try again.");
         }
 
         public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request, Location location)
