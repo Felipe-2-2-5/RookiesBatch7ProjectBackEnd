@@ -85,4 +85,12 @@ public class AssignmentController : BaseController
         var res = await _assignmentService.GetMyAssignmentsAsync(request);
         return Ok(res);
     }
+
+    [HttpPut("{id}/respond")]
+    [Authorize]
+    public async Task<IActionResult> AssignmentRespond(AssignmentRespondDto dto, int id)
+    {
+        await _assignmentService.RespondAssignment(dto, id);
+        return Ok();
+    }
 }
