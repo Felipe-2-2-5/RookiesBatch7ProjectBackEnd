@@ -86,12 +86,16 @@ namespace Backend.Application.Services.UserServices
             var getUser = await FindUserByUserNameAsync(dto.UserName!);
             if (getUser == null)
                 return new LoginResponse(false, "User not found");
+
+            // Check if the user is disabled
+            if (getUser.IsDeleted == true)
+                throw new ForbiddenException("Your account has been disabled");
+
             bool checkPassword = BCrypt.Net.BCrypt.Verify(dto.Password, getUser.Password);
 
             if (checkPassword)
             {
                 return new LoginResponse(true, "Login success", _tokenService.GenerateJWTWithUser(getUser));
-
             }
             else
             {

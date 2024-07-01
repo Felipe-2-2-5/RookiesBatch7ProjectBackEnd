@@ -10,7 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +127,8 @@
       <workItem from="1719457370968" duration="2666000" />
       <workItem from="1719475924717" duration="5122000" />
       <workItem from="1719543462956" duration="6537000" />
-      <workItem from="1719801831126" duration="4725000" />
+      <workItem from="1719801831126" duration="8372000" />
+      <workItem from="1719822556871" duration="1275000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
