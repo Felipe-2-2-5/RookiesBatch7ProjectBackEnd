@@ -124,14 +124,17 @@ namespace Backend.Application.Services.UserServices
             await _userRepo.SaveChangeAsync();
         }
 
-        public async Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy)
+        public async Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy, Location location)
         {
             var user = await _userRepo.GetByIdAsync(id);
             if (user == null)
             {
                 throw new NotFoundException("User not found");
             }
-
+            if(user.Location != location)
+            {
+                throw new ForbiddenException("No permission to update this user");
+            }
             var validationResult = await _validator.ValidateAsync(dto);
             if (!validationResult.IsValid)
             {
