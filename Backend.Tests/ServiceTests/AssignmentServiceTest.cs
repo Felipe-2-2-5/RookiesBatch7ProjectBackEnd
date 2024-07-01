@@ -148,5 +148,25 @@ namespace Backend.Tests.ServiceTests
             // Assert
             Assert.That(result, Is.Null);
         }
+        
+        [Test]
+        public async Task GetMyAssignmentsAsync_ReturnsCorrectPaginationResponse()
+        {
+            // Arrange
+            var request = new MyAssignmentFilterRequest();
+            var assignments = new List<Assignment> { new Assignment() };
+            var paginationResponse = new PaginationResponse<Assignment>(assignments, 1);
+            var assignmentResponses = new List<AssignmentResponse> { new AssignmentResponse() };
+
+            _assignmentRepoMock.Setup(repo => repo.GetMyAssignmentsAsync(request)).ReturnsAsync(paginationResponse);
+            _mapperMock.Setup(mapper => mapper.Map<IEnumerable<AssignmentResponse>>(assignments)).Returns(assignmentResponses);
+
+            // Act
+            var result = await _assignmentService.GetMyAssignmentsAsync(request);
+
+            // Assert
+            Assert.That(result.Data, Is.EqualTo(assignmentResponses));
+            Assert.That(result.TotalCount, Is.EqualTo(1));
+        }
     }
 }
