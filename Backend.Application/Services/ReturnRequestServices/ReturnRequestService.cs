@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Backend.Application.Common.Paging;
+using Backend.Application.DTOs.ReturnRequestDTOs;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
@@ -18,6 +20,7 @@ namespace Backend.Application.Services.ReturnRequestServices
             _assignmentRepository = assignmentRepository;
             _mapper = mapper;
         }
+
         public async Task CreateRequest(int assignmentId, string createName, int createId, Role role)
         {
             var assignment = await _assignmentRepository.GetByIdAsync(assignmentId);
@@ -35,6 +38,20 @@ namespace Backend.Application.Services.ReturnRequestServices
             request.CreatedBy = createName;
             request.CreatedAt = DateTime.Now;
             await _requestRepository.InsertAsync(request);
+        }
+
+        public async Task<ReturnRequestResponse> GetByIdAsync(int id)
+        {
+            var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException();
+            var dto = _mapper.Map<ReturnRequestResponse>(request);
+            return dto;
+        }
+
+        public async Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location)
+        {
+            var res = await _requestRepository.GetFilterAsync(request, location);
+            var dtos = _mapper.Map<IEnumerable<ReturnRequestResponse>>(res.Data);
+            return new(dtos, res.TotalCount);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum ReturnRequestState
     {
-        completed = 0,
-        waiting = 1,
+        Completed = 0,
+        WaitingForReturning = 1,
     }
 }
