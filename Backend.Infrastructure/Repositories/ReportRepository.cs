@@ -8,6 +8,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Backend.Application.Common.Paging;
+using Backend.Domain.Entities;
 
 public class ReportRepository : IReportRepository
 {
@@ -36,7 +38,7 @@ public class ReportRepository : IReportRepository
     //        return  results.AsList();
     //    }
     //}
-    public async Task<List<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page)
+    public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page)
     {
         var sortColumnParameter = new SqlParameter("@SortColumn", SortColumn ?? "Category");
         var sortDirectionParameter = new SqlParameter("@SortDirection", SortDirection ?? "ASC");
@@ -46,19 +48,21 @@ public class ReportRepository : IReportRepository
         using (var connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
         {
             connection.Open();
-            var results = await connection.QueryAsync<AssetReportDto>(sqlCommand, new
+            var results = (await connection.QueryAsync<AssetReportDto>(sqlCommand, new
             {
                 SortColumn = sortColumnParameter.Value,
                 SortDirection = sortDirectionParameter.Value
-            }, commandType: CommandType.StoredProcedure);
+            }, commandType: CommandType.StoredProcedure)).ToList();
 
+            var totalCount = results.Count;
             // pagination
             var pagedResults = results
                 .Skip((Page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
 
-            return pagedResults;
+            //return pagedResults;
+            return new PaginationResponse<AssetReportDto>(pagedResults, totalCount);
         }
     }
 
