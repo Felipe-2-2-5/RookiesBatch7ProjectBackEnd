@@ -1,6 +1,5 @@
 ﻿using Backend.Application.Common.Paging;
 using Backend.Application.Services.ReturnRequestServices;
-using Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +16,11 @@ namespace Backend.API.Controllers
             _requestService = requestService;
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{assignmentId}")]
         [Authorize]
-        public async Task<IActionResult> InsertAsync(int id)
+        public async Task<IActionResult> InsertAsync(int assignmentId)
         {
-            await _requestService.CreateRequest(id, UserName, UserId, Role);
+            await _requestService.CreateRequest(assignmentId, UserName, UserId, Role);
             return Ok();
         }
 

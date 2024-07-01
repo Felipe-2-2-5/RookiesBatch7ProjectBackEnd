@@ -28,6 +28,10 @@ namespace Backend.Application.Services.ReturnRequestServices
             {
                 throw new ForbiddenException("No Permission");
             }
+            if (assignment.State == AssignmentState.Waiting)
+            {
+                throw new DataInvalidException("Assignment not accepted");
+            }
             if (assignment!.IsDeleted == true)
             {
                 throw new DataInvalidException("Asset has been returned");
