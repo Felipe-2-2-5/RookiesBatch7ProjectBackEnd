@@ -40,7 +40,10 @@ namespace Backend.Infrastructure.Repositories
 
             if (request.ReturnedDate.HasValue)
             {
-                query = query.Where(p => p.ReturnedDate == request.ReturnedDate.Value);
+                DateTime startDate = request.ReturnedDate.Value.Date;
+                DateTime endDate = startDate.AddDays(1).AddTicks(-1);
+
+                query = query.Where(p => p.ReturnedDate >= startDate && p.ReturnedDate <= endDate);
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
