@@ -68,7 +68,7 @@ namespace Backend.API.Controllers
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> UpdateAsync(int id, UserDTO dto)
         {
-            var res = await _userService.UpdateAsync(id, dto, UserName);
+            var res = await _userService.UpdateAsync(id, dto, UserName, Location);
             return Ok(res);
         }
     }

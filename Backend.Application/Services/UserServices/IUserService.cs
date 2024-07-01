@@ -21,6 +21,6 @@ namespace Backend.Application.Services.UserServices
 
         Task DisableUserAsync(int userId);
 
-        Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy);
+        Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy, Location location);
     }
 }
