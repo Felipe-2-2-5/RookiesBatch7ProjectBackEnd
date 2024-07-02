@@ -38,7 +38,7 @@ namespace Backend.Infrastructure.Repositories
                 query = request.State == ReturnRequestState.Completed.ToString() ? query.Where(p => p.State == ReturnRequestState.Completed) : query.Where(p => p.State == ReturnRequestState.WaitingForReturning);
             }
 
-            if (request.ReturnedDate.HasValue)
+            if (request.ReturnedDate != null && request.ReturnedDate.HasValue)
             {
                 DateTime startDate = request.ReturnedDate.Value.Date;
                 DateTime endDate = startDate.AddDays(1).AddTicks(-1);
