@@ -11,11 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/AssignmentController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/Common/Paging/AssignmentFilterRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Common/Paging/AssignmentFilterRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Domain/Enum/AssignmentState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Domain/Enum/AssignmentState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/UserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/ReturnRequestsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/ReturnRequestsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/IReturnRequestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/IReturnRequestService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +132,7 @@
       <workItem from="1719801831126" duration="8372000" />
       <workItem from="1719822556871" duration="1275000" />
       <workItem from="1719841271404" duration="4339000" />
-      <workItem from="1719890030100" duration="5795000" />
+      <workItem from="1719890030100" duration="14233000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>

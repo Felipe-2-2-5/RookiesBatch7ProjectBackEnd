@@ -6,21 +6,26 @@ using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
 
-namespace Backend.Application.Services.ReturnRequestServices
+namespace Backend.Application.Services.ReturnRequestServices;
+public class ReturnRequestService : IReturnRequestService
 {
-    public class ReturnRequestService : IReturnRequestService
+    private readonly IReturnRequestRepository _requestRepository;
+    private readonly IAssignmentRepository _assignmentRepository;
+    private readonly IMapper _mapper;
+
+    public ReturnRequestService(IReturnRequestRepository requestRepository, IAssignmentRepository assignmentRepository, IMapper mapper)
     {
-        private readonly IReturnRequestRepository _requestRepository;
-        private readonly IAssignmentRepository _assignmentRepository;
-        private readonly IMapper _mapper;
+        _requestRepository = requestRepository;
+        _assignmentRepository = assignmentRepository;
+        _mapper = mapper;
+    }
 
-        public ReturnRequestService(IReturnRequestRepository requestRepository, IAssignmentRepository assignmentRepository, IMapper mapper)
-        {
-            _requestRepository = requestRepository;
-            _assignmentRepository = assignmentRepository;
-            _mapper = mapper;
-        }
-
+    public async Task<ReturnRequestResponse> GetByIdAsync(int id)
+    {
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException();
+        var dto = _mapper.Map<ReturnRequestResponse>(request);
+        return dto;
+    }
         public async Task CreateRequest(int assignmentId, string createName, int createId, Role role)
         {
             var assignment = await _assignmentRepository.GetByIdAsync(assignmentId);
@@ -51,18 +56,17 @@ namespace Backend.Application.Services.ReturnRequestServices
             await _requestRepository.InsertAsync(request);
         }
 
-        public async Task<ReturnRequestResponse> GetByIdAsync(int id)
-        {
-            var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException();
-            var dto = _mapper.Map<ReturnRequestResponse>(request);
-            return dto;
-        }
+    public async Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location)
+    {
+        var res = await _requestRepository.GetFilterAsync(request, location);
+        var dtos = _mapper.Map<IEnumerable<ReturnRequestResponse>>(res.Data);
+        return new(dtos, res.TotalCount);
+    }
 
-        public async Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location)
-        {
-            var res = await _requestRepository.GetFilterAsync(request, location);
-            var dtos = _mapper.Map<IEnumerable<ReturnRequestResponse>>(res.Data);
-            return new(dtos, res.TotalCount);
-        }
+    public async Task DeleteAsync(int id)
+    {
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Return request with id {id} not found.");
+        
+        await _requestRepository.DeleteAsync(request);
     }
 }
