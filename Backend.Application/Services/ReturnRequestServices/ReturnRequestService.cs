@@ -38,7 +38,7 @@ namespace Backend.Application.Services.ReturnRequestServices
             }
             if (assignment!.ReturnRequest != null)
             {
-                throw new DataInvalidException("Assignment already has return request");
+                throw new DataInvalidException("Assignment already has return request.");
             }
             var request = new ReturnRequest
             {
