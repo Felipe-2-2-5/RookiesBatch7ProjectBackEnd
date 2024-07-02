@@ -20,35 +20,41 @@ public class ReturnRequestService : IReturnRequestService
         _mapper = mapper;
     }
 
-    public async Task CreateRequest(int assignmentId, string createName, int createId, Role role)
-    {
-        var assignment = await _assignmentRepository.GetByIdAsync(assignmentId);
-        if (assignment!.AssignedToId != createId && role == Role.Staff)
-        {
-            throw new ForbiddenException("No Permission");
-        }
-        if (assignment.State == AssignmentState.Waiting)
-        {
-            throw new DataInvalidException("Assignment not accepted");
-        }
-        if (assignment!.IsDeleted == true)
-        {
-            throw new DataInvalidException("Asset has been returned");
-        }
-        var request = new ReturnRequest();
-        request.AssignmentId = assignmentId;
-        request.RequestorId = createId;
-        request.CreatedBy = createName;
-        request.CreatedAt = DateTime.Now;
-        await _requestRepository.InsertAsync(request);
-    }
-
     public async Task<ReturnRequestResponse> GetByIdAsync(int id)
     {
         var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException();
         var dto = _mapper.Map<ReturnRequestResponse>(request);
         return dto;
     }
+        public async Task CreateRequest(int assignmentId, string createName, int createId, Role role)
+        {
+            var assignment = await _assignmentRepository.GetByIdAsync(assignmentId);
+            if (assignment!.AssignedToId != createId && role == Role.Staff)
+            {
+                throw new ForbiddenException("No Permission");
+            }
+            if (assignment.State == AssignmentState.Waiting)
+            {
+                throw new DataInvalidException("Assignment not accepted");
+            }
+            if (assignment!.IsDeleted == true)
+            {
+                throw new DataInvalidException("Asset has been returned");
+            }
+            if (assignment!.ReturnRequest != null)
+            {
+                throw new DataInvalidException("Assignment already has return request.");
+            }
+            var request = new ReturnRequest
+            {
+                AssignmentId = assignmentId,
+                RequestorId = createId,
+                State = ReturnRequestState.WaitingForReturning,
+                CreatedBy = createName,
+                CreatedAt = DateTime.Now
+            };
+            await _requestRepository.InsertAsync(request);
+        }
 
     public async Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location)
     {

@@ -195,14 +195,20 @@ public class AssignmentService : IAssignmentService
             _mapper.Map(dto, assignment);
             await _assignmentRepository.UpdateAsync(assignment);
         }
-        else
+        else if (dto.State == AssignmentState.Declined)
         {
+            //Change Asset State back to "Available"
             var asset =await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
             asset.Assignments = null;
             asset.State = AssetState.Available;
             await _assetRepository.UpdateAsync(asset);
 
-            await _assignmentRepository.DeleteAsync(assignment); 
+            //Update Assignment State to "Decline"
+            _mapper.Map(dto, assignment);
+            await _assignmentRepository.UpdateAsync(assignment);
+        }else
+        {
+            throw new Exception("Something went wrong");
         }
     }
 }

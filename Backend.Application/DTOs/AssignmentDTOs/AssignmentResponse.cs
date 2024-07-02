@@ -1,5 +1,6 @@
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.DTOs.AuthDTOs;
+using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 
 namespace Backend.Application.DTOs.AssignmentDTOs
@@ -22,5 +23,7 @@ namespace Backend.Application.DTOs.AssignmentDTOs
 
         public AssetResponse? Asset { get; set; }
         public int AssetId { get; set; }
+        public ReturnRequest? ReturnRequest { get; set; }
+
     }
 }
