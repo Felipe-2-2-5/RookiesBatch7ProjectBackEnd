@@ -60,7 +60,7 @@ namespace Backend.Infrastructure.Repositories
         }
 
         private static Expression<Func<ReturnRequest, object>> GetSortProperty(ReturnRequestFilterRequest request) =>
-            request.SortColumn?.ToLower() switch
+            request.SortColumn switch
             {
                 "assetCode" => returnRequest => returnRequest.Assignment!.Asset!.AssetCode,
                 "assetName" => returnRequest => returnRequest.Assignment!.Asset!.AssetName,
