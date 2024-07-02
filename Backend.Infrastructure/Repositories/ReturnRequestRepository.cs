@@ -38,12 +38,11 @@ namespace Backend.Infrastructure.Repositories
                 query = request.State == ReturnRequestState.Completed.ToString() ? query.Where(p => p.State == ReturnRequestState.Completed) : query.Where(p => p.State == ReturnRequestState.WaitingForReturning);
             }
 
-            if (request.ReturnedDate != null && request.ReturnedDate.HasValue)
+            if (request.ReturnedDate.HasValue && request.ReturnedDate.Value != DateTime.MinValue)
             {
-                DateTime startDate = request.ReturnedDate.Value.Date;
-                DateTime endDate = startDate.AddDays(1).AddTicks(-1);
-
-                query = query.Where(p => p.ReturnedDate >= startDate && p.ReturnedDate <= endDate);
+                query = query.Where(p =>
+                    p.ReturnedDate.HasValue &&
+                    p.ReturnedDate.Value.Date == request.ReturnedDate.Value.Date);
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
