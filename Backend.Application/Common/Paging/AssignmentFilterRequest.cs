@@ -4,7 +4,5 @@ public class AssignmentFilterRequest : BaseFilterRequest
 {
     public string? State { get; set; }
 
-    public DateTime? FromDate { get; set; }
-
-    public DateTime? ToDate { get; set; }
+    public DateTime? AssignedDate { get; set; }
 }

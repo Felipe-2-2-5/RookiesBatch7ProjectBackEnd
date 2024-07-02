@@ -46,13 +46,9 @@ public class AssignmentController : BaseController
     [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> GetFilterAsync(AssignmentFilterRequest request)
     {
-        if (request.FromDate == DateTime.MinValue)
+        if (request.AssignedDate == DateTime.MinValue)
         {
-            request.FromDate = DateTime.Today;
-        }
-        if (request.ToDate == DateTime.MinValue)
-        {
-            request.ToDate = DateTime.Today;
+            request.AssignedDate = DateTime.Today;
         }
         if (!Enum.TryParse(Location, out Location locationEnum))
         {
@@ -61,7 +57,7 @@ public class AssignmentController : BaseController
         var res = await _assignmentService.GetFilterAsync(request, locationEnum);
         return Ok(res);
     }
-
+    
     [HttpPost]
     [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> InsertAsync(AssignmentDTO dto)
