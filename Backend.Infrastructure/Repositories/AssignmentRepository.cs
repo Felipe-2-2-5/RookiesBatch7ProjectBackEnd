@@ -111,7 +111,9 @@ namespace Backend.Infrastructure.Repositories
             IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.AssignedDate <= DateTime.Now && a.AssignedToId == request.UserId)
                 .Include(a => a.Asset)
                 .Include(a => a.AssignedTo)
-                .Include(a => a.AssignedBy);
+                .Include(a => a.AssignedBy)
+                .Include(a => a.ReturnRequest);
+
 
             query = request.SortOrder?.ToLower() == "descend" ? query.OrderByDescending(GetSortPropertyMyAssignment(request)) : query.OrderBy(GetSortPropertyMyAssignment(request));
             var totalCount = await query.CountAsync();
