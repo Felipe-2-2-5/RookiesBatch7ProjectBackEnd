@@ -54,6 +54,9 @@ public class ReturnRequestService : IReturnRequestService
             CreatedAt = DateTime.Now
         };
         await _requestRepository.InsertAsync(request);
+
+        assignment.State = AssignmentState.WaitingForReturning;
+        await _assignmentRepository.UpdateAsync(assignment);
     }
 
     public async Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location)
