@@ -38,7 +38,7 @@ namespace Backend.Infrastructure.Repositories
                 case "Accepted":
                     query = query.Where(p => p.State == AssignmentState.Accepted);
                     break;
-                case "Waiting":
+                case "Waiting for acceptance":
                     query = query.Where(p => p.State == AssignmentState.Waiting);
                     break;
                 case "Declined":
@@ -62,7 +62,7 @@ namespace Backend.Infrastructure.Repositories
                 p.Asset.AssetName.Contains(request.SearchTerm) ||
                 p.AssignedTo!.UserName.Contains(request.SearchTerm));
         }
-
+        List<Assignment> assignments;
         if (request.SortColumn?.ToLower() == "date")
         {
             query = request.SortOrder?.ToLower() == "descend"
@@ -88,7 +88,7 @@ namespace Backend.Infrastructure.Repositories
             "receiver" => asset => asset.AssignedTo!.UserName,
             "provider" => asset => asset.AssignedBy!.UserName,
             "date" => asset => asset.AssignedDate,
-            "state" => asset => Enum.GetName(typeof(AssignmentState), asset.State),
+            "state" => asset => asset.State,
             _ => asset => asset.AssignedDate
         };
 
@@ -147,7 +147,7 @@ namespace Backend.Infrastructure.Repositories
                 "code" => asset => asset.Asset!.AssetCode,
                 "name" => asset => asset.Asset!.AssetName,
                 "date" => asset => asset.AssignedDate,
-                "state" => asset => Enum.GetName(typeof(AssignmentState), asset.State),
+                "state" => asset => asset.State,
                 _ => asset => asset.AssignedDate
             };
     }
