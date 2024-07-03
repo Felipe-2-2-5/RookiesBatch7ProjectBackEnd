@@ -10,7 +10,6 @@ namespace Backend.Application.IRepositories
 {
     public interface IReportRepository
     {
-        Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page);
-
+        Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int? PageSize, int? Page);
     }
 }

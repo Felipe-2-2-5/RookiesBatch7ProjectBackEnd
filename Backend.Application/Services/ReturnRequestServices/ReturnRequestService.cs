@@ -70,6 +70,12 @@ public class ReturnRequestService : IReturnRequestService
     {
         var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Return request with id {id} not found.");
 
+        // Check if the return request state is completed
+        if (request.State == ReturnRequestState.Completed)
+        {
+            throw new DataInvalidException("Cannot delete return request because its state is 'Completed'.");
+        }
+
         await _requestRepository.DeleteAsync(request);
     }
 }
