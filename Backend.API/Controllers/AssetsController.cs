@@ -63,10 +63,28 @@ namespace Backend.API.Controllers
 
         //get report by category and state
         [HttpPost("report")]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<ActionResult<List<AssetReportDto>>> GetAssetReport(BaseFilterRequest filterDto)
         {
             var result = await _reportService.GetAssetReportAsync(filterDto.SortColumn, filterDto.SortOrder, filterDto.PageSize, filterDto.Page);
             return Ok(result);
+        }
+
+        [HttpPost("export")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> ExportAssetReport()
+        {
+            var filePath = await _reportService.ExportAssetReportAsync();
+            var fileName = Path.GetFileName(filePath);
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
     }
 }

@@ -38,7 +38,7 @@ public class ReportRepository : IReportRepository
     //        return  results.AsList();
     //    }
     //}
-    public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page)
+    public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int? PageSize, int? Page)
     {
         var sortColumnParameter = new SqlParameter("@SortColumn", SortColumn ?? "Category");
         var sortDirectionParameter = new SqlParameter("@SortDirection", SortDirection ?? "ASC");
@@ -47,7 +47,7 @@ public class ReportRepository : IReportRepository
 
         using (var connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
         {
-            connection.Open();
+            await connection.OpenAsync();
             var results = (await connection.QueryAsync<AssetReportDto>(sqlCommand, new
             {
                 SortColumn = sortColumnParameter.Value,
@@ -55,16 +55,23 @@ public class ReportRepository : IReportRepository
             }, commandType: CommandType.StoredProcedure)).ToList();
 
             var totalCount = results.Count;
-            // pagination
-            var pagedResults = results
-                .Skip((Page - 1) * PageSize)
-                .Take(PageSize)
-                .ToList();
 
-            //return pagedResults;
-            return new PaginationResponse<AssetReportDto>(pagedResults, totalCount);
+            if (PageSize.HasValue && Page.HasValue)
+            {
+                // Apply pagination
+                var pagedResults = results
+                    .Skip((Page.Value - 1) * PageSize.Value)
+                    .Take(PageSize.Value)
+                    .ToList();
+
+                return new PaginationResponse<AssetReportDto>(pagedResults, totalCount);
+            }
+            else
+            {
+                // Return all results without pagination
+                return new PaginationResponse<AssetReportDto>(results, totalCount);
+            }
         }
     }
-
 
 }
