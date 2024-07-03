@@ -44,6 +44,9 @@ namespace Backend.Infrastructure.Repositories
                 case "Declined":
                     query = query.Where(p => p.State == AssignmentState.Declined);
                     break;
+                case "Waiting for returning":
+                    query = query.Where(p => p.State == AssignmentState.WaitingForReturning);
+                    break;
             }
         }
 
@@ -85,7 +88,7 @@ namespace Backend.Infrastructure.Repositories
             "receiver" => asset => asset.AssignedTo!.UserName,
             "provider" => asset => asset.AssignedBy!.UserName,
             "date" => asset => asset.AssignedDate,
-            "state" => asset => asset.State,
+            "state" => asset => Enum.GetName(typeof(AssignmentState), asset.State),
             _ => asset => asset.AssignedDate
         };
 
@@ -122,8 +125,18 @@ namespace Backend.Infrastructure.Repositories
                 .Include(a => a.AssignedBy)
                 .Include(a => a.ReturnRequest);
 
-
-            query = request.SortOrder?.ToLower() == "descend" ? query.OrderByDescending(GetSortPropertyMyAssignment(request)) : query.OrderBy(GetSortPropertyMyAssignment(request));
+            if (request.SortColumn?.ToLower() == "date")
+            {
+                query = request.SortOrder?.ToLower() == "descend"
+                    ? query.OrderByDescending(a => a.AssignedDate).ThenByDescending(a => a.Asset!.AssetCode)
+                    : query.OrderBy(a => a.AssignedDate).ThenBy(a => a.Asset!.AssetCode);
+            }
+            else
+            {
+                query = request.SortOrder?.ToLower() == "descend"
+                    ? query.OrderByDescending(GetSortPropertyMyAssignment(request))
+                    : query.OrderBy(GetSortPropertyMyAssignment(request));
+            }
             var totalCount = await query.CountAsync();
             var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             return new PaginationResponse<Assignment>(items, totalCount);
@@ -134,8 +147,8 @@ namespace Backend.Infrastructure.Repositories
                 "code" => asset => asset.Asset!.AssetCode,
                 "name" => asset => asset.Asset!.AssetName,
                 "date" => asset => asset.AssignedDate,
-                "state" => asset => asset.State,
-                _ => asset => new { asset.AssignedDate, asset.Asset!.AssetCode }
+                "state" => asset => Enum.GetName(typeof(AssignmentState), asset.State),
+                _ => asset => asset.AssignedDate
             };
     }
 }
