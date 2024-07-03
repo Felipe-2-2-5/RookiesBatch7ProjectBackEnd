@@ -11,7 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Controllers/ReturnRequestsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Controllers/ReturnRequestsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/IReturnRequestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/IReturnRequestService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +24,12 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/564d11e3c8cbbd636fa9aa3a7b73d9ef576176dfee78aff1abcc84c359c266a/InvalidOperationException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c765e47ec58cf89220cd5779fc5cce70b01abab88edf4ed2b5deaba1244c610/IValidator.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Infrastructure/Repositories/AssignmentRepository.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Infrastructure/Repositories/AssignmentRepository.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -138,7 +145,7 @@
       <workItem from="1719973206517" duration="9465000" />
       <workItem from="1719985091629" duration="1054000" />
       <workItem from="1719993163814" duration="4173000" />
-      <workItem from="1720014230456" duration="4017000" />
+      <workItem from="1720014230456" duration="6363000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>

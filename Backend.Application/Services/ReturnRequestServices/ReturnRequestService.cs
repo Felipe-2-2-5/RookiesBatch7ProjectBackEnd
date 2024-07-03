@@ -65,4 +65,17 @@ public class ReturnRequestService : IReturnRequestService
         var dtos = _mapper.Map<IEnumerable<ReturnRequestResponse>>(res.Data);
         return new(dtos, res.TotalCount);
     }
+
+    public async Task DeleteAsync(int id)
+    {
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Return request with id {id} not found.");
+
+        // Check if the return request state is completed
+        if (request.State == ReturnRequestState.Completed)
+        {
+            throw new DataInvalidException("Cannot delete return request because its state is 'Completed'.");
+        }
+
+        await _requestRepository.DeleteAsync(request);
+    }
 }
