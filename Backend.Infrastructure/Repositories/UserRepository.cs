@@ -99,7 +99,10 @@ namespace Backend.Infrastructure.Repositories
         public async Task<bool> HasActiveAssignmentsAsync(int userId)
         {
             return await _context.Assignments
-                .AnyAsync(a => a.AssignedToId == userId && (a.State == AssignmentState.Accepted || a.State == AssignmentState.Waiting || a.State == AssignmentState.Declined));
+                .AnyAsync(a => a.AssignedToId == userId && (a.State == AssignmentState.Accepted ||
+                                                            a.State == AssignmentState.Waiting ||
+                                                            a.State == AssignmentState.Declined ||
+                                                            a.State == AssignmentState.WaitingForReturning));
         }
 
     }
