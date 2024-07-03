@@ -70,7 +70,7 @@ namespace Backend.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("export")]
+        [HttpPost("report/export")]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> ExportAssetReport()
         {
