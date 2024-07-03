@@ -62,7 +62,6 @@ namespace Backend.Infrastructure.Repositories
                 p.Asset.AssetName.Contains(request.SearchTerm) ||
                 p.AssignedTo!.UserName.Contains(request.SearchTerm));
         }
-        List<Assignment> assignments;
         if (request.SortColumn?.ToLower() == "date")
         {
             query = request.SortOrder?.ToLower() == "descend"
