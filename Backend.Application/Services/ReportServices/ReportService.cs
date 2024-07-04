@@ -21,7 +21,7 @@ namespace Backend.Application.Services.ReportServices
             return await _reportRepository.GetAssetReportAsync(SortColumn, SortDirection, PageSize, Page);
         }
 
-        public async Task<string> ExportAssetReportAsync()
+        public async Task<byte[]> ExportAssetReportAsync()
         {
             // Get all results without pagination
             var results = await _reportRepository.GetAssetReportAsync(null, null, null, null);
@@ -48,13 +48,11 @@ namespace Backend.Application.Services.ReportServices
                     }
                 }
 
-                // Include current date in file name
-                var currentDate = DateTime.Now.ToString("ddMMyyyy");
-                var filePath = $"AssetReport_{currentDate}_RookiesTeam2.xlsx";
-
-                workbook.SaveAs(filePath);
-
-                return filePath;
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    return stream.ToArray();
+                }
             }
         }
     }

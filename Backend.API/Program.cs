@@ -87,7 +87,7 @@ builder.Services.AddCors(options =>
         builder.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader()
-               .WithExposedHeaders("Authorization");
+               .WithExposedHeaders("Authorization", "Content-Disposition");
     });
 });
 // Token services

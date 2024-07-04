@@ -37,7 +37,7 @@ public class AssignmentService : IAssignmentService
 
     public async Task<PaginationResponse<AssignmentResponse>> GetFilterAsync(AssignmentFilterRequest request, Location location)
     {
-        var res = await _assignmentRepository.GetFilterAsync(request,location);
+        var res = await _assignmentRepository.GetFilterAsync(request, location);
         var dto = _mapper.Map<IEnumerable<AssignmentResponse>>(res.Data);
         return new PaginationResponse<AssignmentResponse>(dto, res.TotalCount);
     }
@@ -59,7 +59,7 @@ public class AssignmentService : IAssignmentService
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.CreatedBy = createName;
             assignment.CreatedAt = DateTime.Now;
-            assignment.State = AssignmentState.Waiting;
+            assignment.State = AssignmentState.WaitingForAcceptance;
             assignment.AssignedById = assignedById;
             await _assignmentRepository.InsertAsync(assignment);
 
@@ -180,6 +180,19 @@ public class AssignmentService : IAssignmentService
         }
     }
 
+    public async Task DeleteAsync(int id)
+    {
+        var assignment = await _assignmentRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Assignment with id {id} not found.");
+
+        // Check if the asset state is different than 'Waiting for acceptance' or 'Declined'
+        if (assignment.State != AssignmentState.WaitingForAcceptance && assignment.State != AssignmentState.Declined)
+        {
+            throw new DataInvalidException("Cannot delete assignment because its state is not 'Waiting for acceptance' or 'Declined'.");
+        }
+
+        await _assignmentRepository.DeleteAsync(assignment);
+    }
+
     public async Task<PaginationResponse<AssignmentResponse>> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
     {
         var res = await _assignmentRepository.GetMyAssignmentsAsync(request);
@@ -190,6 +203,11 @@ public class AssignmentService : IAssignmentService
     public async Task RespondAssignment(AssignmentRespondDto dto, int id)
     {
             var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
+        if (assignment.State != AssignmentState.WaitingForAcceptance)
+        {
+            throw new DataInvalidException("This assignment is already responded");
+        }
+
         if (dto.State == AssignmentState.Accepted)
         {
             _mapper.Map(dto, assignment);
@@ -198,7 +216,7 @@ public class AssignmentService : IAssignmentService
         else if (dto.State == AssignmentState.Declined)
         {
             //Change Asset State back to "Available"
-            var asset =await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            var asset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
             asset.Assignments = null;
             asset.State = AssetState.Available;
             await _assetRepository.UpdateAsync(asset);
@@ -206,9 +224,10 @@ public class AssignmentService : IAssignmentService
             //Update Assignment State to "Decline"
             _mapper.Map(dto, assignment);
             await _assignmentRepository.UpdateAsync(assignment);
-        }else
+        }
+        else
         {
-            throw new Exception("Something went wrong");
+            throw new DataInvalidException("State is not correct");
         }
     }
 }

@@ -38,13 +38,11 @@ namespace Backend.API.Controllers
             var res = await _requestService.GetFilterAsync(request, Location);
             return Ok(res);
         }
-
-        // DELETE: api/return-requests/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("cancel-request/{id}")]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> CancelRequestAsync(int id)
         {
-            await _requestService.DeleteAsync(id);
+            await _requestService.CancelRequestAsync(id, UserName, Role);
             return NoContent();
         }
     }
