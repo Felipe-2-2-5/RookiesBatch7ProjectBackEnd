@@ -106,9 +106,13 @@ namespace Backend.Application.Services.UserServices
         public async Task DisableUserAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);
-            if (user == null || user.IsDeleted == true)
+            if (user == null )
             {
                 throw new NotFoundException("User not found");
+            }
+            if (user.IsDeleted == true)
+            {
+                throw new NotAllowedException("User has been disabled");
             }
             if (await _userRepo.HasActiveAssignmentsAsync(userId))
             {
