@@ -66,16 +66,22 @@ public class ReturnRequestService : IReturnRequestService
         return new(dtos, res.TotalCount);
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task CancelRequestAsync(int id, string modifyName, Role role)
     {
         var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Return request with id {id} not found.");
-
+        if (role == Role.Staff)
+        {
+            throw new ForbiddenException("No Permission");
+        }
         // Check if the return request state is completed
         if (request.State == ReturnRequestState.Completed)
         {
             throw new DataInvalidException("Cannot delete return request because its state is 'Completed'.");
         }
 
+        request.Assignment!.State = AssignmentState.Accepted;
+        request.ModifiedAt = DateTime.Now;
+        request.ModifiedBy = modifyName;
         await _requestRepository.DeleteAsync(request);
     }
 }
