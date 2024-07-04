@@ -15,7 +15,7 @@ public class AssignmentController : BaseController
     private readonly IAssignmentService _assignmentService;
     private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
     private string Location => Convert.ToString(User.Claims.First(c => c.Type == "Location").Value);
-    
+
     private int AssignedById
     {
         get
@@ -57,7 +57,7 @@ public class AssignmentController : BaseController
         var res = await _assignmentService.GetFilterAsync(request, locationEnum);
         return Ok(res);
     }
-    
+
     [HttpPost]
     [Authorize(Roles = nameof(Role.Admin))]
     public async Task<IActionResult> InsertAsync(AssignmentDTO dto)
@@ -73,6 +73,16 @@ public class AssignmentController : BaseController
         var res = await _assignmentService.UpdateAsync(dto, id, UserName);
         return Ok(res);
     }
+
+    // DELETE: api/assignments/{id}
+    [HttpDelete("{id}")]
+    [Authorize(Roles = nameof(Role.Admin))]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        await _assignmentService.DeleteAsync(id);
+        return NoContent();
+    }
+
     [HttpPost("my-assignments")]
     [Authorize]
     public async Task<IActionResult> GetMyAssignmentsAsync(MyAssignmentFilterRequest request)
