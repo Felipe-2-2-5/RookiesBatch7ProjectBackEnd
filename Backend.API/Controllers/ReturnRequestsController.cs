@@ -38,5 +38,12 @@ namespace Backend.API.Controllers
             var res = await _requestService.GetFilterAsync(request, Location);
             return Ok(res);
         }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            await _requestService.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

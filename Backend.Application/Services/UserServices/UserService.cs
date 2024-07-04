@@ -106,7 +106,7 @@ namespace Backend.Application.Services.UserServices
         public async Task DisableUserAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);
-            if (user == null)
+            if (user == null || user.IsDeleted == true)
             {
                 throw new NotFoundException("User not found");
             }
