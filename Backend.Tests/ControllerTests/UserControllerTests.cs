@@ -76,6 +76,8 @@ namespace Backend.Tests.ControllerTests
             Assert.IsNotNull(returnValue);
             Assert.IsTrue(returnValue.Flag); 
         }
+
+
         [Test]
         public async Task ChangePasswordAsync_ReturnsOkResult_WithLoginResponse()
         {
@@ -84,7 +86,8 @@ namespace Backend.Tests.ControllerTests
             var loginResponse = new LoginResponse(true, "Password changed successfully", "newToken");
 
             // Setup mock to return loginResponse when ChangePasswordAsync is called with changePasswordDto
-            //_userServiceMock.Setup(s => s.ChangePasswordAsync(changePasswordDto)).ReturnsAsync(loginResponse);
+            _userServiceMock.Setup(s => s.ChangePasswordAsync(changePasswordDto)).ReturnsAsync(true);
+
 
             // Act
             var result = await _controller.ChangePasswordAsync(changePasswordDto);
@@ -104,7 +107,6 @@ namespace Backend.Tests.ControllerTests
             Assert.AreEqual("Password changed successfully", returnValue.Message);
             Assert.AreEqual("newToken", returnValue.Token);
         }
-
 
 
         [Test]
@@ -158,6 +160,7 @@ namespace Backend.Tests.ControllerTests
             // Assert
             Assert.IsInstanceOf<OkResult>(result);
         }
+
         [Test]
         public async Task UpdateAsync_ReturnsOkResult_WithUpdatedUser()
         {
@@ -165,7 +168,7 @@ namespace Backend.Tests.ControllerTests
             var userId = 1;
             var userDto = new UserDTO { FirstName = "Updated", LastName = "User" };
             var userResponse = new UserResponse { Id = userId, FirstName = "Updated", LastName = "User" };
-            _userServiceMock.Setup(s => s.UpdateAsync(userId, userDto, "TestUser")).ReturnsAsync(userResponse);
+            _userServiceMock.Setup(s => s.UpdateAsync(userId, userDto, "TestUser", Location.HaNoi)).ReturnsAsync(userResponse);
 
             // Act
             var result = await _controller.UpdateAsync(userId, userDto);

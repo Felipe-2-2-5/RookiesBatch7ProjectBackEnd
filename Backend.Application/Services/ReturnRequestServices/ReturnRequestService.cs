@@ -79,9 +79,29 @@ public class ReturnRequestService : IReturnRequestService
             throw new DataInvalidException("Cannot delete return request because its state is 'Completed'.");
         }
 
-        request.Assignment!.State = AssignmentState.Accepted;
         request.ModifiedAt = DateTime.Now;
         request.ModifiedBy = modifyName;
+        //request.Assignment!.State = AssignmentState.Accepted;
         await _requestRepository.DeleteAsync(request);
+
+        var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
+        assignment.State = AssignmentState.Accepted;
+        await _assignmentRepository.UpdateAsync(assignment);
     }
+
+    public async Task CompleteRequestAsync(int id, int acceptedBy)
+    {
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException();
+
+        request.State = ReturnRequestState.Completed;
+        request.ReturnedDate = DateTime.Now;
+        request.AcceptorId = acceptedBy;
+        await _requestRepository.UpdateAsync(request);
+
+        var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
+
+        assignment.IsDeleted = true;
+        await _assignmentRepository.UpdateAsync(assignment);
+    }
+
 }
