@@ -70,21 +70,15 @@ namespace Backend.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("export")]
+        [HttpPost("report/export")]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> ExportAssetReport()
         {
-            var filePath = await _reportService.ExportAssetReportAsync();
-            var fileName = Path.GetFileName(filePath);
+            var fileContent = await _reportService.ExportAssetReportAsync();
+            var currentDate = DateTime.Now.ToString("ddMMyyyy");
+            var fileName = $"AssetReport_{currentDate}_RookiesTeam2.xlsx";
 
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(filePath, FileMode.Open))
-            {
-                await stream.CopyToAsync(memory);
-            }
-            memory.Position = 0;
-
-            return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
     }
 }

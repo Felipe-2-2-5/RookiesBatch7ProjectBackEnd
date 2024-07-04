@@ -11,8 +11,7 @@ namespace Backend.Application.Services.ReturnRequestServices
         Task<ReturnRequestResponse> GetByIdAsync(int id);
         Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location);
 
-        Task DeleteAsync(int id);
-
         Task CompleteRequestAsync(int id, int UserId);
+        Task CancelRequestAsync(int id, string modifyName, Role role);
     }
 }

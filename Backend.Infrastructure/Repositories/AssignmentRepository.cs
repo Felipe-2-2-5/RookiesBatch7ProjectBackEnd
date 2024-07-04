@@ -23,74 +23,73 @@ namespace Backend.Infrastructure.Repositories
                 .Include(a => a.ReturnRequest)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
-    public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
-    {
-        IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset!.Location == location)
-            .Include(a => a.Asset)
-            .Include(a => a.AssignedTo)
-            .Include(a => a.AssignedBy)
-            .Include(a => a.ReturnRequest);
-
-        if (!string.IsNullOrWhiteSpace(request.State))
+        public async Task<PaginationResponse<Assignment>> GetFilterAsync(AssignmentFilterRequest request, Location location)
         {
-            switch (request.State)
+            IQueryable<Assignment> query = _table.Where(a => a.IsDeleted == false && a.Asset!.Location == location)
+                .Include(a => a.Asset)
+                .Include(a => a.AssignedTo)
+                .Include(a => a.AssignedBy)
+                .Include(a => a.ReturnRequest);
+
+            if (!string.IsNullOrWhiteSpace(request.State))
             {
-                case "Accepted":
-                    query = query.Where(p => p.State == AssignmentState.Accepted);
-                    break;
-                case "Waiting":
-                    query = query.Where(p => p.State == AssignmentState.Waiting);
-                    break;
-                case "Declined":
-                    query = query.Where(p => p.State == AssignmentState.Declined);
-                    break;
-                case "Waiting for returning":
-                    query = query.Where(p => p.State == AssignmentState.WaitingForReturning);
-                    break;
+                switch (request.State)
+                {
+                    case "Accepted":
+                        query = query.Where(p => p.State == AssignmentState.Accepted);
+                        break;
+                    case "Waiting for acceptance":
+                        query = query.Where(p => p.State == AssignmentState.WaitingForAcceptance);
+                        break;
+                    case "Declined":
+                        query = query.Where(p => p.State == AssignmentState.Declined);
+                        break;
+                    case "Waiting for returning":
+                        query = query.Where(p => p.State == AssignmentState.WaitingForReturning);
+                        break;
+                }
             }
+
+            if (request.AssignedDate.HasValue && request.AssignedDate.Value != DateTime.MinValue)
+            {
+                query = query.Where(p => p.AssignedDate.Date == request.AssignedDate.Value.Date);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                query = query.Where(p =>
+                    p.Asset!.AssetCode.Contains(request.SearchTerm) ||
+                    p.Asset.AssetName.Contains(request.SearchTerm) ||
+                    p.AssignedTo!.UserName.Contains(request.SearchTerm));
+            }
+            if (request.SortColumn?.ToLower() == "date")
+            {
+                query = request.SortOrder?.ToLower() == "descend"
+                    ? query.OrderByDescending(a => a.AssignedDate).ThenByDescending(a => a.Asset!.AssetCode)
+                    : query.OrderBy(a => a.AssignedDate).ThenBy(a => a.Asset!.AssetCode);
+            }
+            else
+            {
+                query = request.SortOrder?.ToLower() == "descend"
+                    ? query.OrderByDescending(GetSortProperty(request))
+                    : query.OrderBy(GetSortProperty(request));
+            }
+            var totalCount = await query.CountAsync();
+            var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
+            return new PaginationResponse<Assignment>(items, totalCount);
         }
 
-        if (request.AssignedDate.HasValue && request.AssignedDate.Value != DateTime.MinValue)
-        {
-            query = query.Where(p => p.AssignedDate.Date == request.AssignedDate.Value.Date);
-        }
-
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-        {
-            query = query.Where(p =>
-                p.Asset!.AssetCode.Contains(request.SearchTerm) ||
-                p.Asset.AssetName.Contains(request.SearchTerm) ||
-                p.AssignedTo!.UserName.Contains(request.SearchTerm));
-        }
-
-        if (request.SortColumn?.ToLower() == "date")
-        {
-            query = request.SortOrder?.ToLower() == "descend"
-                ? query.OrderByDescending(a => a.AssignedDate).ThenByDescending(a => a.Asset!.AssetCode)
-                : query.OrderBy(a => a.AssignedDate).ThenBy(a => a.Asset!.AssetCode);
-        }
-        else
-        {
-            query = request.SortOrder?.ToLower() == "descend"
-                ? query.OrderByDescending(GetSortProperty(request))
-                : query.OrderBy(GetSortProperty(request));
-        }
-        var totalCount = await query.CountAsync();
-        var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
-        return new PaginationResponse<Assignment>(items, totalCount);
-    }
-
-    private static Expression<Func<Assignment, object>> GetSortProperty(AssignmentFilterRequest request) =>
-        request.SortColumn?.ToLower() switch
-        {
-            "code" => asset => asset.Asset!.AssetCode,
-            "name" => asset => asset.Asset!.AssetName,
-            "receiver" => asset => asset.AssignedTo!.UserName,
-            "provider" => asset => asset.AssignedBy!.UserName,
-            "date" => asset => asset.AssignedDate,
-            "state" => asset => Enum.GetName(typeof(AssignmentState), asset.State),
-            _ => asset => asset.AssignedDate
-        };
+        private static Expression<Func<Assignment, object>> GetSortProperty(AssignmentFilterRequest request) =>
+            request.SortColumn?.ToLower() switch
+            {
+                "code" => asset => asset.Asset!.AssetCode,
+                "name" => asset => asset.Asset!.AssetName,
+                "receiver" => asset => asset.AssignedTo!.UserName,
+                "provider" => asset => asset.AssignedBy!.UserName,
+                "date" => asset => asset.AssignedDate,
+                "state" => asset => asset.State,
+                _ => asset => asset.AssignedDate
+            };
 
         public async Task<Assignment?> FindAssignmentByAssetIdAsync(int assetId)
         {
@@ -147,7 +146,7 @@ namespace Backend.Infrastructure.Repositories
                 "code" => asset => asset.Asset!.AssetCode,
                 "name" => asset => asset.Asset!.AssetName,
                 "date" => asset => asset.AssignedDate,
-                "state" => asset => Enum.GetName(typeof(AssignmentState), asset.State),
+                "state" => asset => asset.State,
                 _ => asset => asset.AssignedDate
             };
     }

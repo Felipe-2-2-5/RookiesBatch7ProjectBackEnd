@@ -366,3 +366,5 @@ FodyWeavers.xsd
 .idea/
 #idea1
 /.idea
+
+/Backend.Api/*.xlsx
