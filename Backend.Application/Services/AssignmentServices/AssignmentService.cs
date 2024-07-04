@@ -202,7 +202,12 @@ public class AssignmentService : IAssignmentService
 
     public async Task RespondAssignment(AssignmentRespondDto dto, int id)
     {
-        var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
+            var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
+        if (assignment.State != AssignmentState.Waiting)
+        {
+            throw new DataInvalidException("This assignment is already responded");
+        }
+
         if (dto.State == AssignmentState.Accepted)
         {
             _mapper.Map(dto, assignment);
@@ -222,7 +227,7 @@ public class AssignmentService : IAssignmentService
         }
         else
         {
-            throw new Exception("Something went wrong");
+            throw new DataInvalidException("State is not correct");
         }
     }
 }
