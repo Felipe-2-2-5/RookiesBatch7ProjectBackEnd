@@ -1,3 +1,4 @@
+using Backend.API.Hubs;
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AssetDTOs;
@@ -38,16 +39,6 @@ builder.Services.AddSwaggerGen();
 //Db connection
 var connectionString = builder.Configuration.GetConnectionString("AssetManager");
 builder.Services.AddDbContext<AssetContext>(options => options.UseSqlServer(connectionString));
-
-//builder.Services.AddDbContext<AssetContext>(options =>
-//    options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
-//    {
-//        sqlOptions.EnableRetryOnFailure(
-//            maxRetryCount: 5, // Maximum number of retry attempts
-//            maxRetryDelay: TimeSpan.FromSeconds(30), // Maximum delay between retries
-//            errorNumbersToAdd: null // Additional error numbers to retry on
-//        );
-//    }));
 
 //Add Mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -127,6 +118,10 @@ builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
 builder.Services.AddTransient<IValidator<AssignmentDTO>, AssignmentValidator>();
 
+//Add SignalR
+builder.Services.AddSignalR().AddNewtonsoftJsonProtocol();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -146,5 +141,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
-
+app.MapHub<UserStateHub>("/userStateHub");
 app.Run();
