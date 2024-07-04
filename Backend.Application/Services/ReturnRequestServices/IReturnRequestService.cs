@@ -12,5 +12,7 @@ namespace Backend.Application.Services.ReturnRequestServices
         Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location);
 
         Task DeleteAsync(int id);
+
+        Task CompleteRequestAsync(int id, int UserId);
     }
 }
