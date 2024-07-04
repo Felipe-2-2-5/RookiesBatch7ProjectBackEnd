@@ -203,7 +203,7 @@ public class AssignmentService : IAssignmentService
     public async Task RespondAssignment(AssignmentRespondDto dto, int id)
     {
             var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
-        if (assignment.State != AssignmentState.Waiting)
+        if (assignment.State != AssignmentState.WaitingForAcceptance)
         {
             throw new DataInvalidException("This assignment is already responded");
         }
