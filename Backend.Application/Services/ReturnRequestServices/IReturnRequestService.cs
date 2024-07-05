@@ -10,6 +10,8 @@ namespace Backend.Application.Services.ReturnRequestServices
         Task CreateRequest(int assignmentId, string createName, int createId, Role role);
         Task<ReturnRequestResponse> GetByIdAsync(int id);
         Task<PaginationResponse<ReturnRequestResponse>> GetFilterAsync(ReturnRequestFilterRequest request, Location location);
+
+        Task CompleteRequestAsync(int id, int UserId);
         Task CancelRequestAsync(int id, string modifyName, Role role);
     }
 }

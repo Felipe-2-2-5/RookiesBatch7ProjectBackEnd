@@ -12,12 +12,14 @@ public class ReturnRequestService : IReturnRequestService
     private readonly IReturnRequestRepository _requestRepository;
     private readonly IAssignmentRepository _assignmentRepository;
     private readonly IMapper _mapper;
+    private readonly IAssetRepository _assetRepository;
 
-    public ReturnRequestService(IReturnRequestRepository requestRepository, IAssignmentRepository assignmentRepository, IMapper mapper)
+    public ReturnRequestService(IReturnRequestRepository requestRepository, IAssignmentRepository assignmentRepository, IMapper mapper, IAssetRepository assetRepository)
     {
         _requestRepository = requestRepository;
         _assignmentRepository = assignmentRepository;
         _mapper = mapper;
+        _assetRepository = assetRepository;
     }
 
     public async Task<ReturnRequestResponse> GetByIdAsync(int id)
@@ -79,9 +81,34 @@ public class ReturnRequestService : IReturnRequestService
             throw new DataInvalidException("Cannot delete return request because its state is 'Completed'.");
         }
 
-        request.Assignment!.State = AssignmentState.Accepted;
         request.ModifiedAt = DateTime.Now;
         request.ModifiedBy = modifyName;
+        //request.Assignment!.State = AssignmentState.Accepted;
         await _requestRepository.DeleteAsync(request);
+
+        var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
+        assignment.State = AssignmentState.Accepted;
+        await _assignmentRepository.UpdateAsync(assignment);
     }
+
+    public async Task CompleteRequestAsync(int id, int acceptedBy)
+    {
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request");
+
+        request.State = ReturnRequestState.Completed;
+        request.ReturnedDate = DateTime.Now;
+        request.AcceptorId = acceptedBy;
+        await _requestRepository.UpdateAsync(request);
+
+        var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
+
+        assignment.IsDeleted = true;
+        request.Assignment.Asset.State = AssetState.Available;
+        await _assignmentRepository.UpdateAsync(assignment);
+
+        //var asset = await _assetRepository.GetByIdAsync(request.Assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+        //asset.State = AssetState.Available;
+        //await _assetRepository.UpdateAsync(asset);
+    }
+
 }

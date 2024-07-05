@@ -45,5 +45,14 @@ namespace Backend.API.Controllers
             await _requestService.CancelRequestAsync(id, UserName, Role);
             return NoContent();
         }
+
+        [HttpPut("complete-requests/{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> CompleteRequestAsync(int id )
+        {
+            await _requestService.CompleteRequestAsync(id, UserId);
+            return Ok();
+        }
+
     }
 }
