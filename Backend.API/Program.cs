@@ -5,7 +5,6 @@ using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.DTOs.CategoryDTOs;
-using Backend.Application.IHubs;
 using Backend.Application.IRepositories;
 using Backend.Application.Middleware;
 using Backend.Application.Services.AssetServices;
@@ -136,8 +135,6 @@ builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
 builder.Services.AddTransient<IValidator<AssignmentDTO>, AssignmentValidator>();
 
-//Add UserHub services
-builder.Services.AddScoped<IUserStateHub, UserStateHub>();
 
 //Add SignalR
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol();

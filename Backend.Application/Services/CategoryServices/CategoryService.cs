@@ -27,17 +27,18 @@ namespace Backend.Application.Services.CategoryServices
                 var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
                 throw new DataInvalidException(string.Join(", ", errors));
             }
-            var existCategory = await _categoryRepository.FindCategoryByNameAsync(dto.Name);
-            if (existCategory != null)
-            {
-                throw new DataInvalidException("Existing category name");
-            }
-            existCategory = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);
+            var existCategory = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);
             if (existCategory != null)
             {
                 throw new DataInvalidException("Existing category prefix");
 
             }
+            existCategory = await _categoryRepository.FindCategoryByNameAsync(dto.Name);
+            if (existCategory != null)
+            {
+                throw new DataInvalidException("Existing category name");
+            }
+
             var category = _mapper.Map<Category>(dto);
             await _categoryRepository.InsertAsync(category);
             category = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);

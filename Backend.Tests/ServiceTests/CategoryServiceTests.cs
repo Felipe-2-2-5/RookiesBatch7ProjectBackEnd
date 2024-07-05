@@ -26,26 +26,26 @@ namespace Backend.Tests.ServiceTests
             _validatorMock = new Mock<IValidator<CategoryDTO>>();
             _categoryService = new CategoryService(_categoryRepositoryMock.Object, _mapperMock.Object, _validatorMock.Object);
         }
-
         [Test]
-        public async Task InsertAsync_WhenCategoryIsValid_ReturnsCategoryResponse()
+        public async Task InsertAsync_WhenValid_ShouldInsertCategoryAndReturnResponse()
         {
             // Arrange
-            var categoryDto = new CategoryDTO { Name = "TestCategory", Prefix = "TCFF" };
+            var dto = new CategoryDTO { Prefix = "test", Name = "name" };
             var validationResult = new ValidationResult();
-            var category = new Category { Name = "TestCategory", Prefix = "TCFF" };
-            var categoryResponse = new CategoryResponse { Name = "TestCategory", Prefix = "TCFF" };
+            var category = new Category();
+            var categoryResponse = new CategoryResponse();
 
-            _validatorMock.Setup(v => v.ValidateAsync(categoryDto, default)).ReturnsAsync(validationResult);
-            _categoryRepositoryMock.Setup(r => r.FindCategoryByNameAsync(categoryDto.Name)).ReturnsAsync((Category?)null);
-            _categoryRepositoryMock.Setup(r => r.FindCategoryByPrefixAsync(categoryDto.Prefix)).ReturnsAsync((Category?)null);
-            _mapperMock.Setup(m => m.Map<Category>(categoryDto)).Returns(category);
+            _validatorMock.Setup(v => v.ValidateAsync(dto, default)).ReturnsAsync(validationResult);
+            _categoryRepositoryMock.SetupSequence(r => r.FindCategoryByPrefixAsync(dto.Prefix))
+                                   .ReturnsAsync((Category?)null) // First call returns null
+                                   .ReturnsAsync(category);      // Second call returns the category
+            _categoryRepositoryMock.Setup(r => r.FindCategoryByNameAsync(dto.Name)).ReturnsAsync((Category?)null);
+            _mapperMock.Setup(m => m.Map<Category>(dto)).Returns(category);
             _categoryRepositoryMock.Setup(r => r.InsertAsync(category)).Returns(Task.CompletedTask);
-            _categoryRepositoryMock.Setup(r => r.FindCategoryByPrefixAsync(categoryDto.Prefix)).ReturnsAsync(category);
             _mapperMock.Setup(m => m.Map<CategoryResponse>(category)).Returns(categoryResponse);
 
             // Act
-            var result = await _categoryService.InsertAsync(categoryDto);
+            var result = await _categoryService.InsertAsync(dto);
 
             // Assert
             Assert.That(result, Is.EqualTo(categoryResponse));

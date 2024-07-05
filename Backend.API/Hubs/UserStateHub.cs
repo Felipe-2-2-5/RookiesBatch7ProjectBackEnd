@@ -1,12 +1,11 @@
-﻿using Backend.Application.IHubs;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 
 namespace Backend.API.Hubs
 {
     [Authorize]
-    public class UserStateHub : Hub, IUserStateHub
+    public class UserStateHub : Hub
     {
         private static readonly ConcurrentDictionary<string, string> _userConnections = new();
 
