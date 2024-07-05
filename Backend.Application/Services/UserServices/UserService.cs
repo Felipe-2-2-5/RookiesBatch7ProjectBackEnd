@@ -106,7 +106,7 @@ namespace Backend.Application.Services.UserServices
         public async Task DisableUserAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);
-            if (user == null )
+            if (user == null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -121,7 +121,6 @@ namespace Backend.Application.Services.UserServices
 
             user.IsDeleted = true;
             await _userRepo.UpdateAsync(user);
-            await _userRepo.SaveChangeAsync();
         }
 
         public async Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy, Location location)
@@ -131,7 +130,7 @@ namespace Backend.Application.Services.UserServices
             {
                 throw new NotFoundException("User not found");
             }
-            if(user.Location != location)
+            if (user.Location != location)
             {
                 throw new ForbiddenException("No permission to update this user");
             }

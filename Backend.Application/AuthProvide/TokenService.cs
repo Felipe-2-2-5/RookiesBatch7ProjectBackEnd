@@ -51,10 +51,10 @@ namespace Backend.Application.AuthProvide
         {
             var claims = new List<Claim>
                 {
-                    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new(ClaimTypes.Name, user.UserName),
+                    new("UserId", user.Id.ToString()),
+                    new("UserName", user.UserName),
                     new("Location", user.Location.ToString()),
-                     new("FirstLogin", user.FirstLogin.ToString()),
+                    new("FirstLogin", user.FirstLogin.ToString()),
                     new(ClaimTypes.Role, user.Type.ToString()),
                 };
             if (additionalClaims?.Any() == true)

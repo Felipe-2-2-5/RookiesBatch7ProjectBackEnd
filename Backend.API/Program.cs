@@ -1,9 +1,11 @@
+using Backend.API.Hubs;
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.DTOs.CategoryDTOs;
+using Backend.Application.IHubs;
 using Backend.Application.IRepositories;
 using Backend.Application.Middleware;
 using Backend.Application.Services.AssetServices;
@@ -39,16 +41,6 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("AssetManager");
 builder.Services.AddDbContext<AssetContext>(options => options.UseSqlServer(connectionString));
 
-//builder.Services.AddDbContext<AssetContext>(options =>
-//    options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
-//    {
-//        sqlOptions.EnableRetryOnFailure(
-//            maxRetryCount: 5, // Maximum number of retry attempts
-//            maxRetryDelay: TimeSpan.FromSeconds(30), // Maximum delay between retries
-//            errorNumbersToAdd: null // Additional error numbers to retry on
-//        );
-//    }));
-
 //Add Mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -63,7 +55,23 @@ builder.Services.AddAuthentication(option =>
         options.TokenValidationParameters = TokenService.GetTokenValidationParameters(builder.Configuration);
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/api/userStateHub"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
+
 
 //Add Swagger authen
 builder.Services.AddSwaggerGen(opt =>
@@ -93,7 +101,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.SetIsOriginAllowed(origin => true)
+               .AllowCredentials()
                .AllowAnyMethod()
                .AllowAnyHeader()
                .WithExposedHeaders("Authorization", "Content-Disposition");
@@ -127,6 +136,13 @@ builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
 builder.Services.AddTransient<IValidator<AssignmentDTO>, AssignmentValidator>();
 
+//Add UserHub services
+builder.Services.AddScoped<IUserStateHub, UserStateHub>();
+
+//Add SignalR
+builder.Services.AddSignalR().AddNewtonsoftJsonProtocol();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -146,5 +162,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
-
+app.MapHub<UserStateHub>("/api/userStateHub");
 app.Run();
