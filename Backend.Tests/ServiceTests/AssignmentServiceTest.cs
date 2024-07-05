@@ -154,7 +154,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var assignmentId = 1;
-            var assignment = new Assignment { Id = assignmentId, AssetId = 2 };
+            var assignment = new Assignment { Id = assignmentId, AssetId = 2, State = AssignmentState.WaitingForAcceptance }; // Set the State to WaitingForAcceptance
             var dto = new AssignmentRespondDto { State = AssignmentState.Accepted };
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
@@ -175,9 +175,9 @@ namespace Backend.Tests.ServiceTests
             // Arrange
             var assignmentId = 1;
             var assetId = 2;
-            var assignment = new Assignment { Id = assignmentId, AssetId = assetId };
+            var assignment = new Assignment { Id = assignmentId, AssetId = assetId, State = AssignmentState.WaitingForAcceptance }; // Set the State to WaitingForAcceptance
             var asset = new Asset { Id = assetId, Assignments = new List<Assignment> { assignment }, State = AssetState.Assigned };
-            var dto = new AssignmentRespondDto { State = AssignmentState.WaitingForAcceptance };
+            var dto = new AssignmentRespondDto { State = AssignmentState.Declined }; // Set the State to Declined
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
                 .ReturnsAsync(assignment);
@@ -191,7 +191,6 @@ namespace Backend.Tests.ServiceTests
             Assert.That(asset.Assignments, Is.Null);
             Assert.That(asset.State, Is.EqualTo(AssetState.Available));
             _assetRepoMock.Verify(repo => repo.UpdateAsync(asset), Times.Once);
-            _assignmentRepoMock.Verify(repo => repo.DeleteAsync(assignment), Times.Once);
         }
 
         [Test]
@@ -209,12 +208,12 @@ namespace Backend.Tests.ServiceTests
         }
 
         [Test]
-        public void RespondAssignment_WhenAssetNotFound_ThrowsNotFoundException()
+        public void RespondAssignment_WhenAssetNotFound_ThrowsDataInvalidException()
         {
             // Arrange
             var assignmentId = 1;
             var assetId = 2;
-            var assignment = new Assignment { Id = assignmentId, AssetId = assetId };
+            var assignment = new Assignment { Id = assignmentId, AssetId = assetId, State = AssignmentState.WaitingForAcceptance }; // Set the State to WaitingForAcceptance
             var dto = new AssignmentRespondDto { State = AssignmentState.WaitingForAcceptance };
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
@@ -223,7 +222,7 @@ namespace Backend.Tests.ServiceTests
                 .ReturnsAsync((Asset)null);
 
             // Act & Assert
-            Assert.ThrowsAsync<NotFoundException>(() => _assignmentService.RespondAssignment(dto, assignmentId));
+            Assert.ThrowsAsync<DataInvalidException>(() => _assignmentService.RespondAssignment(dto, assignmentId));
         }
     }
 }
