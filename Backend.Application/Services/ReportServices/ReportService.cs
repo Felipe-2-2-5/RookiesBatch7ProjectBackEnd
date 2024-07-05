@@ -71,7 +71,6 @@ namespace Backend.Application.Services.ReportServices
                         {
                             cell.Value = value;
                         }
-                        cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;  
                     }
                 }
 
