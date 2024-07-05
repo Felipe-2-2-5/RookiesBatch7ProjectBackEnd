@@ -1,8 +1,7 @@
-﻿
-namespace Backend.Application.IHubs
+﻿namespace Backend.Application.IHubs
 {
     public interface IUserStateHub
     {
-        Task NotifyUserDisabled(int userId);
+        Task NotifyUserDisabled(string userId);
     }
 }

@@ -26,7 +26,7 @@ namespace Backend.Tests.ControllerTests
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
-                new Claim("Location", "1") 
+                new Claim("Location", "1")
             }, "mock"));
 
             _controller.ControllerContext = new ControllerContext()
@@ -74,7 +74,7 @@ namespace Backend.Tests.ControllerTests
             Assert.IsNotNull(okResult);
             var returnValue = okResult.Value as LoginResponse;
             Assert.IsNotNull(returnValue);
-            Assert.IsTrue(returnValue.Flag); 
+            Assert.IsTrue(returnValue.Flag);
         }
         [Test]
         public async Task ChangePasswordAsync_ReturnsOkResult_WithLoginResponse()
@@ -165,7 +165,7 @@ namespace Backend.Tests.ControllerTests
             var userId = 1;
             var userDto = new UserDTO { FirstName = "Updated", LastName = "User" };
             var userResponse = new UserResponse { Id = userId, FirstName = "Updated", LastName = "User" };
-            _userServiceMock.Setup(s => s.UpdateAsync(userId, userDto, "TestUser")).ReturnsAsync(userResponse);
+            _userServiceMock.Setup(s => s.UpdateAsync(userId, userDto, "TestUser", Location.HaNoi)).ReturnsAsync(userResponse);
 
             // Act
             var result = await _controller.UpdateAsync(userId, userDto);

@@ -3,7 +3,6 @@ using Backend.Application.AuthProvide;
 using Backend.Application.Common;
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AuthDTOs;
-using Backend.Application.IHubs;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
@@ -18,16 +17,13 @@ namespace Backend.Application.Services.UserServices
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IValidator<UserDTO> _validator;
-        private readonly IUserStateHub _hub;
 
-        public UserService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IValidator<UserDTO> validator
-            , IUserStateHub hub)
+        public UserService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IValidator<UserDTO> validator)
         {
             _userRepo = userRepo;
             _tokenService = tokenService;
             _mapper = mapper;
             _validator = validator;
-            _hub = hub;
         }
         public async Task<UserResponse> GetByIdAsync(int id)
         {
@@ -110,7 +106,7 @@ namespace Backend.Application.Services.UserServices
         public async Task DisableUserAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);
-            if (user == null )
+            if (user == null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -125,7 +121,6 @@ namespace Backend.Application.Services.UserServices
 
             user.IsDeleted = true;
             await _userRepo.UpdateAsync(user);
-            _hub.NotifyUserDisabled(userId);
         }
 
         public async Task<UserResponse> UpdateAsync(int id, UserDTO dto, string modifiedBy, Location location)

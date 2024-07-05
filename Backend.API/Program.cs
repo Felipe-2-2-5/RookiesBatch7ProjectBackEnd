@@ -5,6 +5,7 @@ using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.DTOs.CategoryDTOs;
+using Backend.Application.IHubs;
 using Backend.Application.IRepositories;
 using Backend.Application.Middleware;
 using Backend.Application.Services.AssetServices;
@@ -54,7 +55,23 @@ builder.Services.AddAuthentication(option =>
         options.TokenValidationParameters = TokenService.GetTokenValidationParameters(builder.Configuration);
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/api/userStateHub"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
+
 
 //Add Swagger authen
 builder.Services.AddSwaggerGen(opt =>
@@ -84,7 +101,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.SetIsOriginAllowed(origin => true)
+               .AllowCredentials()
                .AllowAnyMethod()
                .AllowAnyHeader()
                .WithExposedHeaders("Authorization", "Content-Disposition");
@@ -118,6 +136,9 @@ builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 builder.Services.AddTransient<IValidator<AssetDTO>, AssetValidator>();
 builder.Services.AddTransient<IValidator<AssignmentDTO>, AssignmentValidator>();
 
+//Add UserHub services
+builder.Services.AddScoped<IUserStateHub, UserStateHub>();
+
 //Add SignalR
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol();
 
@@ -141,5 +162,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
-app.MapHub<UserStateHub>("/userStateHub");
+app.MapHub<UserStateHub>("/api/userStateHub");
 app.Run();
