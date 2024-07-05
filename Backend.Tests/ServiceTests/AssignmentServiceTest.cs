@@ -128,7 +128,7 @@ namespace Backend.Tests.ServiceTests
             // Assert
             Assert.That(result, Is.Null);
         }
-        
+
         [Test]
         public async Task GetMyAssignmentsAsync_ReturnsCorrectPaginationResponse()
         {
@@ -177,7 +177,7 @@ namespace Backend.Tests.ServiceTests
             var assetId = 2;
             var assignment = new Assignment { Id = assignmentId, AssetId = assetId };
             var asset = new Asset { Id = assetId, Assignments = new List<Assignment> { assignment }, State = AssetState.Assigned };
-            var dto = new AssignmentRespondDto { State = AssignmentState.Waiting };
+            var dto = new AssignmentRespondDto { State = AssignmentState.WaitingForAcceptance };
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
                 .ReturnsAsync(assignment);
@@ -199,7 +199,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var assignmentId = 1;
-            var dto = new AssignmentRespondDto { State = AssignmentState.Waiting };
+            var dto = new AssignmentRespondDto { State = AssignmentState.WaitingForAcceptance };
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
                 .ReturnsAsync((Assignment)null);
@@ -215,7 +215,7 @@ namespace Backend.Tests.ServiceTests
             var assignmentId = 1;
             var assetId = 2;
             var assignment = new Assignment { Id = assignmentId, AssetId = assetId };
-            var dto = new AssignmentRespondDto { State = AssignmentState.Waiting };
+            var dto = new AssignmentRespondDto { State = AssignmentState.WaitingForAcceptance };
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
                 .ReturnsAsync(assignment);

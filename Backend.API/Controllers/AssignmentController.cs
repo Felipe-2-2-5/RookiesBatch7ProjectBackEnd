@@ -1,10 +1,10 @@
-using System.Security.Claims;
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssignmentDTOs;
 using Backend.Application.Services.AssignmentServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Backend.API.Controllers;
 
@@ -13,8 +13,6 @@ namespace Backend.API.Controllers;
 public class AssignmentController : BaseController
 {
     private readonly IAssignmentService _assignmentService;
-    private string UserName => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
-    private string Location => Convert.ToString(User.Claims.First(c => c.Type == "Location").Value);
 
     private int AssignedById
     {
@@ -50,11 +48,7 @@ public class AssignmentController : BaseController
         {
             request.AssignedDate = DateTime.Today;
         }
-        if (!Enum.TryParse(Location, out Location locationEnum))
-        {
-            return BadRequest("Invalid location");
-        }
-        var res = await _assignmentService.GetFilterAsync(request, locationEnum);
+        var res = await _assignmentService.GetFilterAsync(request, Location);
         return Ok(res);
     }
 
