@@ -10,7 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/UserServices/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/UserServiceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/UserServiceTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +144,9 @@
       <workItem from="1719985091629" duration="1054000" />
       <workItem from="1719993163814" duration="4173000" />
       <workItem from="1720014230456" duration="6885000" />
-      <workItem from="1720059509300" duration="1600000" />
+      <workItem from="1720059509300" duration="3786000" />
+      <workItem from="1720074701024" duration="4637000" />
+      <workItem from="1720146761249" duration="8555000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
@@ -156,6 +160,58 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnitTestsCoverage.Settings">
+    <option name="coveragePercentColumnWidth" value="150" />
+    <option name="sortOrder" value="DESCENDING" />
+    <option name="sortedColumn" value="1" />
+    <option name="symbolColumnWidth" value="155" />
+    <coverage-tree-state>
+      <expand>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.API 20% 128/160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.API 20% 128/160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.API.Controllers 20% 128/160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application.Services 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application.Services 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="UserServices 0% 107/107" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 6% 581/619" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application.Services 1% 453/459" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="UserServices 0% 107/107" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="UserService 0% 107/107" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+      </expand>
+      <select />
+    </coverage-tree-state>
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="Vcs.Log.Tabs.Properties">
