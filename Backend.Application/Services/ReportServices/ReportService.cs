@@ -34,7 +34,8 @@ namespace Backend.Application.Services.ReportServices
                 // Header style 
                 var headerStyle = workbook.Style;
                 headerStyle.Font.Bold = true;
-                headerStyle.Fill.BackgroundColor = XLColor.CornflowerBlue;
+                headerStyle.Font.FontColor = XLColor.White;
+                headerStyle.Fill.BackgroundColor = XLColor.FromArgb(192, 80, 77);
                 headerStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 headerStyle.Border.TopBorder = XLBorderStyleValues.Thin;
                 headerStyle.Border.BottomBorder = XLBorderStyleValues.Thin;
