@@ -4,6 +4,5 @@
     {
         Completed = 0,
         WaitingForReturning = 1,
-        Declined = 2,
     }
 }

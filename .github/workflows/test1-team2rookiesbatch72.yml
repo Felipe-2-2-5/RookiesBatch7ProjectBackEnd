@@ -32,6 +32,7 @@ jobs:
         dotnet ef database update --startup-project "${{ env.WORKING_DIRECTORY }}" -p ${{ env.DATABASE_DIRECTORY }} --connection '${{ secrets.DBConnection }}'
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+        
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts

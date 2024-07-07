@@ -2,6 +2,7 @@
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.IRepositories;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 
 namespace Backend.Application.Services.ReportServices
@@ -30,23 +31,52 @@ namespace Backend.Application.Services.ReportServices
             {
                 var worksheet = workbook.Worksheets.Add("AssetReport");
 
-                // Add headers
+                // Header style 
+                var headerStyle = workbook.Style;
+                headerStyle.Font.Bold = true;
+                headerStyle.Font.FontColor = XLColor.White;
+                headerStyle.Fill.BackgroundColor = XLColor.FromArgb(192, 80, 77);
+                headerStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                headerStyle.Border.TopBorder = XLBorderStyleValues.Thin;
+                headerStyle.Border.BottomBorder = XLBorderStyleValues.Thin;
+                headerStyle.Border.LeftBorder = XLBorderStyleValues.Thin;
+                headerStyle.Border.RightBorder = XLBorderStyleValues.Thin;
+                headerStyle.Border.TopBorderColor = XLColor.Black;
+                headerStyle.Border.BottomBorderColor = XLColor.Black;
+                headerStyle.Border.LeftBorderColor = XLColor.Black;
+                headerStyle.Border.RightBorderColor = XLColor.Black;
+
+                // Add headers and apply styles
                 var properties = typeof(AssetReportDto).GetProperties();
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    worksheet.Cell(1, i + 1).Value = properties[i].Name;
+                    var cell = worksheet.Cell(1, i + 1);
+                    cell.Value = properties[i].Name;
+                    cell.Style = headerStyle;
                 }
 
-                // Add rows
+                // Add rows and center all data
                 for (int i = 0; i < results.Data.Count(); i++)
                 {
                     var result = results.Data.ElementAt(i);
                     for (int j = 0; j < properties.Length; j++)
                     {
-                        var value = properties[j].GetValue(result);
-                        worksheet.Cell(i + 2, j + 1).Value = value?.ToString();
+                        var cell = worksheet.Cell(i + 2, j + 1);
+                        var value = properties[j].GetValue(result)?.ToString();
+                        if (double.TryParse(value, out double number))
+                        {
+                            cell.Value = number;
+                            cell.Style.NumberFormat.Format = "#,##0";
+                        }
+                        else
+                        {
+                            cell.Value = value;
+                        }
                     }
                 }
+
+                // Auto-fit columns to content
+                worksheet.Columns().AdjustToContents();
 
                 using (var stream = new MemoryStream())
                 {
