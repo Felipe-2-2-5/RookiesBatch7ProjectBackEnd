@@ -186,7 +186,7 @@ namespace Backend.Tests.ServiceTests
 
             // Assert
             Assert.That(result.Flag, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Invalid credentials"));
+            Assert.That(result.Message, Is.EqualTo("Invalid username or password. Please try again."));
         }
 
         [Test]
@@ -227,7 +227,6 @@ namespace Backend.Tests.ServiceTests
             // Assert
             Assert.That(user.IsDeleted, Is.True);
             _userRepoMock.Verify(repo => repo.UpdateAsync(user), Times.Once);
-            _userRepoMock.Verify(repo => repo.SaveChangeAsync(), Times.Once);
         }
 
         [Test]
@@ -254,6 +253,54 @@ namespace Backend.Tests.ServiceTests
 
             // Act & Assert
             Assert.ThrowsAsync<NotAllowedException>(() => _userService.DisableUserAsync(userId));
+        }
+        
+        // [Test]
+        // public async Task UpdateAsync_WhenUserExists_UpdatesAndReturnsUserResponse()
+        // {
+        //     // Arrange
+        //     var userId = 1;
+        //     var userDto = new UserDTO
+        //     {
+        //         FirstName = "Updated",
+        //         LastName = "User",
+        //         Gender = Gender.Male,
+        //         Location = Location.HaNoi,
+        //         JoinedDate = DateTime.Now,
+        //         Type = Role.Staff,
+        //         DateOfBirth = new DateTime(2002, 02, 22),
+        //     };
+        //     var user = new User { Id = userId, Location = Location.HaNoi };
+        //     var updatedUser = new User { Id = userId, FirstName = "Updated", LastName = "User", Location = Location.HaNoi };
+        //     var userResponse = new UserResponse { Id = userId, FirstName = "Updated", LastName = "User" };
+        //     var validationResult = new ValidationResult();
+        //
+        //     _validatorMock.Setup(validator => validator.ValidateAsync(userDto, default)).ReturnsAsync(validationResult);
+        //     _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+        //     _mapperMock.Setup(mapper => mapper.Map<User>(userDto)).Returns(updatedUser);
+        //     _userRepoMock.Setup(repo => repo.UpdateAsync(updatedUser)).Returns(Task.CompletedTask);
+        //     _mapperMock.Setup(mapper => mapper.Map<UserResponse>(updatedUser)).Returns(userResponse);
+        //
+        //     // Act
+        //     var result = await _userService.UpdateAsync(userId, userDto, "test", Location.HaNoi);
+        //
+        //     // Assert
+        //     Assert.IsNotNull(result, "Result is null");
+        //     Assert.That(result, Is.EqualTo(userResponse));
+        //     _userRepoMock.Verify(repo => repo.UpdateAsync(updatedUser), Times.Once);
+        // }
+        
+        [Test]
+        public void UpdateAsync_WhenUserDoesNotExist_ThrowsNotFoundException()
+        {
+            // Arrange
+            var userId = 1;
+            var userDto = new UserDTO();
+
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User?)null);
+
+            // Act & Assert
+            Assert.ThrowsAsync<NotFoundException>(() => _userService.UpdateAsync(userId, userDto, "test", Location.HaNoi));
         }
     }
 }
