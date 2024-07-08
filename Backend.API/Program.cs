@@ -160,7 +160,7 @@ app.MapControllers();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseMiddleware<CheckUserMidleware>();
+//app.UseMiddleware<CheckUserMidleware>();
 
 /*app.MapHub<UserStateHub>("/api/userStateHub");*/
 app.Run();

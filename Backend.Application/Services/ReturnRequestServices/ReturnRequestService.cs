@@ -70,7 +70,7 @@ public class ReturnRequestService : IReturnRequestService
 
     public async Task CancelRequestAsync(int id, string modifyName, Role role)
     {
-        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Return request with id {id} not found.");
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request.");
         if (role == Role.Staff)
         {
             throw new ForbiddenException("No Permission");
@@ -83,9 +83,6 @@ public class ReturnRequestService : IReturnRequestService
 
         request.ModifiedAt = DateTime.Now;
         request.ModifiedBy = modifyName;
-        request.Assignment = null;
-        request.Acceptor = null;
-        request.Requestor = null;
         await _requestRepository.DeleteAsync(request);
 
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
@@ -95,20 +92,17 @@ public class ReturnRequestService : IReturnRequestService
 
     public async Task CompleteRequestAsync(int id, int acceptedBy)
     {
-        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request");
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request.");
 
         request.State = ReturnRequestState.Completed;
         request.ReturnedDate = DateTime.Now;
         request.AcceptorId = acceptedBy;
-        request.Assignment = null;
-        request.Acceptor = null;
-        request.Requestor = null;
         await _requestRepository.UpdateAsync(request);
 
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
 
         assignment.IsDeleted = true;
-        assignment.Asset.State = AssetState.Available;
+        request.Assignment.Asset.State = AssetState.Available;
         await _assignmentRepository.UpdateAsync(assignment);
     }
 }
