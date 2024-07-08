@@ -19,6 +19,7 @@ namespace Backend.Infrastructure.Repositories
             return await _context.ReturnRequests
                  .Include(a => a.Assignment)
                     .ThenInclude(assignment => assignment!.Asset)
+                .Include(a => a.Assignment!.AssignedTo)
                 .Include(a => a.Requestor)
                 .Include(a => a.Acceptor)
                 .AsNoTracking()
@@ -30,6 +31,7 @@ namespace Backend.Infrastructure.Repositories
             IQueryable<ReturnRequest> query = _table.Where(a => a.Assignment!.Asset!.Location == location)
                 .Include(a => a.Assignment)
                     .ThenInclude(assignment => assignment!.Asset)
+                    .Include(a => a.Assignment!.AssignedTo)
                 .Include(a => a.Requestor)
                 .Include(a => a.Acceptor);
 
@@ -64,6 +66,7 @@ namespace Backend.Infrastructure.Repositories
             {
                 "assetCode" => returnRequest => returnRequest.Assignment!.Asset!.AssetCode,
                 "assetName" => returnRequest => returnRequest.Assignment!.Asset!.AssetName,
+                "assignedTo" => returnRequest => returnRequest.Assignment!.AssignedTo!.UserName!,
                 "requestedBy" => returnRequest => returnRequest.Requestor!.UserName!,
                 "assignedDate" => returnRequest => returnRequest.Assignment!.AssignedDate!,
                 "acceptedBy" => returnRequest => returnRequest.Acceptor!.UserName!,
