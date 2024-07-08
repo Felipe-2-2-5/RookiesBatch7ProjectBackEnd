@@ -30,7 +30,7 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResponse> GetByIdAsync(int id)
     {
-        var entity = await _assignmentRepository.GetByIdAsync(id) ?? throw new NotFoundException();
+        var entity = await _assignmentRepository.GetByIdAsync(id) ?? throw new NotFoundException("Assignment not found.");
         var dto = _mapper.Map<AssignmentResponse>(entity);
         return dto;
     }
