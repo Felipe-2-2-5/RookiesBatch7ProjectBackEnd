@@ -7,6 +7,6 @@ namespace Backend.Application.Services.ReportServices
     public interface IReportService
     {
         Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int PageSize, int Page);
-        Task<byte[]> ExportAssetReportAsync();
+        Task<byte[]> ExportAssetReportAsync(string? SortColumn, string? SortOrder);
     }
 }

@@ -162,5 +162,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
-app.MapHub<UserStateHub>("/api/userStateHub");
+
+//app.UseMiddleware<CheckUserMidleware>();
+
+/*app.MapHub<UserStateHub>("/api/userStateHub");*/
 app.Run();
