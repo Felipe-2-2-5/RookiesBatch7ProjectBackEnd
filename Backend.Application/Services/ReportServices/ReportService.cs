@@ -2,7 +2,6 @@
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.IRepositories;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 
 namespace Backend.Application.Services.ReportServices
@@ -11,7 +10,7 @@ namespace Backend.Application.Services.ReportServices
     {
         private readonly IReportRepository _reportRepository;
 
-        public ReportService ( IReportRepository reportRepository)
+        public ReportService(IReportRepository reportRepository)
         {
             _reportRepository = reportRepository;
         }
@@ -26,6 +25,11 @@ namespace Backend.Application.Services.ReportServices
         {
             // Get all results without pagination
             var results = await _reportRepository.GetAssetReportAsync(null, null, null, null);
+
+            if (results.Data.Count() == 0)
+            {
+                return null; // Return null if there are no results
+            }
 
             using (XLWorkbook workbook = new XLWorkbook())
             {
@@ -74,7 +78,6 @@ namespace Backend.Application.Services.ReportServices
                         }
                     }
                 }
-
                 // Auto-fit columns to content
                 worksheet.Columns().AdjustToContents();
 

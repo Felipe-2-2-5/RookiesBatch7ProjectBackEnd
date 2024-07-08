@@ -56,6 +56,7 @@ namespace Backend.Application.AuthProvide
                     new("Location", user.Location.ToString()),
                     new("FirstLogin", user.FirstLogin.ToString()),
                     new(ClaimTypes.Role, user.Type.ToString()),
+                    new ("ModifyAt", user.ModifiedAt.ToString()!)
                 };
             if (additionalClaims?.Any() == true)
                 claims.AddRange(additionalClaims!);
