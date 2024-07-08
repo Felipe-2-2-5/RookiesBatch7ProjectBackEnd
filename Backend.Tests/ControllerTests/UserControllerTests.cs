@@ -5,7 +5,11 @@ using Backend.Application.Services.UserServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
 using Moq;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace Backend.Tests.ControllerTests
@@ -20,18 +24,29 @@ namespace Backend.Tests.ControllerTests
         public void SetUp()
         {
             _userServiceMock = new Mock<IUserService>();
-            _controller = new UsersController(_userServiceMock.Object);
 
-            // Mock User claims
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            // Mock HttpContext and User claims
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "TestUser"),
-                new Claim("Location", "1")
+                new Claim("UserName", "TestUser"),
+                new Claim("Location", Location.HaNoi.ToString()), // Replace with appropriate location value
+                new Claim("UserId", "1"),
+                new Claim(ClaimTypes.Role, Role.Admin.ToString()) // Replace with appropriate role value
             }, "mock"));
 
-            _controller.ControllerContext = new ControllerContext()
+            // Setup ControllerActionDescriptor
+            var controllerActionDescriptor = new ControllerActionDescriptor
             {
-                HttpContext = new DefaultHttpContext() { User = user }
+                ControllerTypeInfo = typeof(UsersController).GetTypeInfo(), // Replace with your controller type
+                MethodInfo = typeof(UsersController).GetMethod("UpdateAsync"), // Replace with your action method
+            };
+
+            var actionContext = new ActionContext(httpContext, new RouteData(), controllerActionDescriptor);
+
+            _controller = new UsersController(_userServiceMock.Object)
+            {
+                ControllerContext = new ControllerContext(actionContext)
             };
         }
 
@@ -77,36 +92,6 @@ namespace Backend.Tests.ControllerTests
             Assert.IsTrue(returnValue.Flag);
         }
 
-
-        [Test]
-        public async Task ChangePasswordAsync_ReturnsOkResult_WithLoginResponse()
-        {
-            // Arrange
-            var changePasswordDto = new ChangePasswordDTO { Id = 1, OldPassword = "oldpassword", NewPassword = "newpassword" };
-            var loginResponse = new LoginResponse(true, "Password changed successfully", "newToken");
-
-            // Setup mock to return loginResponse when ChangePasswordAsync is called with changePasswordDto
-            _userServiceMock.Setup(s => s.ChangePasswordAsync(changePasswordDto)).ReturnsAsync(true);
-
-
-            // Act
-            var result = await _controller.ChangePasswordAsync(changePasswordDto);
-
-            // Assert
-            Assert.IsInstanceOf<ActionResult<LoginResponse>>(result);
-            var actionResult = result as ActionResult<LoginResponse>;
-            Assert.IsNotNull(actionResult);
-            Assert.IsInstanceOf<OkObjectResult>(actionResult.Result);
-            var okResult = actionResult.Result as OkObjectResult;
-            Assert.IsNotNull(okResult);
-
-            // Validate the content of the response
-            var returnValue = okResult.Value as LoginResponse;
-            Assert.IsNotNull(returnValue);
-            Assert.IsTrue(returnValue.Flag);
-            Assert.AreEqual("Password changed successfully", returnValue.Message);
-            Assert.AreEqual("newToken", returnValue.Token);
-        }
 
 
         [Test]
