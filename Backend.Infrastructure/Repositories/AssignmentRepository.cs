@@ -104,7 +104,7 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.Assignments
                             .Include(a => a.AssignedTo)
-                            .Include(a => a.AssignedBy)
+                            .Include(a => a.AssignedBy).AsNoTracking()
                             .FirstOrDefaultAsync(a => a.Id == id);
         }
         public async Task<Assignment?> FindLatestAssignment()

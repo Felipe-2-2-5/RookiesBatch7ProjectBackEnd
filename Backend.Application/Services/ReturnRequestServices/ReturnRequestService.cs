@@ -83,6 +83,9 @@ public class ReturnRequestService : IReturnRequestService
 
         request.ModifiedAt = DateTime.Now;
         request.ModifiedBy = modifyName;
+        request.Assignment = null;
+        request.Acceptor = null;
+        request.Requestor = null;
         await _requestRepository.DeleteAsync(request);
 
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
@@ -97,12 +100,15 @@ public class ReturnRequestService : IReturnRequestService
         request.State = ReturnRequestState.Completed;
         request.ReturnedDate = DateTime.Now;
         request.AcceptorId = acceptedBy;
+        request.Assignment = null;
+        request.Acceptor = null;
+        request.Requestor = null;
         await _requestRepository.UpdateAsync(request);
 
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
 
         assignment.IsDeleted = true;
-        request.Assignment.Asset.State = AssetState.Available;
+        assignment.Asset.State = AssetState.Available;
         await _assignmentRepository.UpdateAsync(assignment);
     }
 }
