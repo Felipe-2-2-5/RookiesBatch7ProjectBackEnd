@@ -1,15 +1,11 @@
-﻿using Backend.Application.DTOs.AssetDTOs;
+﻿using Backend.Application.Common.Paging;
+using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.IRepositories;
 using Backend.Infrastructure.Data;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
-using Backend.Application.Common.Paging;
-using Backend.Domain.Entities;
 
 public class ReportRepository : IReportRepository
 {
@@ -18,7 +14,7 @@ public class ReportRepository : IReportRepository
     public ReportRepository(AssetContext context)
     {
         _context = context;
-        _connectionString = context.Database.GetConnectionString();
+        _connectionString = context.Database.GetConnectionString()!;
 
     }
 

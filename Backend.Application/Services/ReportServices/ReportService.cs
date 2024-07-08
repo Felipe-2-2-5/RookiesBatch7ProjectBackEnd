@@ -16,7 +16,7 @@ namespace Backend.Application.Services.ReportServices
         }
 
         //get report by category and state 
-        public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string SortColumn, string SortDirection, int PageSize, int Page)
+        public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int? PageSize, int? Page)
         {
             return await _reportRepository.GetAssetReportAsync(SortColumn, SortDirection, PageSize, Page);
         }
@@ -24,12 +24,7 @@ namespace Backend.Application.Services.ReportServices
         public async Task<byte[]> ExportAssetReportAsync()
         {
             // Get all results without pagination
-            var results = await _reportRepository.GetAssetReportAsync(null, null, null, null);
-
-            if (results.Data.Count() == 0)
-            {
-                return null; // Return null if there are no results
-            }
+            var results = await _reportRepository.GetAssetReportAsync("", "", 1, 300);
 
             using (XLWorkbook workbook = new XLWorkbook())
             {
