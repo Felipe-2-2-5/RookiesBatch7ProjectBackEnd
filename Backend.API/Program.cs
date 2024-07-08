@@ -128,6 +128,7 @@ builder.Services.AddScoped<IReportService, ReportService>();
 //Return request services
 builder.Services.AddScoped<IReturnRequestRepository, ReturnRequestRepository>();
 builder.Services.AddScoped<IReturnRequestService, ReturnRequestService>();
+
 //Add FluentValidation services
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
 builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
@@ -160,7 +161,5 @@ app.MapControllers();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-//app.UseMiddleware<CheckUserMidleware>();
 
-/*app.MapHub<UserStateHub>("/api/userStateHub");*/
 app.Run();
