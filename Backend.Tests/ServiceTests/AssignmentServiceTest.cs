@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Backend.Application.Common.Paging;
+using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.DTOs.AssignmentDTOs;
+using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Services.AssignmentServices;
 using Backend.Domain.Entities;
@@ -66,6 +68,68 @@ namespace Backend.Tests.ServiceTests
         }
 
         [Test]
+        public async Task GetFilterAsync_WhenRepositoryReturnsData_ReturnsExpectedResult()
+        {
+            // Arrange
+            var request = new AssignmentFilterRequest { };
+            var location = new Location { };
+            var assignments = new List<Assignment> {};
+            var response = new PaginationResponse<Assignment>(assignments, assignments.Count);
+
+            _assignmentRepoMock.Setup(repo => repo.GetFilterAsync(request, location))
+                               .ReturnsAsync(response);
+            _mapperMock.Setup(mapper => mapper.Map<IEnumerable<AssignmentResponse>>(assignments))
+                       .Returns(new List<AssignmentResponse> {});
+
+            // Act
+            var result = await _assignmentService.GetFilterAsync(request, location);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(assignments.Count, result.TotalCount);
+            _assignmentRepoMock.Verify(repo => repo.GetFilterAsync(request, location), Times.Once);
+            _mapperMock.Verify(mapper => mapper.Map<IEnumerable<AssignmentResponse>>(assignments), Times.Once);
+        }
+
+        [Test]
+        public async Task GetFilterAsync_WhenRepositoryReturnsNoData_ReturnsEmptyResult()
+        {
+            // Arrange
+            var request = new AssignmentFilterRequest { /* Initialize properties */ };
+            var location = new Location { /* Initialize properties */ };
+            var response = new PaginationResponse<Assignment>(new List<Assignment>(), 0);
+
+            _assignmentRepoMock.Setup(repo => repo.GetFilterAsync(request, location))
+                               .ReturnsAsync(response);
+            _mapperMock.Setup(mapper => mapper.Map<IEnumerable<AssignmentResponse>>(It.IsAny<IEnumerable<Assignment>>()))
+                       .Returns(new List<AssignmentResponse>());
+
+            // Act
+            var result = await _assignmentService.GetFilterAsync(request, location);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.TotalCount);
+            _assignmentRepoMock.Verify(repo => repo.GetFilterAsync(request, location), Times.Once);
+            _mapperMock.Verify(mapper => mapper.Map<IEnumerable<AssignmentResponse>>(It.IsAny<IEnumerable<Assignment>>()), Times.Once);
+        }
+
+        [Test]
+        public void GetFilterAsync_WhenRepositoryThrowsException_ThrowsException()
+        {
+            // Arrange
+            var request = new AssignmentFilterRequest { /* Initialize properties */ };
+            var location = new Location { /* Initialize properties */ };
+
+            _assignmentRepoMock.Setup(repo => repo.GetFilterAsync(request, location))
+                               .ThrowsAsync(new System.Exception("Test exception"));
+
+            // Act & Assert
+            Assert.ThrowsAsync<System.Exception>(async () => await _assignmentService.GetFilterAsync(request, location));
+            _assignmentRepoMock.Verify(repo => repo.GetFilterAsync(request, location), Times.Once);
+        }
+
+        [Test]
         public async Task InsertAsync_WhenAssignmentIsValid_ReturnsAssignmentResponse()
         {
             // Arrange
@@ -97,6 +161,59 @@ namespace Backend.Tests.ServiceTests
             _assignmentRepoMock.Verify(repo => repo.InsertAsync(It.IsAny<Assignment>()), Times.Once);
             _assetRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Asset>()), Times.Once);
         }
+
+
+        [Test]
+        public async Task InsertAsync_WhenAssetAlreadyAssigned_ThrowsDataInvalidException()
+        {
+            // Arrange
+            var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 1 };
+            var assignedAsset = new Asset { Id = 3, State = AssetState.Assigned };
+            var existingAssignment = new Assignment { AssetId = 3, AssignedToId = 2 };
+            var assignedUser = new User { Id = 2, UserName = "existingUser" };
+
+            // Mocking the repositories
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssetId)).ReturnsAsync(assignedAsset);
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignmentDto.AssetId)).ReturnsAsync(existingAssignment);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(existingAssignment.AssignedToId)).ReturnsAsync(assignedUser);
+
+            // Act
+            var exception = Assert.ThrowsAsync<Exception>(() => _assignmentService.InsertAsync(assignmentDto, "creator", 1));
+
+            // Assert
+            Assert.That(exception.Message, Is.EqualTo("Error Asset has been assigned to existingUser "));
+            Assert.That(exception.InnerException, Is.InstanceOf<DataInvalidException>());
+            Assert.That(exception.InnerException?.Message, Is.EqualTo("Asset has been assigned to existingUser "));
+
+            // Verifying that InsertAsync and UpdateAsync methods were never called
+            _assignmentRepoMock.Verify(repo => repo.InsertAsync(It.IsAny<Assignment>()), Times.Never);
+            _assetRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Asset>()), Times.Never);
+        }
+
+
+        [Test]
+        public async Task InsertAsync_WhenExceptionThrown_RethrowsException()
+        {
+            // Arrange
+            var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 1 };
+            var asset = new Asset { Id = 3, State = AssetState.Available };
+
+            // Mocking the asset repository to return a valid asset
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssetId)).ReturnsAsync(asset);
+
+            // Mocking the assignment repository to throw an exception
+            _assignmentRepoMock.Setup(repo => repo.InsertAsync(It.IsAny<Assignment>())).ThrowsAsync(new Exception("Database error"));
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(() => _assignmentService.InsertAsync(assignmentDto, "creator", 1));
+            Assert.That(ex.Message, Is.EqualTo("Error Object reference not set to an instance of an object."));
+
+            // Verifying that UpdateAsync method was never called
+            _assetRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Asset>()), Times.Never);
+        }
+
+
+
 
         [Test]
         public async Task FindAssignmentByAssetIdAsync_WhenAssignmentExists_ReturnsAssignment()
@@ -147,6 +264,200 @@ namespace Backend.Tests.ServiceTests
             // Assert
             Assert.That(result.Data, Is.EqualTo(assignmentResponses));
             Assert.That(result.TotalCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task UpdateAsync_NoChanges_DoesNotUpdate()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssetId = 1, AssignedToId = 1 };
+            int assignmentId = 1;
+            string modifiedName = "testUser";
+            var assignment = new Assignment { AssetId = 1, AssignedToId = 1, State = AssignmentState.WaitingForAcceptance };
+            var oldAsset = new Asset { State = AssetState.Assigned, Assignments = new List<Assignment>() };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
+                .ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignment.AssetId))
+                .ReturnsAsync(oldAsset);
+
+            // Act
+            var response = await _assignmentService.UpdateAsync(dto, assignmentId, modifiedName);
+
+            // Assert
+            _assetRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Asset>()), Times.Never);
+            _assignmentRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Assignment>()), Times.Once);
+            Assert.That(response, Is.Null);
+        }
+
+        [Test]
+        public void UpdateAsync_ChangeUserOnly_UserNotFound_ThrowsNotFoundException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssetId = 1, AssignedToId = 2 }; // Changing user only
+            int assignmentId = 1;
+            string modifiedName = "testUser";
+            var currentAssignment = new Assignment
+            {
+                AssetId = 1,
+                AssignedToId = 1,
+                State = AssignmentState.WaitingForAcceptance,
+                AssignedTo = new User(),
+                Asset = new Asset { Id = 1, State = AssetState.Assigned }
+            };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
+                .ReturnsAsync(currentAssignment);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssignedToId))
+                .ReturnsAsync((User)null); // User not found
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () => await _assignmentService.UpdateAsync(dto, assignmentId, modifiedName));
+
+            // Check that the inner exception is NotFoundException
+            Assert.That(ex.InnerException, Is.InstanceOf<NotFoundException>());
+            Assert.That(ex.InnerException.Message, Contains.Substring("Not found user"));
+        }
+
+        [Test]
+        public void UpdateAsync_NewAssetAlreadyAssigned_ThrowsDataInvalidException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssetId = 2, AssignedToId = 1 };
+            int assignmentId = 1;
+            string modifiedName = "testUser";
+
+            var assignment = new Assignment { AssetId = 1, AssignedToId = 1, State = AssignmentState.WaitingForAcceptance };
+            var newAsset = new Asset { State = AssetState.Assigned };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
+                .ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssetId))
+                .ReturnsAsync(newAsset);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () => await _assignmentService.UpdateAsync(dto, assignmentId, modifiedName));
+
+            // Check that the inner exception is DataInvalidException
+            Assert.That(ex.InnerException, Is.InstanceOf<DataInvalidException>());
+            Assert.That(ex.InnerException.Message, Contains.Substring("Asset has been assigned to other Staff"));
+        }
+
+        [Test]
+        public void UpdateAsync_AssignmentAccepted_ThrowsDataInvalidException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssetId = 1, AssignedToId = 1 };
+            int assignmentId = 1;
+            string modifiedName = "testUser";
+            var assignment = new Assignment { AssetId = 1, AssignedToId = 1, State = AssignmentState.Accepted };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignmentId))
+                .ReturnsAsync(assignment);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () => await _assignmentService.UpdateAsync(dto, assignmentId, modifiedName));
+
+            // Check that the inner exception is DataInvalidException
+            Assert.That(ex.InnerException, Is.InstanceOf<DataInvalidException>());
+            Assert.That(ex.InnerException.Message, Contains.Substring("Assignment is assigned to user"));
+        }
+
+        [Test]
+        public async Task UpdateAsync_ChangeAssetOnly_OldAssetNotFound_ThrowsNotFoundException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssignedToId = 1, AssetId = 2 };
+            var assignment = new Assignment { Id = 1, AssignedToId = 1, AssetId = 3, State = AssignmentState.WaitingForAcceptance };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(1))
+                .ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(3))
+                .ReturnsAsync((Asset)null);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+            Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
+            Assert.AreEqual("Not found asset", ex.InnerException.Message);
+        }
+
+        [Test]
+        public async Task UpdateAsync_ChangeUserOnly_OldUserNotFound_ThrowsNotFoundException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssignedToId = 2, AssetId = 1 };
+            var assignment = new Assignment { Id = 1, AssignedToId = 1, AssetId = 1, State = AssignmentState.WaitingForAcceptance };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(1))
+                .ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(1))
+                .ReturnsAsync((Asset)null);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+            Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
+            Assert.AreEqual("Not found user", ex.InnerException.Message);
+        }
+
+        [Test]
+        public async Task UpdateAsync_ChangeAssetAndUser_NewAssetNotFound_ThrowsNotFoundException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssignedToId = 2, AssetId = 3 };
+            var assignment = new Assignment { Id = 1, AssignedToId = 1, AssetId = 1, State = AssignmentState.WaitingForAcceptance };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(1))
+                .ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(3))
+                .ReturnsAsync((Asset)null);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+            Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
+            Assert.AreEqual("Not found asset", ex.InnerException.Message);
+        }
+
+        [Test]
+        public async Task UpdateAsync_ChangeAssetAndUser_NewUserNotFound_ThrowsNotFoundException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssignedToId = 2, AssetId = 3 };
+            var assignment = new Assignment { Id = 1, AssignedToId = 1, AssetId = 1, State = AssignmentState.WaitingForAcceptance };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(1))
+                .ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(3))
+                .ReturnsAsync(new Asset { Id = 3, State = AssetState.Available });
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(2))
+                .ReturnsAsync((User)null);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+            Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
+            Assert.AreEqual("Not found asset", ex.InnerException.Message);
+        }
+
+        [Test]
+        public async Task UpdateAsync_ChangeUserOnly_NewUserNotFound_ThrowsNotFoundException()
+        {
+            // Arrange
+            var dto = new AssignmentDTO { AssignedToId = 2, AssetId = 1 };
+            var assignment = new Assignment { Id = 1, AssignedToId = 1, AssetId = 1, State = AssignmentState.WaitingForAcceptance };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(1))
+                .ReturnsAsync(assignment);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(2))
+                .ReturnsAsync((User)null);
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+            Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
+            Assert.AreEqual("Not found user", ex.InnerException.Message);
         }
 
         [Test]
