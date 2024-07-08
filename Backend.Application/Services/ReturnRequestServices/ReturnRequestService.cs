@@ -70,7 +70,7 @@ public class ReturnRequestService : IReturnRequestService
 
     public async Task CancelRequestAsync(int id, string modifyName, Role role)
     {
-        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Return request with id {id} not found.");
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request.");
         if (role == Role.Staff)
         {
             throw new ForbiddenException("No Permission");
@@ -92,7 +92,7 @@ public class ReturnRequestService : IReturnRequestService
 
     public async Task CompleteRequestAsync(int id, int acceptedBy)
     {
-        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request");
+        var request = await _requestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Not found request.");
 
         request.State = ReturnRequestState.Completed;
         request.ReturnedDate = DateTime.Now;
