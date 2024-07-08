@@ -1,4 +1,3 @@
-using Backend.API.Hubs;
 using Backend.Application.AuthProvide;
 using Backend.Application.Common.Converter;
 using Backend.Application.DTOs.AssetDTOs;
@@ -158,6 +157,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.UseMiddleware<ExceptionMiddleware>();
-app.MapHub<UserStateHub>("/api/userStateHub");
+
+app.UseMiddleware<CheckUserMidleware>();
+
+/*app.MapHub<UserStateHub>("/api/userStateHub");*/
 app.Run();
