@@ -10,9 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/ReturnRequestServiceTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,12 +22,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/564d11e3c8cbbd636fa9aa3a7b73d9ef576176dfee78aff1abcc84c359c266a/InvalidOperationException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c765e47ec58cf89220cd5779fc5cce70b01abab88edf4ed2b5deaba1244c610/IValidator.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/AssignmentServices/IAssignmentService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/NashTech/Assignment/RookiesBatch7ProjectBackEnd/Backend.Infrastructure/Repositories/AssignmentRepository.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -149,7 +144,11 @@
       <workItem from="1720146761249" duration="8815000" />
       <workItem from="1720166229452" duration="78000" />
       <workItem from="1720170160778" duration="305000" />
-      <workItem from="1720184943811" duration="1615000" />
+      <workItem from="1720184943811" duration="2205000" />
+      <workItem from="1720202797694" duration="582000" />
+      <workItem from="1720403958559" duration="6086000" />
+      <workItem from="1720420452568" duration="3276000" />
+      <workItem from="1720425501719" duration="2989000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
@@ -165,50 +164,31 @@
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="75" />
+    <option name="coveragePercentColumnWidth" value="52" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="388" />
+    <option name="symbolColumnWidth" value="323" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 37% 1842/2911" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 37% 1842/2911" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 84% 77/486" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 37% 1842/2911" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 84% 77/486" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application.Services 84% 77/486" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 37% 1842/2911" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Services 60% 195/483" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 37% 1842/2911" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Services 60% 195/483" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="ReturnRequestServices 94% 4/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 37% 1842/2911" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 43% 489/854" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Services 60% 195/483" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="ReturnRequestServices 94% 4/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="ReturnRequestService 94% 4/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.API 76% 39/160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
