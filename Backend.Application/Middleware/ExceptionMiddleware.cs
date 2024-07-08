@@ -1,9 +1,6 @@
-﻿using Backend.Application.IRepositories;
-using Backend.Domain.Exceptions;
+﻿using Backend.Domain.Exceptions;
 using Backend.Domain.Resource;
 using Microsoft.AspNetCore.Http;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Backend.Application.Middleware
 {
@@ -27,7 +24,7 @@ namespace Backend.Application.Middleware
         #region Methods
 
 
-        public async Task Invoke(HttpContext context, IUserRepository userRepository)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
@@ -83,7 +80,7 @@ namespace Backend.Application.Middleware
             await context.Response.WriteAsync(text: err.ToString() ?? "");
         }
 
-        private async Task CheckUserInfor(HttpContext context, IUserRepository userRepository)
+        /*private async Task CheckUserInfor(HttpContext context, IUserRepository userRepository)
         {
             var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
@@ -101,7 +98,7 @@ namespace Backend.Application.Middleware
             {
                 throw new ForbiddenException("Your accout has been disabled");
             }
-        }
+        }*/
         #endregion
     }
 }

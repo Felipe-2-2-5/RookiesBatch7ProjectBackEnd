@@ -21,10 +21,15 @@ namespace Backend.Application.Services.ReportServices
             return await _reportRepository.GetAssetReportAsync(SortColumn, SortDirection, PageSize, Page);
         }
 
-        public async Task<byte[]> ExportAssetReportAsync()
+        public async Task<byte[]> ExportAssetReportAsync(string? SortColumn, string? SortOrder)
         {
             // Get all results without pagination
-            var results = await _reportRepository.GetAssetReportAsync("", "", 1, 300);
+            var results = await _reportRepository.GetAssetReportAsync(SortColumn, SortOrder, null, null);
+
+            if (results.Data.Count() == 0)
+            {
+                return null!; // Return null if there are no results
+            }
 
             using (XLWorkbook workbook = new XLWorkbook())
             {
