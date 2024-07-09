@@ -302,5 +302,47 @@ namespace Backend.Tests.ServiceTests
             // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _userService.UpdateAsync(userId, userDto, "test", Location.HaNoi));
         }
+        
+        [Test]
+        public void UpdateAsync_UserLocationMismatch_ThrowsForbiddenException()
+        {
+            // Arrange
+            var userId = 1;
+            var userDto = new UserDTO();
+            var user = new User { Id = userId, Location = Location.HaNoi };
+
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+
+            // Act & Assert
+            Assert.ThrowsAsync<ForbiddenException>(() => _userService.UpdateAsync(userId, userDto, "test", Location.HoChiMinh));
+        }
+        
+        [Test]
+        public async Task UpdateAsync_UserLocationMatches_UpdateUser()
+        {
+            // Arrange
+            var userId = 1;
+            var userDto = new UserDTO
+            {
+                FirstName = "Updated",
+                LastName = "User",
+                Gender = Gender.Male,
+                Location = Location.HaNoi,
+                JoinedDate = DateTime.Now,
+                Type = Role.Staff,
+                DateOfBirth = new DateTime(2002, 02, 22),
+            };
+            var user = new User { Id = userId, Location = Location.HaNoi };
+            var validationResult = new ValidationResult();
+
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+            _validatorMock.Setup(validator => validator.ValidateAsync(userDto, default)).ReturnsAsync(validationResult);
+
+            // Act
+            await _userService.UpdateAsync(userId, userDto, "test", Location.HaNoi);
+
+            // Assert
+            _userRepoMock.Verify(repo => repo.UpdateAsync(user), Times.Once);
+        }
     }
 }

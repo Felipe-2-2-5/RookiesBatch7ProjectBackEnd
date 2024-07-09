@@ -97,14 +97,49 @@ namespace Backend.Tests.ControllerTests
             // Assert
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var okResult = result as OkObjectResult;
-            Assert.That(okResult.Value, Is.InstanceOf<PaginationResponse<AssignmentResponse>>());
+            Assert.That(okResult!.Value, Is.InstanceOf<PaginationResponse<AssignmentResponse>>());
 
-            var returnedData = (PaginationResponse<AssignmentResponse>)okResult.Value;
+            var returnedData = (PaginationResponse<AssignmentResponse>)okResult.Value!;
             Assert.Multiple(() =>
             {
                 Assert.That(returnedData.TotalCount, Is.EqualTo(expectedData.Count));
                 Assert.That(returnedData.Data, Is.EqualTo(expectedData));
             });
+        }
+        
+        [Test]
+        public async Task GetFilterAsync_AssignedDateIsMinValue_AssignedDateIsSetToToday()
+        {
+            // Arrange
+            var request = new AssignmentFilterRequest
+            {
+                AssignedDate = DateTime.MinValue
+            };
+            _mockAssignmentService.Setup(x => x.GetFilterAsync(request, It.IsAny<Location>())).ReturnsAsync(new PaginationResponse<AssignmentResponse>(new List<AssignmentResponse>(), 0));
+
+            // Act
+            await _controller.GetFilterAsync(request);
+
+            // Assert
+            Assert.That(request.AssignedDate, Is.EqualTo(DateTime.Today));
+        }
+
+        [Test]
+        public async Task GetFilterAsync_AssignedDateIsNotMinValue_AssignedDateIsNotChanged()
+        {
+            // Arrange
+            var assignedDate = new DateTime(2022, 1, 1);
+            var request = new AssignmentFilterRequest
+            {
+                AssignedDate = assignedDate
+            };
+            _mockAssignmentService.Setup(x => x.GetFilterAsync(request, It.IsAny<Location>())).ReturnsAsync(new PaginationResponse<AssignmentResponse>(new List<AssignmentResponse>(), 0));
+
+            // Act
+            await _controller.GetFilterAsync(request);
+
+            // Assert
+            Assert.That(request.AssignedDate, Is.EqualTo(assignedDate));
         }
 
         [Test]

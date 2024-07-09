@@ -1,4 +1,5 @@
-﻿using Backend.Application.DTOs.AuthDTOs;
+﻿using System.Globalization;
+using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.Validations;
 using Backend.Domain.Enum;
 using FluentValidation.TestHelper;
@@ -31,19 +32,11 @@ namespace Backend.Application.Tests.Validations
             var result = _validator.TestValidate(model);
             result.ShouldHaveValidationErrorFor(user => user.LastName);
         }
-
+        
         [Test]
-        public void Should_Have_Error_When_DateOfBirth_Is_Invalid()
+        public void Should_Have_Error_When_User_Is_Just_Under_18()
         {
-            var model = new UserDTO { DateOfBirth = DateTime.Parse("32/13/2000") };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(user => user.DateOfBirth);
-        }
-
-        [Test]
-        public void Should_Have_Error_When_User_Is_Under_18()
-        {
-            var model = new UserDTO { DateOfBirth = DateTime.Today.AddYears(-17) };
+            var model = new UserDTO { DateOfBirth = DateTime.Today.AddYears(-18).AddDays(1) };
             var result = _validator.TestValidate(model);
             result.ShouldHaveValidationErrorFor(user => user.DateOfBirth);
         }
