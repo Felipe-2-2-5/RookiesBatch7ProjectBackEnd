@@ -213,7 +213,7 @@ public class AssignmentService : IAssignmentService
         }
         if (assignment.AssignedToId != dto.AssignedToID || assignment.AssetId != dto.AssetID)
         {
-            throw new DataInvalidException("The assignment has been modified, please refresh page!!");
+            throw new DataInvalidException("The assignment has been modified");
         }
         if (dto.State == AssignmentState.Accepted)
         {
