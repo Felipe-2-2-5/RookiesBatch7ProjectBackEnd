@@ -59,7 +59,7 @@ namespace Backend.Application.Services.AssetServices
             asset.AssetName = assetDTO.AssetName;
             asset.Specification = assetDTO.Specification;
             asset.InstalledDate = (DateTime)assetDTO.InstalledDate!;
-            asset.State = assetDTO.State;
+            asset.State = assetDTO.State ?? 0;
             asset.ModifiedBy = updatedName;
             asset.ModifiedAt = DateTime.Now;
             asset.Category = null;

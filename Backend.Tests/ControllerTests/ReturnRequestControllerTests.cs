@@ -1,18 +1,15 @@
-﻿using System.Threading.Tasks;
-using Backend.API.Controllers;
+﻿using Backend.API.Controllers;
+using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.ReturnRequestDTOs;
 using Backend.Application.Services.ReturnRequestServices;
-using Backend.Application.Common.Paging;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
+using Moq;
 using System.Reflection;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Routing;
 
 namespace Backend.API.Tests.Controllers
 {
@@ -32,16 +29,16 @@ namespace Backend.API.Tests.Controllers
             httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
             {
                 new Claim("UserName", "testuser"),
-                new Claim("Location", Location.HaNoi.ToString()), 
+                new Claim("Location", Location.HaNoi.ToString()),
                 new Claim("UserId", "1"),
-                new Claim(ClaimTypes.Role, Role.Admin.ToString()) 
+                new Claim(ClaimTypes.Role, Role.Admin.ToString())
             }, "mock"));
 
             // Setup ControllerActionDescriptor
             var controllerActionDescriptor = new ControllerActionDescriptor
             {
                 ControllerTypeInfo = typeof(ReturnRequestsController).GetTypeInfo(),
-                MethodInfo = typeof(ReturnRequestsController).GetMethod("GetFilterAsync"), 
+                MethodInfo = typeof(ReturnRequestsController).GetMethod("GetFilterAsync")!,
                 //ParameterDescriptors = new List<ParameterDescriptor>(), 
             };
 
@@ -66,7 +63,7 @@ namespace Backend.API.Tests.Controllers
             Assert.IsInstanceOf<OkResult>(result);
             var okResult = result as OkResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
 
             _mockRequestService.Verify(s => s.CreateRequest(assignmentId, It.IsAny<string>(), It.IsAny<int>(), It.IsAny<Role>()), Times.Once);
         }
@@ -78,7 +75,7 @@ namespace Backend.API.Tests.Controllers
             int id = 1;
             var returnRequestDto = new ReturnRequestResponse();
             _mockRequestService.Setup(s => s.GetByIdAsync(id))
-                               .ReturnsAsync(returnRequestDto); 
+                               .ReturnsAsync(returnRequestDto);
 
             // Act
             var result = await _controller.GetByIdAsync(id);
@@ -87,8 +84,8 @@ namespace Backend.API.Tests.Controllers
             Assert.IsInstanceOf<OkObjectResult>(result);
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
-            Assert.AreEqual(returnRequestDto, okResult.Value);
+            Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
+            Assert.That(okResult.Value, Is.EqualTo(returnRequestDto));
         }
 
         [Test]
@@ -98,7 +95,7 @@ namespace Backend.API.Tests.Controllers
             var filterRequest = new ReturnRequestFilterRequest();
             var paginationResponse = new PaginationResponse<ReturnRequestResponse>(new ReturnRequestResponse[] { new ReturnRequestResponse() }, 1);
 
-            _mockRequestService.Setup(s => s.GetFilterAsync(filterRequest, Location.HaNoi)) 
+            _mockRequestService.Setup(s => s.GetFilterAsync(filterRequest, Location.HaNoi))
                                .ReturnsAsync(paginationResponse);
 
             try
@@ -110,13 +107,13 @@ namespace Backend.API.Tests.Controllers
                 Assert.IsInstanceOf<OkObjectResult>(result);
                 var okResult = result as OkObjectResult;
                 Assert.IsNotNull(okResult);
-                Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
-                Assert.AreEqual(paginationResponse, okResult.Value); 
+                Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
+                Assert.That(okResult.Value, Is.EqualTo(paginationResponse));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString()); 
-                throw; 
+                Console.WriteLine(ex.ToString());
+                throw;
             }
         }
 
@@ -125,8 +122,6 @@ namespace Backend.API.Tests.Controllers
         {
             // Arrange
             int requestId = 1;
-            string userName = "admin";
-            Role userRole = Role.Admin;
 
             _mockRequestService.Setup(service => service.CancelRequestAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Role>()))
                 .Returns(Task.CompletedTask);
@@ -143,7 +138,6 @@ namespace Backend.API.Tests.Controllers
         {
             // Arrange
             int requestId = 1;
-            int userId = 1;
 
             _mockRequestService.Setup(service => service.CompleteRequestAsync(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.CompletedTask);
