@@ -120,5 +120,42 @@ namespace Backend.API.Tests.Controllers
             }
         }
 
+        [Test]
+        public async Task CancelRequestAsync_ReturnsNoContent()
+        {
+            // Arrange
+            int requestId = 1;
+            string userName = "admin";
+            Role userRole = Role.Admin;
+
+            _mockRequestService.Setup(service => service.CancelRequestAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Role>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.CancelRequestAsync(requestId);
+
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
+        [Test]
+        public async Task CompleteRequestAsync_ReturnsOk()
+        {
+            // Arrange
+            int requestId = 1;
+            int userId = 1;
+
+            _mockRequestService.Setup(service => service.CompleteRequestAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.CompleteRequestAsync(requestId);
+
+            // Assert
+            Assert.IsInstanceOf<OkResult>(result);
+        }
+
+
+
     }
 }

@@ -167,5 +167,34 @@ namespace Backend.Tests.ControllerTests
             Assert.AreEqual("Updated", returnValue.FirstName);
             Assert.AreEqual("User", returnValue.LastName);
         }
+
+        [Test]
+        public async Task ChangePasswordAsync_ReturnsOkResult_WithLoginResponse()
+        {
+            // Arrange
+            var changePasswordDto = new ChangePasswordDTO
+            {
+                Id = 1,
+                OldPassword = "oldPassword",
+                NewPassword = "newPassword",
+                ConfirmPassword = "newPassword"
+            };
+
+            var loginResponse = new LoginResponse(true, "Password changed successfully", "sampleToken");
+
+            _userServiceMock.Setup(service => service.ChangePasswordAsync(It.IsAny<ChangePasswordDTO>()))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.ChangePasswordAsync(changePasswordDto);
+
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result.Result);
+            var okResult = result.Result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(loginResponse.Flag, okResult.Value);
+        }
+
+
     }
 }
