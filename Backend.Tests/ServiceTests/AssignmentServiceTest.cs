@@ -446,7 +446,8 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             var dto = new AssignmentDTO { AssignedToId = 2, AssetId = 1 };
-            var assignment = new Assignment { Id = 1, AssignedToId = 1, AssetId = 1, State = AssignmentState.WaitingForAcceptance };
+            var assignment = new Assignment
+                { Id = 1, AssignedToId = 1, AssetId = 1, State = AssignmentState.WaitingForAcceptance };
 
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(1))
                 .ReturnsAsync(assignment);
@@ -535,5 +536,6 @@ namespace Backend.Tests.ServiceTests
             // Act & Assert
             Assert.ThrowsAsync<DataInvalidException>(() => _assignmentService.RespondAssignment(dto, assignmentId));
         }
+        
     }
 }
