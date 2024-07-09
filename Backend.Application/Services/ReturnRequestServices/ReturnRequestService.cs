@@ -102,7 +102,7 @@ public class ReturnRequestService : IReturnRequestService
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(request.AssignmentId) ?? throw new NotFoundException("Not found assignment");
 
         assignment.IsDeleted = true;
-        request.Assignment.Asset.State = AssetState.Available;
+        request.Assignment!.Asset!.State = AssetState.Available;
         await _assignmentRepository.UpdateAsync(assignment);
     }
 }

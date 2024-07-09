@@ -64,6 +64,7 @@ public class AssignmentService : IAssignmentService
             await _assignmentRepository.InsertAsync(assignment);
 
             assignedAsset.State = AssetState.Assigned;
+            assignedAsset.Assignments = null;
             await _assetRepository.UpdateAsync(assignedAsset);
 
             var returnAssignment = await _assignmentRepository.FindLatestAssignment();
@@ -107,6 +108,7 @@ public class AssignmentService : IAssignmentService
 
                 newAsset.State = AssetState.Assigned;
                 newAsset.Category = null;
+                newAsset.Assignments = null;
                 await _assetRepository.UpdateAsync(newAsset);
 
                 return _mapper.Map<AssignmentResponse>(assignment);
