@@ -57,7 +57,7 @@ namespace Backend.Application.Tests.Services.ReportServices
                                  .ReturnsAsync(paginationResponse);
 
             // Act
-            var result = await _reportService.ExportAssetReportAsync();
+            var result = await _reportService.ExportAssetReportAsync(It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -94,7 +94,7 @@ namespace Backend.Application.Tests.Services.ReportServices
                                  .ReturnsAsync(paginationResponse);
 
             // Act
-            var result = await _reportService.ExportAssetReportAsync();
+            var result = await _reportService.ExportAssetReportAsync(It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.That(result, Is.Null);
