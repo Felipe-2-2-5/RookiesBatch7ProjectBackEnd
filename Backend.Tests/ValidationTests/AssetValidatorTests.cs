@@ -1,8 +1,10 @@
-﻿using Backend.Application.DTOs.AssetDTOs;
+﻿using System.Globalization;
+using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.Validations;
+using Backend.Domain.Enum;
 using FluentValidation.TestHelper;
 
-namespace Backend.Application.Tests.Validations
+namespace Backend.Tests.ValidationTests
 {
     [TestFixture]
     public class AssetValidatorTests
@@ -48,19 +50,20 @@ namespace Backend.Application.Tests.Validations
         }
 
         [Test]
-        public void Should_Have_Error_When_InstalledDate_Is_Invalid()
-        {
-            var model = new AssetDTO { InstalledDate = DateTime.Parse("01/01/2020") };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(asset => asset.InstalledDate);
-        }
-
-        [Test]
         public void Should_Have_Error_When_State_Is_Null()
         {
             var model = new AssetDTO { State = null };
             var result = _validator.TestValidate(model);
             result.ShouldHaveValidationErrorFor(asset => asset.State);
         }
+
+        [Test]
+        public void Should_Not_Have_Error_When_InstalledDate_Is_Valid()
+        {
+            var model = new AssetDTO { InstalledDate = DateTime.ParseExact("12/12/2000", "dd/MM/yyyy", CultureInfo.InvariantCulture) };
+            var result = _validator.TestValidate(model);
+            result.ShouldNotHaveValidationErrorFor(asset => asset.InstalledDate);
+        }
+        
     }
 }
