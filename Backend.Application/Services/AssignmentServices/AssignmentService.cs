@@ -211,7 +211,10 @@ public class AssignmentService : IAssignmentService
         {
             throw new DataInvalidException("This assignment is already responded");
         }
-
+        if (assignment.AssignedToId != dto.AssignedToID || assignment.AssetId != dto.AssetID)
+        {
+            throw new DataInvalidException("The assignment has been modified");
+        }
         if (dto.State == AssignmentState.Accepted)
         {
             _mapper.Map(dto, assignment);
