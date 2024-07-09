@@ -87,6 +87,10 @@ public class AssignmentService : IAssignmentService
             {
                 throw new DataInvalidException("Assignment is assigned to user");
             }
+            if (assignment.IsDeleted == true)
+            {
+                throw new DataInvalidException("Assignment has been disabled");
+            }
             // Change asset only
             if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId != dto.AssetId)
             {

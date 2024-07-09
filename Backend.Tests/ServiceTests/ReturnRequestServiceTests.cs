@@ -175,7 +175,7 @@ public class ReturnRequestServiceTests
         _requestRepositoryMock.Verify(repo => repo.DeleteAsync(request), Times.Once);
         _assignmentRepositoryMock.Verify(repo => repo.UpdateAsync(assignment), Times.Once);
     }
-    
+
     [Test]
     public void CancelRequestAsync_WhenUserIsStaff_ThrowsForbiddenException()
     {
@@ -205,7 +205,7 @@ public class ReturnRequestServiceTests
         // Act & Assert
         Assert.ThrowsAsync<DataInvalidException>(() => _service.CancelRequestAsync(id, modifyName, role));
     }
-    
+
     [Test]
     public async Task CompleteRequestAsync_WhenValidInputs_ProceedsAsExpected()
     {
@@ -236,7 +236,7 @@ public class ReturnRequestServiceTests
         var id = 1;
         var acceptedBy = 1;
 
-        _requestRepositoryMock.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync((ReturnRequest)null);
+        _requestRepositoryMock.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync((ReturnRequest?)null);
 
         // Act & Assert
         Assert.ThrowsAsync<NotFoundException>(() => _service.CompleteRequestAsync(id, acceptedBy));
@@ -251,7 +251,7 @@ public class ReturnRequestServiceTests
         var request = new ReturnRequest { Id = id, State = ReturnRequestState.WaitingForReturning, AssignmentId = id };
 
         _requestRepositoryMock.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(request);
-        _assignmentRepositoryMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(request.AssignmentId)).ReturnsAsync((Assignment)null);
+        _assignmentRepositoryMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(request.AssignmentId)).ReturnsAsync((Assignment?)null);
 
         // Act & Assert
         Assert.ThrowsAsync<NotFoundException>(() => _service.CompleteRequestAsync(id, acceptedBy));
