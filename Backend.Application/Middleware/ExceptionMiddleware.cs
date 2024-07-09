@@ -28,6 +28,7 @@ namespace Backend.Application.Middleware
         {
             try
             {
+                /*await CheckUserInfor(context, userRepository);*/
                 await _next(context);
             }
             catch (DataInvalidException ex)
@@ -79,6 +80,25 @@ namespace Backend.Application.Middleware
             await context.Response.WriteAsync(text: err.ToString() ?? "");
         }
 
+        /*private async Task CheckUserInfor(HttpContext context, IUserRepository userRepository)
+        {
+            var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+            var tokenRole = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            var userId = jwtToken?.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var user = await userRepository.GetByIdAsync(Int16.Parse(userId!));
+            var userRole = user!.Type.ToString();
+
+            if (tokenRole != userRole)
+            {
+                throw new ForbiddenException("Your information has been modified");
+            }
+            if (user.IsDeleted == true)
+            {
+                throw new ForbiddenException("Your accout has been disabled");
+            }
+        }*/
         #endregion
     }
 }

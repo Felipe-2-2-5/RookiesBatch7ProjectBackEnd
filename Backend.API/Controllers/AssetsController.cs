@@ -72,9 +72,9 @@ namespace Backend.API.Controllers
 
         [HttpPost("report/export")]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> ExportAssetReport()
+        public async Task<IActionResult> ExportAssetReport(BaseFilterRequest filterDto)
         {
-            var fileContent = await _reportService.ExportAssetReportAsync();
+            var fileContent = await _reportService.ExportAssetReportAsync(filterDto.SortColumn, filterDto.SortOrder);
             var currentDate = DateTime.Now.ToString("ddMMyyyy");
             var fileName = $"AssetReport_{currentDate}_RookiesTeam2.xlsx";
 
