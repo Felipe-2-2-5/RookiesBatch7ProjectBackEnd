@@ -130,6 +130,10 @@ namespace Backend.Application.Services.UserServices
             {
                 throw new NotFoundException("User not found");
             }
+            if (user.IsDeleted == true)
+            {
+                throw new NotAllowedException("User has been disabled");
+            }
             if (user.Location != location)
             {
                 throw new ForbiddenException("No permission to update this user");
