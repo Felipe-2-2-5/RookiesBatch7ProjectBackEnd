@@ -68,7 +68,7 @@ namespace Backend.Infrastructure.Repositories
                     p.State == AssetState.Recycled),
                 "Available" => query.Where(p => p.State == AssetState.Available),
                 "Not available" => query.Where(p => p.State == AssetState.NotAvailable),
-                "Waiting for Recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
+                "Waiting for recycling" => query.Where(p => p.State == AssetState.WaitingForRecycling),
                 "Recycled" => query.Where(p => p.State == AssetState.Recycled),
                 "Assigned" => query.Where(p => p.State == AssetState.Assigned),
                 _ => query.Where(p => p.State == AssetState.Available || p.State == AssetState.NotAvailable || p.State == AssetState.Assigned)

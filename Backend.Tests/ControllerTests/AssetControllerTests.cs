@@ -160,12 +160,13 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task ExportAssetReport_ShouldReturnFileResult()
         {
+            var filterDto = new BaseFilterRequest();
             // Arrange
-            _mockReportService.Setup(s => s.ExportAssetReportAsync())
+            _mockReportService.Setup(s => s.ExportAssetReportAsync(It.IsAny<string>(), It.IsAny<string>()))
                               .ReturnsAsync(new byte[0]);
 
             // Act
-            var result = await _controller.ExportAssetReport();
+            var result = await _controller.ExportAssetReport(filterDto);
 
             // Assert
             Assert.IsInstanceOf<FileContentResult>(result);

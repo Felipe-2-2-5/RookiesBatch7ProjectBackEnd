@@ -10,9 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd9ab55-8c58-405a-a96e-fbaa3bbb4269" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Backend.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Application/Services/ReturnRequestServices/ReturnRequestService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Infrastructure/Repositories/AssignmentRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ControllerTests/AssignmentControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ControllerTests/AssignmentControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/AssignmentServiceTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/ReportServiceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/ReportServiceTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ServiceTests/UserServiceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ServiceTests/UserServiceTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ValidationTests/AssetValidatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ValidationTests/AssetValidatorTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend.Tests/ValidationTests/UserValidatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend.Tests/ValidationTests/UserValidatorTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +152,9 @@
       <workItem from="1720202797694" duration="582000" />
       <workItem from="1720403958559" duration="6086000" />
       <workItem from="1720420452568" duration="3276000" />
-      <workItem from="1720425501719" duration="2989000" />
+      <workItem from="1720425501719" duration="4168000" />
+      <workItem from="1720495942592" duration="3069000" />
+      <workItem from="1720507882683" duration="8925000" />
     </task>
     <task id="LOCAL-00001" summary="fix view assignment list and detailed assignment">
       <created>1718812892311</created>
@@ -164,31 +170,38 @@
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="52" />
+    <option name="coveragePercentColumnWidth" value="42" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="323" />
+    <option name="symbolColumnWidth" value="411" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 90% 68/711" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 84% 77/486" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 90% 68/711" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.API 95% 8/160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application 84% 77/486" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.Application.Services 84% 77/486" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 90% 68/711" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 89% 60/551" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 82% 116/646" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Backend.API 76% 39/160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 90% 68/711" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 89% 60/551" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 89% 60/551" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 90% 68/711" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 89% 60/551" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Backend.Application 89% 60/551" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Services 88% 60/488" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />

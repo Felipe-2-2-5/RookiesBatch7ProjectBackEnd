@@ -64,6 +64,7 @@ public class AssignmentService : IAssignmentService
             await _assignmentRepository.InsertAsync(assignment);
 
             assignedAsset.State = AssetState.Assigned;
+            assignedAsset.Assignments = null;
             await _assetRepository.UpdateAsync(assignedAsset);
 
             var returnAssignment = await _assignmentRepository.FindLatestAssignment();
@@ -86,6 +87,10 @@ public class AssignmentService : IAssignmentService
             {
                 throw new DataInvalidException("Assignment is assigned to user");
             }
+            if (assignment.IsDeleted == true)
+            {
+                throw new DataInvalidException("Assignment has been disabled");
+            }
             // Change asset only
             if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId != dto.AssetId)
             {
@@ -107,6 +112,7 @@ public class AssignmentService : IAssignmentService
 
                 newAsset.State = AssetState.Assigned;
                 newAsset.Category = null;
+                newAsset.Assignments = null;
                 await _assetRepository.UpdateAsync(newAsset);
 
                 return _mapper.Map<AssignmentResponse>(assignment);
@@ -209,7 +215,10 @@ public class AssignmentService : IAssignmentService
         {
             throw new DataInvalidException("This assignment is already responded");
         }
-
+        if (assignment.AssignedToId != dto.AssignedToID || assignment.AssetId != dto.AssetID)
+        {
+            throw new DataInvalidException("The assignment has been modified");
+        }
         if (dto.State == AssignmentState.Accepted)
         {
             _mapper.Map(dto, assignment);
