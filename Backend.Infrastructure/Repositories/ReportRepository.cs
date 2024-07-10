@@ -1,11 +1,16 @@
 ﻿using Backend.Application.Common.Paging;
-using Backend.Application.DTOs.AssetDTOs;
+
 using Backend.Application.IRepositories;
+
+using Backend.Domain.Entities;
+
 using Backend.Infrastructure.Data;
-using Dapper;
+
 using Microsoft.Data.SqlClient;
+
 using Microsoft.EntityFrameworkCore;
-using System.Data;
+
+
 
 public class ReportRepository : IReportRepository
 {
@@ -18,50 +23,29 @@ public class ReportRepository : IReportRepository
         _connectionString = context.Database.GetConnectionString()!;
     }
 
-    public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int? PageSize, int? Page)
+    public async Task<PaginationResponse<AssetReport>> GetAssetReportAsync(string? sortColumn, string? sortDirection, int? pageSize = 20, int? page = 1)
     {
-        var sortColumnParameter = new SqlParameter("@SortColumn", SortColumn ?? "Category");
-        var sortDirectionParameter = new SqlParameter("@SortDirection", SortDirection ?? "ASC");
+        var sortColumnParameter = new SqlParameter("@SortColumn", sortColumn ?? "Category");
 
-        var sqlCommand = "getAssetReportByCategoryAndState";
+        var sortDirectionParameter = new SqlParameter("@SortDirection", sortDirection ?? "ASC");
 
-        // Log connection string for debugging (redact sensitive information)
-        Console.WriteLine($"ConnectionString: {_connectionString.Substring(0, _connectionString.IndexOf(';', _connectionString.IndexOf(';') + 1))}...");
+        // Build the SQL query
+        string sqlQuery = $@"
+            EXEC [dbo].[getAssetReportByCategoryAndState] 
+                @SortColumn = @SortColumn, 
+                @SortDirection = @SortDirection";
 
-        using (var connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
-        {
-            try
-            {
-                await connection.OpenAsync();
-                var results = (await connection.QueryAsync<AssetReportDto>(sqlCommand, new
-                {
-                    SortColumn = sortColumnParameter.Value,
-                    SortDirection = sortDirectionParameter.Value
-                }, commandType: CommandType.StoredProcedure)).ToList();
+        // Execute the stored procedure and get the results
+        var results = await _context.AssetsReport.FromSqlRaw(sqlQuery, sortColumnParameter, sortDirectionParameter).ToListAsync();
 
-                var totalCount = results.Count;
+        // Paginate the results
+        var paginatedResults = results.Skip((int)page! - 1 * pageSize!.Value).Take(pageSize.Value).ToList();
 
-                if (PageSize.HasValue && Page.HasValue)
-                {
-                    var pagedResults = results
-                        .Skip((Page.Value - 1) * PageSize.Value)
-                        .Take(PageSize.Value)
-                        .ToList();
+        // Create and return the response
+        var response = new PaginationResponse<Backend.Domain.Entities.AssetReport>(paginatedResults, results.Count());
 
-                    return new PaginationResponse<AssetReportDto>(pagedResults, totalCount);
-                }
-                else
-                {
-                    return new PaginationResponse<AssetReportDto>(results, totalCount);
-                }
-            }
-            catch (SqlException ex)
-            {
-                // Log SQL exception details for debugging
-                Console.WriteLine($"SqlException: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                throw;
-            }
-        }
+        return response;
+
     }
+
 }

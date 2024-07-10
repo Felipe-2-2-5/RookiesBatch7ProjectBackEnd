@@ -1,6 +1,9 @@
-﻿using Backend.Domain.Exceptions;
+﻿using Backend.Application.IRepositories;
+using Backend.Domain.Exceptions;
 using Backend.Domain.Resource;
 using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Backend.Application.Middleware
 {
@@ -24,10 +27,32 @@ namespace Backend.Application.Middleware
         #region Methods
 
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IUserRepository userRepository)
         {
             try
             {
+                if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                    var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+                    var tokenRole = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+                    var userId = jwtToken?.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+                    var user = await userRepository.GetByIdAsync(Int16.Parse(userId!));
+                    var userRole = user!.Type.ToString();
+
+                    if (tokenRole != userRole)
+                    {
+                        throw new ForbiddenException("Your information has been modified");
+                    }
+                    if (user.IsDeleted == true)
+                    {
+                        throw new ForbiddenException("Your accout has been disabled");
+                    }
+                    user = null;
+                }
                 await _next(context);
             }
             catch (DataInvalidException ex)

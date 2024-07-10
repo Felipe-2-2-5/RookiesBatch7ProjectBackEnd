@@ -3,17 +3,15 @@ using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.Services.AssetServices;
 using Backend.Application.Services.ReportServices;
+using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Moq;
-using NUnit.Framework;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 //asset
 namespace Backend.Tests.Controllers
@@ -143,7 +141,7 @@ namespace Backend.Tests.Controllers
         {
             // Arrange
             var filterDto = new BaseFilterRequest();
-            var paginationResponse = new PaginationResponse<AssetReportDto>(new List<AssetReportDto> { new AssetReportDto() }, 1);
+            var paginationResponse = new PaginationResponse<AssetReport>(new List<AssetReport> { new AssetReport() }, 1);
             _mockReportService.Setup(s => s.GetAssetReportAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                               .ReturnsAsync(paginationResponse);
 

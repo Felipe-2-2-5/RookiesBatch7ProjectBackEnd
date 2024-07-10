@@ -103,6 +103,5 @@ public class ReturnRequestService : IReturnRequestService
 
         assignment.IsDeleted = true;
         request.Assignment!.Asset!.State = AssetState.Available;
-        await _assignmentRepository.UpdateAsync(assignment);
     }
 }

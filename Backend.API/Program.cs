@@ -115,6 +115,8 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IReturnRequestRepository, ReturnRequestRepository>();
 builder.Services.AddScoped<IReturnRequestService, ReturnRequestService>();
 
+builder.Services.AddHttpContextAccessor();
+
 //Add FluentValidation services
 builder.Services.AddTransient<IValidator<UserDTO>, UserValidator>();
 builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();

@@ -14,7 +14,7 @@ namespace Backend.Infrastructure.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<ReturnRequest> ReturnRequests { get; set; }
 
-
+        public DbSet<AssetReport> AssetsReport { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,6 +69,7 @@ namespace Backend.Infrastructure.Data
 
             modelBuilder.Entity<User>().HasData(users);
 
+            modelBuilder.Entity<AssetReport>().HasNoKey();
         }
     }
 }

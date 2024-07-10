@@ -5,7 +5,6 @@ using Backend.Application.Services.UserServices;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Moq;
@@ -129,7 +128,7 @@ namespace Backend.Tests.ControllerTests
             Assert.IsNotNull(okResult);
             var returnValue = okResult.Value as UserResponse;
             Assert.IsNotNull(returnValue);
-            Assert.AreEqual("manhpt", returnValue.UserName);
+            Assert.That(returnValue.UserName, Is.EqualTo("manhpt"));
         }
 
         [Test]
@@ -164,8 +163,8 @@ namespace Backend.Tests.ControllerTests
             Assert.IsNotNull(okResult);
             var returnValue = okResult.Value as UserResponse;
             Assert.IsNotNull(returnValue);
-            Assert.AreEqual("Updated", returnValue.FirstName);
-            Assert.AreEqual("User", returnValue.LastName);
+            Assert.That(returnValue.FirstName, Is.EqualTo("Updated"));
+            Assert.That(returnValue.LastName, Is.EqualTo("User"));
         }
 
         [Test]
@@ -192,7 +191,7 @@ namespace Backend.Tests.ControllerTests
             Assert.IsInstanceOf<OkObjectResult>(result.Result);
             var okResult = result.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(loginResponse.Flag, okResult.Value);
+            Assert.That(okResult.Value, Is.EqualTo(loginResponse.Flag));
         }
 
 
