@@ -47,11 +47,9 @@ public class AssignmentService : IAssignmentService
         var assignedAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException(404, "Asset not found");
 
         //asset is already assigned
-        if (assignedAsset.State == AssetState.Assigned)
+        if (assignedAsset.State != AssetState.Available)
         {
-            var assignedAssignment = await _assignmentRepository.FindAssignmentByAssetIdAsync(dto.AssetId);
-            var assignedUser = await _userRepository.GetByIdAsync(assignedAssignment!.AssignedToId);
-            throw new DataInvalidException($"Asset has been assigned to {assignedUser!.UserName} ");
+            throw new DataInvalidException($"Asset is not available ");
         }
 
         var assignment = _mapper.Map<Assignment>(dto);
@@ -88,9 +86,9 @@ public class AssignmentService : IAssignmentService
         if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId != dto.AssetId)
         {
             var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found asset");
-            if (newAsset.State == AssetState.Assigned)
+            if (newAsset.State != AssetState.Available)
             {
-                throw new DataInvalidException($"Asset has been assigned to other Staff");
+                throw new DataInvalidException($"Asset is not available");
             }
 
             var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
