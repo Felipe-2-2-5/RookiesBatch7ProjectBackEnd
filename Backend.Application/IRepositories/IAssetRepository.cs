@@ -9,5 +9,7 @@ namespace Backend.Application.IRepositories
         Task<Asset?> FindAssetByCodeAsync(string code);
         Task<Asset> GenerateAssetInfo(Asset asset);
         Task<PaginationResponse<Asset>> GetFilterAsync(AssetFilterRequest request, Location location);
+        Task<PaginationResponse<Asset>> GetFilterChoosingAsync(int id, AssetFilterRequest request, Location location);
+
     }
 }

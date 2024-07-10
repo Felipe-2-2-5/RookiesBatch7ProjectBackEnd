@@ -48,6 +48,14 @@ namespace Backend.API.Controllers
             return Ok(res);
         }
 
+        [HttpPost("filter-choosing/{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> GetFilterChoosingAsync(int id, UserFilterRequest request)
+        {
+            var res = await _userService.GetFilterChoosingAsync(id, request,  Location);
+            return Ok(res);
+        }
+
         [HttpPost]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> InsertAsync(UserDTO dto)

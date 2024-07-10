@@ -9,6 +9,7 @@ namespace Backend.Application.IRepositories
         Task<User?> FindUserByUserNameAsync(string userName);
         Task<User> GenerateUserInformation(User user);
         Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request, Location location);
+        Task<PaginationResponse<User>> GetFilterChoosingAsync(int id, UserFilterRequest request, Location location);
         Task<bool> HasActiveAssignmentsAsync(int userId);
     }
 }

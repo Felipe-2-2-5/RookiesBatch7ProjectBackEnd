@@ -1,4 +1,5 @@
-﻿using Backend.Application.Common.Paging;
+﻿using Azure.Core;
+using Backend.Application.Common.Paging;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
@@ -87,6 +88,57 @@ namespace Backend.Infrastructure.Repositories
             var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             return new(items, totalCount);
         }
+        public async Task<PaginationResponse<User>> GetFilterChoosingAsync(int id, UserFilterRequest request, Location location)
+        {
+            IQueryable<User> query = _table.Where(u => u.Location == location && u.IsDeleted != true);
+
+            // Check if filter parameters are all empty
+            bool isDefaultFilter = string.IsNullOrEmpty(request.SearchTerm) &&
+                                   (string.IsNullOrEmpty(request.SortColumn) || request.SortColumn.ToLower() == "name") &&
+                                   string.IsNullOrEmpty(request.SortOrder) &&
+                                   string.IsNullOrEmpty(request.Type);
+
+            if (!string.IsNullOrWhiteSpace(request.Type))
+            {
+                query = request.Type == "Admin" ? query.Where(p => p.Type == Role.Admin) : query.Where(p => p.Type == Role.Staff);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                query = query.Where(p => p.StaffCode.Contains(request.SearchTerm) ||
+                                         (p.FirstName + " " + p.LastName).Contains(request.SearchTerm));
+            }
+
+            // Sorting logic
+            if (isDefaultFilter)
+            {
+                // Prioritize specific user ID and then sort by name ascending
+                query = query.OrderBy(u => u.Id == id ? 0 : 1)
+                             .ThenBy(u => u.FirstName)
+                             .ThenBy(u => u.LastName);
+            }
+            else
+            {
+                // Normal sorting based on user-defined criteria
+                if (request.SortOrder?.ToLower() == "descend")
+                {
+                    query = query.OrderByDescending(GetSortProperty(request));
+                }
+                else
+                {
+                    query = query.OrderBy(GetSortProperty(request));
+                }
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query.Skip((request.Page - 1) * request.PageSize)
+                                   .Take(request.PageSize)
+                                   .AsNoTracking()
+                                   .ToListAsync();
+
+            return new PaginationResponse<User>(items, totalCount);
+        }
+
         private static Expression<Func<User, object>> GetSortProperty(UserFilterRequest request) =>
         request.SortColumn?.ToLower() switch
         {
@@ -101,5 +153,6 @@ namespace Backend.Infrastructure.Repositories
             return await _context.Assignments.AnyAsync(a => a.AssignedToId == userId && (a.State == AssignmentState.Accepted || a.State == AssignmentState.WaitingForAcceptance || a.State == AssignmentState.Declined || a.State == AssignmentState.WaitingForReturning));
         }
 
+        
     }
 }
