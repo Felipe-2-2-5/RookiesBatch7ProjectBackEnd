@@ -2,8 +2,6 @@
 using Backend.Domain.Exceptions;
 using Backend.Domain.Resource;
 using Microsoft.AspNetCore.Http;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Backend.Application.Middleware
 {
@@ -31,7 +29,7 @@ namespace Backend.Application.Middleware
         {
             try
             {
-                if (context.User.Identity?.IsAuthenticated == true)
+                /*if (context.User.Identity?.IsAuthenticated == true)
                 {
                     var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
                     var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
@@ -52,7 +50,7 @@ namespace Backend.Application.Middleware
                         throw new ForbiddenException("Your accout has been disabled");
                     }
                     user = null;
-                }
+                }*/
                 await _next(context);
             }
             catch (DataInvalidException ex)
