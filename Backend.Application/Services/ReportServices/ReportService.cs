@@ -24,7 +24,7 @@ namespace Backend.Application.Services.ReportServices
         public async Task<byte[]> ExportAssetReportAsync(string? SortColumn, string? SortOrder)
         {
             // Get all results without pagination
-            var results = await _reportRepository.GetAssetReportAsync(SortColumn, SortOrder, null, null);
+            var results = await _reportRepository.GetAssetReportAsync(SortColumn, SortOrder, 3000, 1);
 
             if (results.Data.Count() == 0)
             {
