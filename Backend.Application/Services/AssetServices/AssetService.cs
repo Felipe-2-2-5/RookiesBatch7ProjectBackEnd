@@ -54,10 +54,6 @@ namespace Backend.Application.Services.AssetServices
             {
                 throw new NotFoundException();
             }
-            if (asset.IsDeleted == true)
-            {
-                throw new DataInvalidException("Asset has been disabled");
-            }
             var category = asset.Category;
 
             asset.AssetName = assetDTO.AssetName;
