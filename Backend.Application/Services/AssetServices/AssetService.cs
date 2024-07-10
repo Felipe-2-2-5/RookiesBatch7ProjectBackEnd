@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Backend.Application.Common.Paging;
 using Backend.Application.DTOs.AssetDTOs;
+using Backend.Application.DTOs.AuthDTOs;
 using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
@@ -89,6 +90,12 @@ namespace Backend.Application.Services.AssetServices
             return new(dtos, res.TotalCount);
         }
 
+        public async Task<PaginationResponse<AssetResponse>> GetFilterChoosingAsync(int id, AssetFilterRequest request, Location location)
+        {
+            var res = await _assetRepository.GetFilterChoosingAsync(id, request, location);
+            var dtos = _mapper.Map<IEnumerable<AssetResponse>>(res.Data);
+            return new(dtos, res.TotalCount);
+        }
         public async Task DeleteAsync(int id)
         {
             var asset = await _assetRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Asset with id {id} not found.");

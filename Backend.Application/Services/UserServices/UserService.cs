@@ -7,6 +7,7 @@ using Backend.Application.IRepositories;
 using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Backend.Domain.Exceptions;
+using DocumentFormat.OpenXml.Office2016.Excel;
 using FluentValidation;
 
 namespace Backend.Application.Services.UserServices
@@ -102,6 +103,12 @@ namespace Backend.Application.Services.UserServices
             return new(dtos, res.TotalCount);
 
         }
+        public async Task<PaginationResponse<UserResponse>> GetFilterChoosingAsync(int id, UserFilterRequest request, Location location)
+        {
+            var res = await _userRepo.GetFilterChoosingAsync(id, request, location);
+            var dtos = _mapper.Map<IEnumerable<UserResponse>>(res.Data);
+            return new(dtos, res.TotalCount);
+        }
 
         public async Task DisableUserAsync(int userId)
         {
@@ -165,5 +172,7 @@ namespace Backend.Application.Services.UserServices
             var res = _mapper.Map<UserResponse>(user);
             return res;
         }
+
+        
     }
 }

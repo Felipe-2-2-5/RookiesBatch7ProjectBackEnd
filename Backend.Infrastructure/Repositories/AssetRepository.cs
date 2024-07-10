@@ -92,6 +92,60 @@ namespace Backend.Infrastructure.Repositories
             var items = await query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).AsNoTracking().ToListAsync();
             return new(items, totalCount);
         }
+        public async Task<PaginationResponse<Asset>> GetFilterChoosingAsync(int id, AssetFilterRequest request, Location location)
+        {
+            // Combine the query to include the specific "Assigned" asset and all "Available" assets
+            IQueryable<Asset> query = _table.Include(u => u.Category)
+                                            .Include(u => u.Assignments)
+                                            .Where(u => u.Location == location &&
+                                                        (u.State == AssetState.Available || (u.Id == id && u.State == AssetState.Assigned)));
+
+            // Apply filters from the request if any
+            if (!string.IsNullOrWhiteSpace(request.Category))
+            {
+                query = query.Where(p => p.Category.Name == request.Category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                query = query.Where(p => p.AssetCode.Contains(request.SearchTerm) || p.AssetName.Contains(request.SearchTerm));
+            }
+
+            // Check if filter parameters are all default for special sorting
+            bool isDefaultFilter = string.IsNullOrWhiteSpace(request.SearchTerm) &&
+                                   (string.IsNullOrEmpty(request.SortColumn) || request.SortColumn.ToLower() == "assetname") &&
+                                   string.IsNullOrWhiteSpace(request.SortOrder) &&
+                                   string.IsNullOrWhiteSpace(request.Category);
+
+            // Sorting logic
+            if (isDefaultFilter)
+            {
+                // Prioritize specific user ID and then sort by name ascending
+                query = query.OrderBy(a => a.Id == id ? 0 : 1)
+                             .ThenBy(a => a.AssetName);
+            }
+            else
+            {
+                // Normal sorting based on user-defined criteria
+                if (request.SortOrder?.ToLower() == "descend")
+                {
+                    query = query.OrderByDescending(GetSortProperty(request));
+                }
+                else
+                {
+                    query = query.OrderBy(GetSortProperty(request));
+                }
+            }
+
+            // Pagination and final result preparation
+            int totalCount = await query.CountAsync();
+            var items = await query.Skip((request.Page - 1) * request.PageSize)
+                                   .Take(request.PageSize)
+                                   .AsNoTracking()
+                                   .ToListAsync();
+
+            return new PaginationResponse<Asset>(items, totalCount);
+        }
 
         private static Expression<Func<Asset, object>> GetSortProperty(AssetFilterRequest request) =>
             request.SortColumn?.ToLower() switch

@@ -52,6 +52,13 @@ namespace Backend.API.Controllers
             return Ok(res);
         }
 
+        [HttpPost("filter-choosing/{id}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> GetFilterChoosingAsync(int id, AssetFilterRequest request)
+        {
+            var res = await _assetService.GetFilterChoosingAsync(id, request, Location);
+            return Ok(res);
+        }
         // DELETE: api/asset/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = nameof(Role.Admin))]
