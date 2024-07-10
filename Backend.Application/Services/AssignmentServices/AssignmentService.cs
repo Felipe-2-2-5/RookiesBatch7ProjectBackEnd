@@ -49,7 +49,7 @@ public class AssignmentService : IAssignmentService
         //asset is already assigned
         if (assignedAsset.State != AssetState.Available)
         {
-            throw new DataInvalidException($"Asset is not available ");
+            throw new DataInvalidException("Asset is not available");
         }
 
         var assignment = _mapper.Map<Assignment>(dto);
@@ -72,7 +72,6 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResponse> UpdateAsync(AssignmentDTO dto, int id, string modifiedName)
     {
-
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
         if (assignment.State == AssignmentState.Accepted)
         {
@@ -85,13 +84,13 @@ public class AssignmentService : IAssignmentService
         // Change asset only
         if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId != dto.AssetId)
         {
-            var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found asset");
+            var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found new asset");
             if (newAsset.State != AssetState.Available)
             {
-                throw new DataInvalidException($"Asset is not available");
+                throw new DataInvalidException("Asset is not available");
             }
 
-            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found old asset");
             oldAsset.Assignments = null;
             oldAsset.State = AssetState.Available;
             await _assetRepository.UpdateAsync(oldAsset);
@@ -111,7 +110,7 @@ public class AssignmentService : IAssignmentService
         //Change user only
         else if (assignment.AssignedToId != dto.AssignedToId && assignment.AssetId == dto.AssetId)
         {
-            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
+            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found new user");
             var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId);
             oldAsset!.Assignments = null;
 
@@ -128,7 +127,7 @@ public class AssignmentService : IAssignmentService
         //Nothing Change
         else if (assignment.AssignedToId == dto.AssignedToId && assignment.AssetId == dto.AssetId)
         {
-            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found old asset");
             oldAsset.Assignments = null;
 
             _mapper.Map(dto, assignment);
@@ -143,19 +142,19 @@ public class AssignmentService : IAssignmentService
         //Change user, change asset
         else
         {
-            var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found asset");
+            var newAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException("Not found new asset");
             if (newAsset.State == AssetState.Assigned)
             {
-                throw new DataInvalidException($"Asset has been assigned to other Staff");
+                throw new DataInvalidException("Asset has been assigned to other Staff");
             }
             newAsset.State = AssetState.Assigned;
             newAsset.Category = null;
 
-            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found asset");
+            var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId) ?? throw new NotFoundException("Not found old asset");
             oldAsset.Assignments = null;
             oldAsset.State = AssetState.Available;
 
-            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found user");
+            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found new user");
 
             _mapper.Map(dto, assignment);
             assignment.AssignedTo = newUser;
