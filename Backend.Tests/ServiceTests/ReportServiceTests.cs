@@ -1,8 +1,7 @@
 ﻿using Backend.Application.Common.Paging;
-using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.IRepositories;
 using Backend.Application.Services.ReportServices;
-using ClosedXML.Excel;
+using Backend.Domain.Entities;
 using Moq;
 
 namespace Backend.Application.Tests.Services.ReportServices
@@ -30,7 +29,7 @@ namespace Backend.Application.Tests.Services.ReportServices
             ;
             var page = 1;
 
-            var paginationResponse = new PaginationResponse<AssetReportDto>(new List<AssetReportDto>(), 0);
+            var paginationResponse = new PaginationResponse<AssetReport>(new List<AssetReport>(), 0);
 
             _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(sortColumn, sortDirection, pageSize, page))
                                  .ReturnsAsync(paginationResponse);
@@ -47,12 +46,12 @@ namespace Backend.Application.Tests.Services.ReportServices
         public async Task ExportAssetReportAsync_ShouldReturnExcelFile()
         {
             // Arrange
-            var assetReports = new List<AssetReportDto>
+            var assetReports = new List<AssetReport>
             {
-                new AssetReportDto {  }
+                new AssetReport {  }
             };
 
-            var paginationResponse = new PaginationResponse<AssetReportDto>(assetReports, assetReports.Count);
+            var paginationResponse = new PaginationResponse<AssetReport>(assetReports, assetReports.Count);
 
             _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(null, null, null, null))
                                  .ReturnsAsync(paginationResponse);
@@ -68,7 +67,7 @@ namespace Backend.Application.Tests.Services.ReportServices
         public async Task ExportAssetReportAsync_ShouldReturnNullWhenNoData()
         {
             // Arrange
-            var paginationResponse = new PaginationResponse<AssetReportDto>(new List<AssetReportDto>(), 0);
+            var paginationResponse = new PaginationResponse<AssetReport>(new List<AssetReport>(), 0);
 
             _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(null, null, null, null))
                                  .ReturnsAsync(paginationResponse);

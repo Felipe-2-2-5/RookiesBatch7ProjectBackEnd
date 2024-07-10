@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Backend.Application.DTOs.AssetDTOs
+﻿namespace Backend.Domain.Entities
 {
-    public class AssetReportDto
+    public class AssetReport
     {
-        public string Category { get; set; }
+        public string? Category { get; set; }
         public int Total { get; set; }
         public int Assigned { get; set; }
         public int Available { get; set; }
@@ -16,5 +10,4 @@ namespace Backend.Application.DTOs.AssetDTOs
         public int WaitingForRecycling { get; set; }
         public int Recycled { get; set; }
     }
-
 }

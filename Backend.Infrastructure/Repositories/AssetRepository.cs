@@ -103,7 +103,7 @@ namespace Backend.Infrastructure.Repositories
             // Apply filters from the request if any
             if (!string.IsNullOrWhiteSpace(request.Category))
             {
-                query = query.Where(p => p.Category.Name == request.Category);
+                query = query.Where(p => p.Category!.Name == request.Category);
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))

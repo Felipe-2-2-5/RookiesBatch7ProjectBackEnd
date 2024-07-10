@@ -417,7 +417,7 @@ namespace Backend.Tests.ServiceTests
             var ex = Assert.ThrowsAsync<Exception>(async () =>
                 await _assignmentService.UpdateAsync(dto, 1, "modifier"));
             Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
-            Assert.That(ex.InnerException.Message, Is.EqualTo("Not found asset"));
+            Assert.That(ex.InnerException!.Message, Is.EqualTo("Not found asset"));
         }
 
         [Test]
@@ -438,7 +438,7 @@ namespace Backend.Tests.ServiceTests
             var ex = Assert.ThrowsAsync<Exception>(async () =>
                 await _assignmentService.UpdateAsync(dto, 1, "modifier"));
             Assert.IsInstanceOf<NotFoundException>(ex.InnerException);
-            Assert.That(ex.InnerException.Message, Is.EqualTo("Not found asset"));
+            Assert.That(ex.InnerException!.Message, Is.EqualTo("Not found asset"));
         }
 
         [Test]

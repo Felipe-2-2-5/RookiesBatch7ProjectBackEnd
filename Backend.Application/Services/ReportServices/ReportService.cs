@@ -1,6 +1,6 @@
 ﻿using Backend.Application.Common.Paging;
-using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.IRepositories;
+using Backend.Domain.Entities;
 using ClosedXML.Excel;
 
 
@@ -16,7 +16,7 @@ namespace Backend.Application.Services.ReportServices
         }
 
         //get report by category and state 
-        public async Task<PaginationResponse<AssetReportDto>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int? PageSize, int? Page)
+        public async Task<PaginationResponse<AssetReport>> GetAssetReportAsync(string? SortColumn, string? SortDirection, int? PageSize, int? Page)
         {
             return await _reportRepository.GetAssetReportAsync(SortColumn, SortDirection, PageSize, Page);
         }
@@ -51,7 +51,7 @@ namespace Backend.Application.Services.ReportServices
                 headerStyle.Border.RightBorderColor = XLColor.Black;
 
                 // Add headers and apply styles
-                var properties = typeof(AssetReportDto).GetProperties();
+                var properties = typeof(AssetReport).GetProperties();
                 for (int i = 0; i < properties.Length; i++)
                 {
                     var cell = worksheet.Cell(1, i + 1);

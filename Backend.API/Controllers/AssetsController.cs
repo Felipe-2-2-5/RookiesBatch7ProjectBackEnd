@@ -2,6 +2,7 @@
 using Backend.Application.DTOs.AssetDTOs;
 using Backend.Application.Services.AssetServices;
 using Backend.Application.Services.ReportServices;
+using Backend.Domain.Entities;
 using Backend.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,7 @@ namespace Backend.API.Controllers
         //get report by category and state
         [HttpPost("report")]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<ActionResult<List<AssetReportDto>>> GetAssetReport(BaseFilterRequest filterDto)
+        public async Task<ActionResult<List<AssetReport>>> GetAssetReport(BaseFilterRequest filterDto)
         {
             var result = await _reportService.GetAssetReportAsync(filterDto.SortColumn, filterDto.SortOrder, filterDto.PageSize, filterDto.Page);
             return Ok(result);
