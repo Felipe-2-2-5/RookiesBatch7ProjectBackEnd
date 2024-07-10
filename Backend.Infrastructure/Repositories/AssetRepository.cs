@@ -98,7 +98,7 @@ namespace Backend.Infrastructure.Repositories
             IQueryable<Asset> query = _table.Include(u => u.Category)
                                             .Include(u => u.Assignments)
                                             .Where(u => u.Location == location &&
-                                                        (u.State == AssetState.Available || (u.Id == id && u.State == AssetState.Assigned)));
+                                                        (u.State == AssetState.Available || (u.Id == int.Parse(request.State) && u.State == AssetState.Assigned)));
 
             // Apply filters from the request if any
             if (!string.IsNullOrWhiteSpace(request.Category))
