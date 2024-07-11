@@ -30,13 +30,13 @@ namespace Backend.Application.Services.CategoryServices
             var existCategory = await _categoryRepository.FindCategoryByPrefixAsync(dto.Prefix);
             if (existCategory != null)
             {
-                throw new DataInvalidException("Existing category prefix");
+                throw new DataInvalidException("The prefix has been existed, please choose another prefix");
 
             }
             existCategory = await _categoryRepository.FindCategoryByNameAsync(dto.Name);
             if (existCategory != null)
             {
-                throw new DataInvalidException("Existing category name");
+                throw new DataInvalidException("The name has been existed, please choose another name");
             }
 
             var category = _mapper.Map<Category>(dto);
