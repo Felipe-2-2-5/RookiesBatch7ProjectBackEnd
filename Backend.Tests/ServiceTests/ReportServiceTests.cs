@@ -53,7 +53,7 @@ namespace Backend.Application.Tests.Services.ReportServices
 
             var paginationResponse = new PaginationResponse<AssetReport>(assetReports, assetReports.Count);
 
-            _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(null, null, null, null))
+            _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(It.IsAny<string>(), It.IsAny<string>(), 3000, 1))
                                  .ReturnsAsync(paginationResponse);
 
             // Act
@@ -61,6 +61,7 @@ namespace Backend.Application.Tests.Services.ReportServices
 
             // Assert
             Assert.That(result, Is.Not.Null);
+            Assert.That(result.Length, Is.GreaterThan(0));
         }
 
         [Test]
@@ -69,7 +70,7 @@ namespace Backend.Application.Tests.Services.ReportServices
             // Arrange
             var paginationResponse = new PaginationResponse<AssetReport>(new List<AssetReport>(), 0);
 
-            _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(null, null, null, null))
+            _reportRepositoryMock.Setup(repo => repo.GetAssetReportAsync(It.IsAny<string>(), It.IsAny<string>(), 3000, 1))
                                  .ReturnsAsync(paginationResponse);
 
             // Act
