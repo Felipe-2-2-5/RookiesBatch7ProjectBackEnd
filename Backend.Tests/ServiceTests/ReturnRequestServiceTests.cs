@@ -226,7 +226,7 @@ public class ReturnRequestServiceTests
 
         // Assert
         _requestRepositoryMock.Verify(repo => repo.UpdateAsync(request), Times.Once);
-        _assignmentRepositoryMock.Verify(repo => repo.UpdateAsync(assignment), Times.Never);
+        _assignmentRepositoryMock.Verify(repo => repo.UpdateAsync(assignment), Times.Once);
     }
 
     [Test]
