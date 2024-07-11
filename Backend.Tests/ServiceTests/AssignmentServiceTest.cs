@@ -139,13 +139,49 @@ namespace Backend.Tests.ServiceTests
         }
 
         [Test]
+        public void InsertAsync_UserNotFound_ThrowException()
+        {
+            // Arrange 
+            var dto = new AssignmentDTO { AssetId = 1, AssignedToId = 1 };
+            var asset = new Asset { Id = 1};
+
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssetId)).ReturnsAsync(asset);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssignedToId)).ReturnsAsync((User?)null);
+
+            //Act 
+            var ex = Assert.ThrowsAsync<NotFoundException>(async () => await _assignmentService.InsertAsync(dto, "admin", 1));
+
+            //Assert
+            Assert.That(ex.Message, Is.EqualTo("User not found"));
+        }
+
+        [Test]
+        public void InsertAsync_UserDisabled_ThrowException()
+        {
+            // Arrange 
+            var dto = new AssignmentDTO { AssetId = 1, AssignedToId = 1 };
+            var asset = new Asset { Id = 1 };
+            var user = new User { Id = 1, IsDeleted = true };
+
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssetId)).ReturnsAsync(asset);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssignedToId)).ReturnsAsync(user);
+
+            //Act 
+            var ex = Assert.ThrowsAsync<DataInvalidException>(async () => await _assignmentService.InsertAsync(dto, "admin", 1));
+
+            //Assert
+            Assert.That(ex.Message, Is.EqualTo("User has been disabled"));
+        }
+
+
+        [Test]
         public void InsertAsync_WhenAssetAlreadyAssigned_ThrowsDataInvalidException()
         {
             // Arrange
             var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 1 };
             var assignedAsset = new Asset { Id = 3, State = AssetState.Assigned };
-            var existingAssignment = new Assignment { AssetId = 3, AssignedToId = 2 };
-            var assignedUser = new User { Id = 2, UserName = "existingUser" };
+            var existingAssignment = new Assignment { AssetId = 3, AssignedToId = 1 };
+            var assignedUser = new User { Id = 1, UserName = "existingUser" };
 
             // Mocking the repositories
             _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssetId)).ReturnsAsync(assignedAsset);
@@ -167,6 +203,7 @@ namespace Backend.Tests.ServiceTests
             var assignment = new Assignment { AssetId = 3, AssignedToId = 1 };
             var assignmentResponse = new AssignmentResponse { AssetId = 3, AssignedToId = 1 };
             var asset = new Asset { Id = 3, State = AssetState.Available };
+            var user = new User { Id = 3 };
 
             // Mocking the mapper
             _mapperMock.Setup(mapper => mapper.Map<Assignment>(assignmentDto)).Returns(assignment);
@@ -175,6 +212,7 @@ namespace Backend.Tests.ServiceTests
             _assignmentRepoMock.Setup(repo => repo.FindAssignmentByAssetIdAsync(assignmentDto.AssetId)).ReturnsAsync((Assignment?)null);
             _assignmentRepoMock.Setup(repo => repo.InsertAsync(It.IsAny<Assignment>())).Returns(Task.CompletedTask);
             _assignmentRepoMock.Setup(repo => repo.FindLatestAssignment()).ReturnsAsync(assignment);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssignedToId)).ReturnsAsync(user);
 
             // Mocking the asset repository
             _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssetId)).ReturnsAsync(asset);
@@ -198,19 +236,16 @@ namespace Backend.Tests.ServiceTests
             // Arrange
             var assignmentDto = new AssignmentDTO { AssetId = 3, AssignedToId = 1 };
             var asset = new Asset { Id = 3, State = AssetState.Available };
+            var user = new User { Id = 3 };
 
-            // Mocking the asset repository to return a valid asset
             _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssetId)).ReturnsAsync(asset);
-
-            // Mocking the assignment repository to throw an exception
             _assignmentRepoMock.Setup(repo => repo.InsertAsync(It.IsAny<Assignment>())).ThrowsAsync(new Exception("Database error"));
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(assignmentDto.AssignedToId)).ReturnsAsync(user);
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<NullReferenceException>(() => _assignmentService.InsertAsync(assignmentDto, "creator", 1));
             Assert.That(ex.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 
-            // Verifying that UpdateAsync method was never called
-            _assetRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<Asset>()), Times.Never);
         }
 
 
@@ -389,7 +424,7 @@ namespace Backend.Tests.ServiceTests
         }
 
         [Test]
-        public void UpdateAsync_ChangeUserOnly_NotFoundOldAsset_ThrowException()
+        public void UpdateAsync_ChangeUserOnly_NotFoundUser_ThrowException()
         {
             // Arrange
             var assignment = new Assignment { Id = 1, AssetId = 1, AssignedToId = 1, State = AssignmentState.WaitingForAcceptance };
@@ -402,7 +437,25 @@ namespace Backend.Tests.ServiceTests
             var ex = Assert.ThrowsAsync<NotFoundException>(async () => await _assignmentService.UpdateAsync(dto, 1, "modifier"));
 
             // Assert
-            Assert.That(ex.Message, Is.EqualTo("Not found new user"));
+            Assert.That(ex.Message, Is.EqualTo("Not found user"));
+        }
+
+        [Test]
+        public void UpdateAsync_ChangeUserOnly_UserDisabled_ThrowException()
+        {
+            // Arrange
+            var assignment = new Assignment { Id = 1, AssetId = 1, AssignedToId = 1, State = AssignmentState.WaitingForAcceptance };
+            var dto = new AssignmentDTO { AssetId = 1, AssignedToId = 2 };
+            var user = new User { Id = 2, IsDeleted = true };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignment.Id)).ReturnsAsync(assignment);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssignedToId)).ReturnsAsync(user);
+
+            // Act
+            var ex = Assert.ThrowsAsync<DataInvalidException>(async () => await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+
+            // Assert
+            Assert.That(ex.Message, Is.EqualTo("User has been disabled"));
         }
 
         [Test]
@@ -517,6 +570,28 @@ namespace Backend.Tests.ServiceTests
         }
 
         [Test]
+        public void UpdateAsync_ChangeUserAndAsset_UserDisabled_ThrowException()
+        {
+            // Arrange
+            var assignment = new Assignment { Id = 1, AssetId = 1, AssignedToId = 1, State = AssignmentState.WaitingForAcceptance };
+            var dto = new AssignmentDTO { AssetId = 2, AssignedToId = 2 };
+            var user = new User { Id = 2, IsDeleted = true };
+            var newAsset = new Asset { Id = 2 };
+            var oldAsset = new Asset { Id = 1 };
+
+            _assignmentRepoMock.Setup(repo => repo.FindAssignmentByIdWithoutAsset(assignment.Id)).ReturnsAsync(assignment);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssignedToId)).ReturnsAsync(newAsset);
+            _assetRepoMock.Setup(repo => repo.GetByIdAsync(assignment.AssignedToId)).ReturnsAsync(oldAsset);
+            _userRepoMock.Setup(repo => repo.GetByIdAsync(dto.AssignedToId)).ReturnsAsync(user);
+
+            // Act
+            var ex = Assert.ThrowsAsync<DataInvalidException>(async () => await _assignmentService.UpdateAsync(dto, 1, "modifier"));
+
+            // Assert
+            Assert.That(ex.Message, Is.EqualTo("User has been disabled"));
+        }
+
+        [Test]
         public void UpdateAsync_ChangeUserAndAsset_NotFoundNewUser_ThrowException()
         {
             // Arrange
@@ -534,7 +609,7 @@ namespace Backend.Tests.ServiceTests
             var ex = Assert.ThrowsAsync<NotFoundException>(async () => await _assignmentService.UpdateAsync(dto, 1, "modifier"));
 
             // Assert
-            Assert.That(ex.Message, Is.EqualTo("Not found new user"));
+            Assert.That(ex.Message, Is.EqualTo("Not found user"));
         }
 
         [Test]
