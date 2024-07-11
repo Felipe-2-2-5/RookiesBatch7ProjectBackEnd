@@ -89,7 +89,7 @@ namespace Backend.Application.Services.UserServices
                 return new LoginResponse(false, "User not found");
 
             if (getUser.IsDeleted == true)
-                throw new ForbiddenException("Your account has been disabled");
+                throw new NotAllowedException("Your account has been disabled");
 
             var checkPassword = BCrypt.Net.BCrypt.Verify(dto.Password, getUser.Password);
 
