@@ -45,6 +45,12 @@ public class AssignmentService : IAssignmentService
     public async Task<AssignmentResponse> InsertAsync(AssignmentDTO dto, string createName, int assignedById)
     {
         var assignedAsset = await _assetRepository.GetByIdAsync(dto.AssetId) ?? throw new NotFoundException(404, "Asset not found");
+        var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException(404, "User not found");
+        if (newUser.IsDeleted == true) 
+        {
+            throw new DataInvalidException("User has been disabled");
+        }
+
 
         //asset is already assigned
         if (assignedAsset.State != AssetState.Available)
@@ -73,6 +79,7 @@ public class AssignmentService : IAssignmentService
     public async Task<AssignmentResponse> UpdateAsync(AssignmentDTO dto, int id, string modifiedName)
     {
         var assignment = await _assignmentRepository.FindAssignmentByIdWithoutAsset(id) ?? throw new NotFoundException("Not found assignment");
+        
         if (assignment.State == AssignmentState.Accepted)
         {
             throw new DataInvalidException(400, "Assignment is assigned to user");
@@ -110,7 +117,12 @@ public class AssignmentService : IAssignmentService
         //Change user only
         else if (assignment.AssignedToId != dto.AssignedToId && assignment.AssetId == dto.AssetId)
         {
-            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found new user");
+            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException(404, "Not found user");
+            if (newUser.IsDeleted == true)
+            {
+                throw new DataInvalidException("User has been disabled");
+            }
+
             var oldAsset = await _assetRepository.GetByIdAsync(assignment.AssetId);
             oldAsset!.Assignments = null;
 
@@ -154,7 +166,11 @@ public class AssignmentService : IAssignmentService
             oldAsset.Assignments = null;
             oldAsset.State = AssetState.Available;
 
-            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException("Not found new user");
+            var newUser = await _userRepository.GetByIdAsync(dto.AssignedToId) ?? throw new NotFoundException(404, "Not found user");
+            if (newUser.IsDeleted == true)
+            {
+                throw new DataInvalidException("User has been disabled");
+            }
 
             _mapper.Map(dto, assignment);
             assignment.AssignedTo = newUser;
